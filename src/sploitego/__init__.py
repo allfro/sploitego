@@ -22,7 +22,7 @@ __all__ = [
     'scapytools',
     'transforms',
     'utils',
-    'webtools'
+    'webtools',
     'xmltools',
     'config',
     'framework',
