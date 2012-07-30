@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+
+from sys import platform, exit, argv
+from optparse import OptionParser
+from subprocess import Popen
+
+from sploitego.metasploit.app.shell import MsfShellWindow
+from PyQt4.QtGui import QApplication, QIcon, QPixmap
+from sploitego.resource import metasploit
+
+__author__ = 'Nadeem Douba'
+__copyright__ = 'Copyright 2012, Sploitego Project'
+__credits__ = [ 'Nadeem Douba' ]
+
+__license__ = 'GPL'
+__version__ = '0.1'
+__maintainer__ = 'Nadeem Douba'
+__email__ = 'ndouba@gmail.com'
+__status__ = 'Development'
+
+
+def parseargs(args):
+    p = OptionParser()
+    p.add_option("-P", dest="password", help="Specify the password to access msfrpcd", metavar="opt")
+    p.add_option("-S", dest="ssl", help="Disable SSL on the RPC socket", action="store_false", default=True)
+    p.add_option("-U", dest="username", help="Specify the username to access msfrpcd", metavar="opt", default="msf")
+    p.add_option("-a", dest="server", help="Connect to this IP address", metavar="host", default="127.0.0.1")
+    p.add_option("-p", dest="port", help="Connect to the specified port instead of 55553", metavar="opt", default=55553)
+    p.add_option("-c", dest="command", help="Execute a command on startup", metavar="opt", default="")
+    o, a = p.parse_args(args)
+    if o.password is None:
+        print '[-] Error: a password must be specified (-P)\n'
+        p.print_help()
+        exit(-1)
+    return o
+
+
+def main(args):
+    app = QApplication(args)
+    o = parseargs([ str(i) for i in app.arguments() ]).__dict__
+    app.setWindowIcon(QIcon(QPixmap(metasploit)))
+    window = MsfShellWindow(o.pop('password'), **o)
+    window.show()
+    if platform == 'darwin':
+        Popen(['osascript', '-e', 'tell application "Python" to activate'])
+    exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main(argv)
