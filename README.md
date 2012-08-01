@@ -92,8 +92,18 @@ $ mtginstall -p sploitego.transform -m <Maltego Settings Dir> -w <Transforms Wor
 
 ```<Transforms Working Dir>``` is the working directory that you wish to use as a scratchpad for your transforms. This is
 also the directory where you can specify an additional configuration file to override certain settings for transforms.
-If you're unsure, pick your home directory (e.g. ```~/```). If successful, you will see the following output in your
-terminal:
+If you're unsure, pick your home directory (e.g. ```~/```).
+
+For example:
+
+```bash
+$ mtginstall -p sploitego.transforms -m  ~/Library/Application\ Support/maltego/3.1.1 -w ~/
+```
+
+Will install the transforms located in the ```sploitego.transforms``` python package in the Maltego 3.1.1 settings
+directory with a working path of the user's home director (```~/```)
+
+If successful, you will see the following output in your terminal:
 
 ```bash
 $ mtginstall -w ~/ -p sploitego.transforms -m ~/Library/Application\ Support/maltego/v3.1.1
