@@ -91,7 +91,7 @@ def parseargs():
     )
     parser.add_option(
         '-m',
-        '--maltego-prefix',
+        '--maltego-settings-prefix',
         dest='maltego_prefix',
         help="The name of the directory that contains Maltego's settings (i.e. ~/.maltego)",
         metavar='prefix'
@@ -122,6 +122,9 @@ def main(*args):
 
     opts = parseargs()
 
+    if opts.package == 'sploitego':
+        opts.package = 'sploitego.transforms'
+
     m = __import__(opts.package, globals(), locals(), ['__all__'])
 
     for t in m.__all__:
@@ -136,6 +139,10 @@ def main(*args):
                 opts.maltego_prefix,
                 opts.working_dir
             )
+
+    if not transforms:
+        print 'Error: no transforms found...'
+        exit(-1)
 
 
 if __name__ == '__main__':
