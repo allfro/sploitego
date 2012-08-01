@@ -29,6 +29,7 @@ timedoutport = imageicon('networking', 'timedoutport.gif')
 closedport = imageicon('networking', 'closed_port.gif')
 
 # severity
+critical = imageicon('severity', 'critical.gif')
 high = imageicon('severity', 'high.gif')
 medium = imageicon('severity', 'medium.gif')
 low = imageicon('severity', 'low.gif')
