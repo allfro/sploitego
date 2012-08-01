@@ -101,7 +101,9 @@ $ mtginstall -p sploitego.transforms -m  ~/Library/Application\ Support/maltego/
 ```
 
 Will install the transforms located in the ```sploitego.transforms``` python package in the Maltego 3.1.1 settings
-directory with a working path of the user's home director (```~/```)
+directory with a working path of the user's home director (```~/```). **WARNING**: DO NOT use ```sudo``` for
+```mtginstall```. Otherwise, you'll pooch your Maltego settings directory and Maltego will not be able to run or find
+any additional transforms.
 
 If successful, you will see the following output in your terminal:
 
