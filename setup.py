@@ -1,4 +1,20 @@
 from setuptools import setup, find_packages
+from os import path, system, name, environ, pathsep, sep, listdir, chown, chmod
+from shutil import copyfile
+
+scripts = [
+    'src/scripts/csv2sheets',
+    'src/scripts/dispatcher',
+    'src/scripts/mtgdebug',
+    'src/scripts/mtginstall',
+    'src/scripts/mtgsh',
+    'src/scripts/mtguninstall',
+    'src/scripts/mtgx2csv',
+    'src/scripts/pymsfconsole',
+    'src/scripts/pymsfrpc',
+    'src/scripts/pyqtmsfconsole',
+    'src/scripts/pysetuid'
+]
 
 setup(
     name='sploitego',
@@ -9,19 +25,7 @@ setup(
     license='GPL',
     packages=find_packages('src'),
     package_dir={ '' : 'src' },
-    scripts=[
-        'src/scripts/csv2sheets',
-        'src/scripts/dispatcher',
-        'src/scripts/mtgdebug',
-        'src/scripts/mtginstall',
-        'src/scripts/mtgsh',
-        'src/scripts/mtguninstall',
-        'src/scripts/mtgx2csv',
-        'src/scripts/pymsfconsole',
-        'src/scripts/pymsfrpc',
-        'src/scripts/pyqtmsfconsole',
-        'src/scripts/pysetuid'
-    ],
+    scripts=scripts,
     zip_safe=False,
     package_data={
         '' : [ '*.gif', '*.png', '*.conf' ]
@@ -48,3 +52,23 @@ setup(
         'scapy' : [ 'libdnet' ]
     }
 )
+
+if name == 'posix' and system('which mtginstall'):
+    print 'Sploitego scripts are not in your path... fixing that!'
+    script_dir = sep.join([path.dirname(path.realpath(__file__)), 'src', 'scripts'])
+    scripts = listdir(script_dir)
+    paths = [ path.realpath(p) for p in environ['PATH'].split(pathsep) ]
+
+    for dst in ['/opt/local/bin', '/usr/local/bin', '/usr/bin']:
+        if dst in paths:
+            print 'Copying scripts to the %s directory' % dst
+            for s in scripts:
+                srcf = sep.join([script_dir, s])
+                dstf = sep.join([dst, s])
+                print 'Copying %s -> %s' % (srcf, dstf)
+                copyfile(srcf, dstf)
+                chown(dstf, 0, 0)
+                chmod(dstf, 0755)
+            break
+    print 'Fixed the problem... have fun!'
+
