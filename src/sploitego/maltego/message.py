@@ -593,13 +593,14 @@ class UIMessage(MaltegoElement):
 @XMLAttribute(name='Type', propname='type')
 class Entity(MaltegoElement):
 
+    namespace = 'maltego'
     name = None
 
     def __init__(self, value, **kwargs):
         super(Entity, self).__init__("Entity")
         type = kwargs.get('type', None)
         if type is None:
-            self.type = 'maltego.%s' % self.__class__.__name__ if self.name is None else self.name
+            self.type = '%s.%s' % (self.namespace, self.__class__.__name__ if self.name is None else self.name)
         self.value = value
         self.weight = kwargs.get('weight', self.weight)
         self.iconurl = kwargs.get('iconurl', self.iconurl)

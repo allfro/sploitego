@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from sploitego.maltego.message import Entity, EntityField, EntityFieldType, MatchingRule
-from sploitego.resource import unavailableport, closedport, timedoutport, openport, high, medium, low, info
+from sploitego.resource import unavailableport, closedport, timedoutport, openport, high, medium, low, info, critical
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -26,9 +26,7 @@ __all__ = [
 
 class SploitegoEntity(Entity):
 
-    def __init__(self, value, **kwargs):
-        self.name = 'sploitego.%s' % self.__class__.__name__
-        super(SploitegoEntity, self).__init__(value, **kwargs)
+    namespace = 'sploitego'
 
 
 class PortStatus(object):
@@ -52,6 +50,7 @@ class PortStatus(object):
 
 
 class VulnerabilitySeverity(object):
+    Critical = 4
     High = 3
     Medium = 2
     Low = 1
@@ -60,7 +59,9 @@ class VulnerabilitySeverity(object):
     @staticmethod
     def icon(obj, val):
         val = int(val)
-        if val == VulnerabilitySeverity.High:
+        if val == VulnerabilitySeverity.Critical:
+            obj.iconurl = critical
+        elif val == VulnerabilitySeverity.High:
             obj.iconurl = high
         elif val == VulnerabilitySeverity.Medium:
             obj.iconurl = medium
