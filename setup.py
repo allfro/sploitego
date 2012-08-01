@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
-from os import path, system, name, environ, pathsep, sep, listdir, chown, chmod
-from shutil import copyfile
+from os import path, system, name, environ, pathsep, sep, symlink
+from distutils.sysconfig import get_config_var
 
 scripts = [
     'src/scripts/csv2sheets',
@@ -55,20 +55,18 @@ setup(
 
 if name == 'posix' and system('which mtginstall'):
     print 'Sploitego scripts are not in your path... fixing that!'
-    script_dir = sep.join([path.dirname(path.realpath(__file__)), 'src', 'scripts'])
-    scripts = listdir(script_dir)
+    script_dir = get_config_var('BINDIR')
     paths = [ path.realpath(p) for p in environ['PATH'].split(pathsep) ]
 
-    for dst in ['/opt/local/bin', '/usr/local/bin', '/usr/bin']:
+    for dst in ['/usr/local/bin', '/opt/local/bin', '/usr/bin']:
         if dst in paths:
-            print 'Copying scripts to the %s directory' % dst
+            print 'Creating symlinks to scripts in the %s directory' % dst
             for s in scripts:
-                srcf = sep.join([script_dir, s])
                 dstf = sep.join([dst, s])
-                print 'Copying %s -> %s' % (srcf, dstf)
-                copyfile(srcf, dstf)
-                chown(dstf, 0, 0)
-                chmod(dstf, 0755)
+                if not path.exists(dstf):
+                    srcf = sep.join([script_dir, path.basename(s)])
+                    print 'Symbolically linking %s -> %s' % (srcf, dstf)
+                    symlink(srcf, dstf)
             break
     print 'Fixed the problem... have fun!'
 
