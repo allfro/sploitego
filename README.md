@@ -133,3 +133,33 @@ To configure these options copy ```sploitego.conf``` from the ```src/sploitego/r
 into the transform working directory specified during mtginstall (i.e. ```<Transform Working Dir>```) and override the
 necessary settings in the configuration file with your desired values. Place-holders encapsulated with angled brackets 
 (```<```, ```>```) can be found throughout the configuration file where additional configuration is required.
+
+
+## 4.0 - Framework Overview
+
+### 4.1 - Sploitego Local Transform Execution
+Local transforms in Maltego execute on the client's local machine by executing a local script or executable and listening
+for results on ```stdout``` (or standard output). Sploitego provides a single script for local transform execution called
+```dispatcher``` which essentially determines which transform to execute on the client's machine. A typical local transform
+is executed in the following manner in Sploitego:
+
+1. Maltego executes ```dispatcher``` with the following parameters:
+  * ```<transform>```: the name of the python module that contains the local transform data mining logic (e.g. 
+    ```sploitego.transforms.nmapfastscan```)
+  * ```[param1 ... paramN]```: optionally, any extra local transform parameters that can be parsed using ```optparse``` (e.g. 
+    ```-p 80```)
+  * ```<value>```: the value of the entity being passed into the local transform (e.g. ```google.com```)
+  * ```[field1=value1...#fieldN=valueN]```: optionally, any entity field values delimited by ```#``` (e.g. 
+    ```url=http://www.google.ca#public=true```)
+2. ```dispatcher``` parses the command-line arguments and attempts to load the local transform module.
+3. If successful, ```dispatcher``` checks for the presence of the ```dotransform``` function in the local transform module.
+4. Additionally, ```dispatcher``` checks for the presence of the ```onterminate``` function in the local transform module
+   and registers the function as an exit handler if it exists.
+5. If ```dotransform``` exists, ```dispatcher``` calls ```dotransform``` passing in, both, the ```request``` and ```response``` 
+   objects
+6. ```dotransform``` does its thing and returns the ```response``` object to ```dispatcher```
+7. Finally, ```dotransform``` serializes the ```response``` object and returns the result to ```stdout```
+
+In the event that an exception is raised during the execution of a local transform, ```dispatcher``` will catch the exception 
+and send an exception message to Maltego's UI. In the event that a local transform is marked to run as a super-user,  
+```dispatcher``` will try to elevate its privilege level using ```pysetuid``` prior to calling ```dotransform```.
