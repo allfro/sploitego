@@ -14,7 +14,9 @@ scripts = [
     'src/scripts/pymsfconsole',
     'src/scripts/pymsfrpc',
     'src/scripts/pyqtmsfconsole',
-    'src/scripts/pysetuid'
+    'src/scripts/pysetuid',
+    'src/scripts/mtgtransgen',
+    'src/scripts/mtgpkggen'
 ]
 
 setup(
@@ -29,7 +31,7 @@ setup(
     scripts=scripts,
     zip_safe=False,
     package_data={
-        '' : [ '*.gif', '*.png', '*.conf' ]
+        '' : [ '*.gif', '*.png', '*.conf', '*.plate' ]
     },
     install_requires=[
         'easygui>=0.94',
