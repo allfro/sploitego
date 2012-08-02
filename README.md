@@ -77,7 +77,8 @@ $ sudo python setup.py install
 ```
 
 This will install all the necessary modules and download any dependencies (other than libdnet and PyQt4) automatically.
-Once Sploitego has been installed, it's time to install the transforms. First, make sure Maltego is not running and run:
+Once Sploitego has been installed, it's time to install the transforms. First, make sure Maltego is not running. Second,
+make sure the Sploitego scripts are in your path. When you're ready, run the following command:
 
 ```bash
 $ mtginstall -p sploitego.transform -m <Maltego Settings Dir> -w <Transforms Working Dir>
@@ -118,7 +119,17 @@ Installing transform sploitego.v2.NSRecordToDNSName_CacheSnoop from sploitego.tr
 ...
 ```
 
+### 3.4 - Additional Steps
+Some of the transforms in Sploitego require additional configuration in order to operate correctly. The following web API 
+keys are required:
+* Bing API: [Sign up][15]
+* Bluecoat K9: [Sign up][16] (download not required)
+* Pipl: [Sign up][17]
 
+To configure these options copy ```sploitego.conf``` from the ```src/sploitego/resources/etc/``` in your build directory
+into the transform working directory specified during mtginstall (i.e. ```<Transform Working Dir>```) and override the
+necessary settings in the configuration file with your desired values. Place-holders encapsulated with angled brackets 
+(```<```, ```>```) can be found throughout the configuration file where additional configuration is required.
 
 
 [1]: http://paterva.com/
@@ -135,3 +146,6 @@ Installing transform sploitego.v2.NSRecordToDNSName_CacheSnoop from sploitego.tr
 [12]: http://www.thc.org/releases/amap-5.4.tar.gz
 [13]: http://downloads.metasploit.com/data/releases/framework-latest.tar.bz2
 [14]: http://www.tenable.com/products/nessus/nessus-product-overview
+[15]: https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44
+[16]: http://www1.k9webprotection.com/get-k9-web-protection-free
+[17]: http://dev.pipl.com/
