@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+from sys import argv
 from os import path, system, name, environ, pathsep, sep, symlink
 from distutils.sysconfig import get_config_var
 
@@ -53,7 +54,7 @@ setup(
     }
 )
 
-if name == 'posix' and system('which mtginstall'):
+if name == 'posix' and 'install' in argv and system('which mtginstall'):
     print 'Sploitego scripts are not in your path... fixing that!'
     script_dir = get_config_var('BINDIR')
     paths = [ path.realpath(p) for p in environ['PATH'].split(pathsep) ]
@@ -62,9 +63,10 @@ if name == 'posix' and system('which mtginstall'):
         if dst in paths:
             print 'Creating symlinks to scripts in the %s directory' % dst
             for s in scripts:
+                s = path.basename(s)
                 dstf = sep.join([dst, s])
                 if not path.exists(dstf):
-                    srcf = sep.join([script_dir, path.basename(s)])
+                    srcf = sep.join([script_dir, s])
                     print 'Symbolically linking %s -> %s' % (srcf, dstf)
                     symlink(srcf, dstf)
             break
