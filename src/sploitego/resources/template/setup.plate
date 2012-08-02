@@ -20,4 +20,3 @@ setup(
         # custom links for the install_requires
     ]
 )
-

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-from os import path, mkdir, chdir, sep
 from pkg_resources import resource_filename
 from string import Template
 from getpass import getuser
+from os import path, sep
 from sys import argv
+from re import sub
 
 
 __author__ = 'Nadeem Douba'
@@ -49,6 +50,9 @@ def main():
 
     write(sep.join([d, s if s.endswith('.py') else '%s.py' % s ]), read('newtransform', kw))
 
+    print 'installing to __init__.py'
+    d = file('__init__.py').read()
+    file('__init__.py', mode='wb').write(sub(r'__all__\s*\=\s*\[', '__all__ = [\n    %s,' % repr(s), d))
     print 'done!'
 
 if __name__ == '__main__':

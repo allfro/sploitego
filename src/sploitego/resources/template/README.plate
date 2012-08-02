@@ -15,11 +15,14 @@ directory structure to use in the following manner:
 * ```maltego/``` is where you can store your Maltego entity exports.
 
 If you're going to add a new transform in the transforms directory, remember to update the ```__all__``` variable in
-src/${package}/transforms/__init__.py. Otherwise, ```mtginstall``` won't attempt to install the transform. To test your
-transform, simply ```cd``` into the src directory and run ```mtgdebug```, like so:
+```src/${package}/transforms/__init__.py```. Otherwise, ```mtginstall``` won't attempt to install the transform.
+Alternatively, ```mtgtransgen <transform name>``` can be used within the ```src/${package}/transforms``` directory to
+generate a transform module and have it automatically added to the ```__init__.py``` file, like so:
+
+To test your transform, simply ```cd``` into the src directory and run ```mtgdebug```, like so:
 
 ```bash
-$ mtgdebug ${project}.transforms.helloworld Phil
+$$ mtgdebug ${project}.transforms.helloworld Phil
 %50
 D:This was pointless!
 %100

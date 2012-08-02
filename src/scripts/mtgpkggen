@@ -71,17 +71,17 @@ def main():
 
     write(sep.join(
         ['src', p, '__init__.py']),
-        read('__init__', kw) + "\n\n__all__ = [ 'transforms' ]"
+        read('__init__', kw) + "\n\n__all__ = [\n    'transforms'\n]"
     )
 
     write(sep.join(
         ['src', p, 'transforms', '__init__.py']),
-        read('__init__', kw) + "\n\n__all__ = [ 'common', 'helloworld' ]"
+        read('__init__', kw) + "\n\n__all__ = [\n    'common',\n    'helloworld'\n]"
     )
 
     write(sep.join(
         ['src', p, 'transforms', 'common', '__init__.py']),
-        read('__init__', kw) + "\n\n__all__ = [ 'entities' ]"
+        read('__init__', kw) + "\n\n__all__ = [\n    'entities'\n]"
     )
 
     chdir('..')
