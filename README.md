@@ -3,7 +3,7 @@ Sploitego - Maltego's (Local) Partner in Crime
 
 ## 1.0 - Introduction
 
-Sploitego is a **rapid** local transform development framework for [Maltego][http://paterva.com/] written in Python. Sploitego's core
+Sploitego is a **rapid** local transform development framework for [Maltego](http://paterva.com/) written in Python. Sploitego's core
 features include:
 
 - An easily **extensible and configurable** framework;
@@ -14,18 +14,18 @@ features include:
 
 The original focus of Sploitego was to provide a set of transforms that would aid in the execution of penetration tests,
 and vulnerability assessments. Ever since it's first prototype, it has become evident that the framework can be used for
-much more than that. Sploitego is perfect for anyone wishing to graphically represent their data in [Maltego][1] without
+much more than that. Sploitego is perfect for anyone wishing to graphically represent their data in [Maltego](http://paterva.com) without
 the hassle of learning a whole bunch of unnecessary stuff. It has generated interest from digital forensics analysts to
-pen-testers, and even [psychologists][http://www.forbes.com/sites/kashmirhill/2012/07/20/using-twitter-to-help-expose-psychopaths].
+pen-testers, and even [psychologists](http://www.forbes.com/sites/kashmirhill/2012/07/20/using-twitter-to-help-expose-psychopaths).
 
 ## 2.0 - Why Use Sploitego?
 
 ### 2.1 - Extensibility
 To develop *local* transforms for Maltego with *ease*; no need to learn XML, the local transform 
-[specification][http://paterva.com/web5/documentation/localtransforms.php], or develop tedious routines for command-line input parsing, 
+[specification](http://paterva.com/web5/documentation/localtransforms.php), or develop tedious routines for command-line input parsing, 
 debugging, or XML messaging. All you need to do is focus on developing the core data mining logic and Sploitego does the rest. Sploitego's 
-interface is designed on the principles of [convention over configuration][http://en.wikipedia.org/wiki/Convention_over_configuration] and 
-[KISS][http://en.wikipedia.org/wiki/KISS_principle].
+interface is designed on the principles of [convention over configuration](http://en.wikipedia.org/wiki/Convention_over_configuration) and 
+[KISS](http://en.wikipedia.org/wiki/KISS_principle).
 
 For example, this is what a local transform looks like using Sploitego:
 
@@ -59,18 +59,18 @@ various platforms.
 Sploitego is only supported on Python version 2.6. The setup script will automatically download and install most of the
 prerequisite modules, however, some modules will still need to be installed manually. The following modules require
 manual installation:
-* **scapy:** See the [Scapy Installation Manual for more details][http://www.secdev.org/projects/scapy/doc/installation.html]
+* **scapy:** See the [Scapy Installation Manual for more details](http://www.secdev.org/projects/scapy/doc/installation.html)
   for build instructions pertaining to your operating system.
-* **sip & PyQt4**: [Download][http://www.riverbankcomputing.co.uk/software/pyqt/download/]
-* **easygui**: [Download][http://easygui.sourceforge.net/download/index.html]
+* **sip & PyQt4**: [Download](http://www.riverbankcomputing.co.uk/software/pyqt/download/)
+* **easygui**: [Download](http://easygui.sourceforge.net/download/index.html)
 
 Some of the transforms require external command-line tools (e.g. nmap, amap, p0f, etc.). The following command-line
 tools are currently supported:
-* **Nmap version 5.51**: [Download][http://nmap.org/dist/?C=M&O=D]
-* **P0f version 3.05b**: [Download][http://lcamtuf.coredump.cx/p0f3/releases/p0f-3.05b.tgz]
-* **Amap version 5.4**: [Download][http://www.thc.org/releases/amap-5.4.tar.gz]
-* **Metasploit**: [Download][http://downloads.metasploit.com/data/releases/framework-latest.tar.bz2]
-* **Nessus**: [Download][http://www.tenable.com/products/nessus/nessus-product-overview]
+* **Nmap version 5.51**: [Download](http://nmap.org/dist/?C=M&O=D)
+* **P0f version 3.05b**: [Download](http://lcamtuf.coredump.cx/p0f3/releases/p0f-3.05b.tgz)
+* **Amap version 5.4**: [Download](http://www.thc.org/releases/amap-5.4.tar.gz)
+* **Metasploit**: [Download](http://downloads.metasploit.com/data/releases/framework-latest.tar.bz2)
+* **Nessus**: [Download](http://www.tenable.com/products/nessus/nessus-product-overview)
 
 ### 3.3 - Installation
 Once you've installed the necessary prerequisites, installing Sploitego is a cinch. Just run:
@@ -125,9 +125,9 @@ Installing transform sploitego.v2.NSRecordToDNSName_CacheSnoop from sploitego.tr
 ### 3.4 - Additional Steps
 Some of the transforms in Sploitego require additional configuration in order to operate correctly. The following web API 
 keys are required:
-* Bing API: [Sign up][https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44]
-* Bluecoat K9: [Sign up][http://www1.k9webprotection.com/get-k9-web-protection-free] (download not required)
-* Pipl: [Sign up][http://dev.pipl.com/]
+* Bing API: [Sign up](https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44)
+* Bluecoat K9: [Sign up](http://www1.k9webprotection.com/get-k9-web-protection-free) (download not required)
+* Pipl: [Sign up](http://dev.pipl.com/)
 
 To configure these options copy ```sploitego.conf``` from the ```src/sploitego/resources/etc/``` in your build directory
 into the transform working directory specified during mtginstall (i.e. ```<Transform Working Dir>```) and override the
