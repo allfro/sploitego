@@ -112,6 +112,8 @@ def main(*args):
     if len(args) != 2:
         print 'usage: %s <package>' % args[0]
         exit(-1)
+    if '' not in sys.path:
+        sys.path.insert(0, '')
     mtgsh = MtgConsole(args[1])
     mtgsh.interact(hl('Welcome to Sploitego.', 'green', True))
 

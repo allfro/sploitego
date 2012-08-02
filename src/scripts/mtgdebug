@@ -68,6 +68,8 @@ def main(*args):
     m = None
 
     try:
+        if '' not in sys.path:
+            sys.path.insert(0, '')
         m = __import__(script, globals(), locals(), ['dotransform'])
         if name == 'posix' and hasattr(m.dotransform, 'privileged') and geteuid():
             execvp('pysetuid', ['pysetuid'] + list(args))
