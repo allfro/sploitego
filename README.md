@@ -3,28 +3,29 @@ Sploitego - Maltego's (Local) Partner in Crime
 
 ## 1.0 - Introduction
 
-Sploitego is a **rapid** local transform development framework for [Maltego][1] written in Python. Sploitego's core
+Sploitego is a **rapid** local transform development framework for [Maltego](http://paterva.com/) written in Python. Sploitego's core
 features include:
 
 - An easily **extensible and configurable** framework;
 - A set of **powerful** and **easy-to-use** scripts for debugging, configuring, and installing transforms;
-- A **plethora** of auxiliary modules focused on [Open Source Intelligence (OSINT)][2] gathering as well as
-  **penetration testing**;
+- A **plethora** of auxiliary modules focused on [Open Source Intelligence (OSINT)](http://en.wikipedia.org/wiki/Open-source_intelligence)
+  gathering as well as **penetration testing**;
 - Finally, a great number of **really awesome pen-testing transforms**.
 
 The original focus of Sploitego was to provide a set of transforms that would aid in the execution of penetration tests,
 and vulnerability assessments. Ever since it's first prototype, it has become evident that the framework can be used for
-much more than that. Sploitego is perfect for anyone wishing to graphically represent their data in [Maltego][1] without
+much more than that. Sploitego is perfect for anyone wishing to graphically represent their data in [Maltego](http://paterva.com) without
 the hassle of learning a whole bunch of unnecessary stuff. It has generated interest from digital forensics analysts to
-pen-testers, and even [psychologists][3].
+pen-testers, and even [psychologists](http://www.forbes.com/sites/kashmirhill/2012/07/20/using-twitter-to-help-expose-psychopaths).
 
 ## 2.0 - Why Use Sploitego?
 
 ### 2.1 - Extensibility
-To develop *local* transforms for Maltego with *ease*; no need to learn XML, the local transform [specification][3], or
-develop tedious routines for command-line input parsing, debugging, or XML messaging. All you need to do is focus on
-developing the core data mining logic and Sploitego does the rest. Sploitego's interface is designed on the principles
-of [convention over configuration][5] and [KISS][6].
+To develop *local* transforms for Maltego with *ease*; no need to learn XML, the local transform 
+[specification](http://paterva.com/web5/documentation/localtransforms.php), or develop tedious routines for command-line input parsing, 
+debugging, or XML messaging. All you need to do is focus on developing the core data mining logic and Sploitego does the rest. Sploitego's 
+interface is designed on the principles of [convention over configuration](http://en.wikipedia.org/wiki/Convention_over_configuration) and 
+[KISS](http://en.wikipedia.org/wiki/KISS_principle).
 
 For example, this is what a local transform looks like using Sploitego:
 
@@ -58,16 +59,18 @@ various platforms.
 Sploitego is only supported on Python version 2.6. The setup script will automatically download and install most of the
 prerequisite modules, however, some modules will still need to be installed manually. The following modules require
 manual installation:
-* **libdnet:** [Download][7] (See the [Scapy Installation Manual for more details][8])
-* **sip & PyQt4**: [Download][9]
+* **Scapy 2.1.0**: See the [Scapy Installation Manual for more details](http://www.secdev.org/projects/scapy/doc/installation.html)
+  for build instructions pertaining to your operating system.
+* **sip & PyQt4**: [Download](http://www.riverbankcomputing.co.uk/software/pyqt/download/)
+* **easygui**: [Download](http://easygui.sourceforge.net/download/index.html)
 
 Some of the transforms require external command-line tools (e.g. nmap, amap, p0f, etc.). The following command-line
 tools are currently supported:
-* **Nmap version 5.51**: [Download][10]
-* **P0f version 3.05b**: [Download][11]
-* **Amap version 5.4**: [Download][12]
-* **Metasploit**: [Download][13]
-* **Nessus**: [Download][14]
+* **Nmap version 5.51**: [Download](http://nmap.org/dist/?C=M&O=D)
+* **P0f version 3.05b**: [Download](http://lcamtuf.coredump.cx/p0f3/releases/p0f-3.05b.tgz)
+* **Amap version 5.4**: [Download](http://www.thc.org/releases/amap-5.4.tar.gz)
+* **Metasploit**: [Download](http://downloads.metasploit.com/data/releases/framework-latest.tar.bz2)
+* **Nessus**: [Download](http://www.tenable.com/products/nessus/nessus-product-overview)
 
 ### 3.3 - Installation
 Once you've installed the necessary prerequisites, installing Sploitego is a cinch. Just run:
@@ -122,9 +125,9 @@ Installing transform sploitego.v2.NSRecordToDNSName_CacheSnoop from sploitego.tr
 ### 3.4 - Additional Steps
 Some of the transforms in Sploitego require additional configuration in order to operate correctly. The following web API 
 keys are required:
-* Bing API: [Sign up][15]
-* Bluecoat K9: [Sign up][16] (download not required)
-* Pipl: [Sign up][17]
+* Bing API: [Sign up](https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44)
+* Bluecoat K9: [Sign up](http://www1.k9webprotection.com/get-k9-web-protection-free) (download not required)
+* Pipl: [Sign up](http://dev.pipl.com/)
 
 To configure these options copy ```sploitego.conf``` from the ```src/sploitego/resources/etc/``` in your build directory
 into the transform working directory specified during mtginstall (i.e. ```<Transform Working Dir>```) and override the
@@ -132,20 +135,31 @@ necessary settings in the configuration file with your desired values. Place-hol
 (```<```, ```>```) can be found throughout the configuration file where additional configuration is required.
 
 
-[1]: http://paterva.com/
-[2]: http://en.wikipedia.org/wiki/Open-source_intelligence
-[3]: http://www.forbes.com/sites/kashmirhill/2012/07/20/using-twitter-to-help-expose-psychopaths
-[4]: http://paterva.com/web5/documentation/localtransforms.php
-[5]: http://en.wikipedia.org/wiki/Convention_over_configuration
-[6]: http://en.wikipedia.org/wiki/KISS_principle
-[7]: http://libdnet.googlecode.com/files/libdnet-1.12.tgz
-[8]: http://www.secdev.org/projects/scapy/doc/installation.html#install-from-original-sources
-[9]: http://www.riverbankcomputing.co.uk/software/pyqt/download/
-[10]: http://nmap.org/dist/?C=M&O=D
-[11]: http://lcamtuf.coredump.cx/p0f3/releases/p0f-3.05b.tgz
-[12]: http://www.thc.org/releases/amap-5.4.tar.gz
-[13]: http://downloads.metasploit.com/data/releases/framework-latest.tar.bz2
-[14]: http://www.tenable.com/products/nessus/nessus-product-overview
-[15]: https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44
-[16]: http://www1.k9webprotection.com/get-k9-web-protection-free
-[17]: http://dev.pipl.com/
+## 4.0 - Framework Overview
+
+### 4.1 - Sploitego Local Transform Execution
+Local transforms in Maltego execute on the client's local machine by executing a local script or executable and listening
+for results on ```stdout``` (or standard output). Sploitego provides a single script for local transform execution called
+```dispatcher``` which essentially determines which transform to execute on the client's machine. A typical local transform
+is executed in the following manner in Sploitego:
+
+1. Maltego executes ```dispatcher``` with the following parameters:
+  * ```<transform>```: the name of the python module that contains the local transform data mining logic (e.g. 
+    ```sploitego.transforms.nmapfastscan```)
+  * ```[param1 ... paramN]```: optionally, any extra local transform parameters that can be parsed using ```optparse``` (e.g. 
+    ```-p 80```)
+  * ```<value>```: the value of the entity being passed into the local transform (e.g. ```google.com```)
+  * ```[field1=value1...#fieldN=valueN]```: optionally, any entity field values delimited by ```#``` (e.g. 
+    ```url=http://www.google.ca#public=true```)
+2. ```dispatcher``` parses the command-line arguments and attempts to load the local transform module.
+3. If successful, ```dispatcher``` checks for the presence of the ```dotransform``` function in the local transform module.
+4. Additionally, ```dispatcher``` checks for the presence of the ```onterminate``` function in the local transform module
+   and registers the function as an exit handler if it exists.
+5. If ```dotransform``` exists, ```dispatcher``` calls ```dotransform``` passing in, both, the ```request``` and ```response``` 
+   objects
+6. ```dotransform``` does its thing and returns the ```response``` object to ```dispatcher```
+7. Finally, ```dotransform``` serializes the ```response``` object and returns the result to ```stdout```
+
+In the event that an exception is raised during the execution of a local transform, ```dispatcher``` will catch the exception 
+and send an exception message to Maltego's UI. In the event that a local transform is marked to run as a super-user,  
+```dispatcher``` will try to elevate its privilege level using ```pysetuid``` prior to calling ```dotransform```.
