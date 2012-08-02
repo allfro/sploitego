@@ -1,0 +1,11 @@
+#!/usr/bin/env python
+
+__author__ = '${author}'
+__copyright__ = 'Copyright ${year}, ${project} Project'
+__credits__ = []
+
+__license__ = 'GPL'
+__version__ = '0.1'
+__maintainer__ = '${author}'
+__email__ = 'whereim@onthe.net'
+__status__ = 'Development'

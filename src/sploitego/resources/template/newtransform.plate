@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+
+from sploitego.maltego.utils import debug, progress
+from sploitego.framework import configure #, superuser
+
+__author__ = '${author}'
+__copyright__ = 'Copyright ${year}, <project> Project'
+__credits__ = []
+
+__license__ = 'GPL'
+__version__ = '0.1'
+__maintainer__ = '${author}'
+__email__ = 'whereim@onthe.net'
+__status__ = 'Development'
+
+__all__ = [
+    'dotransform',
+    'onterminate'
+]
+
+# Uncomment the line below if the transform needs to run as super-user
+#@superuser
+"""
+TODO: set the appropriate configuration parameters for your transform.
+"""
+@configure(
+    label='To ${entity} [Hello World]',
+    description='Returns a ${entity} entity with the phrase "Hello Word!"',
+    uuids=[ '${namespace}.v2.${entity}ToPhrase_HelloWorld' ],
+    inputs=[ ( '${project}', Person ) ],
+    debug=True
+)
+def dotransform(request, response):
+    """
+    TODO: write your data mining logic below.
+    """
+    return response
+
+
+def onterminate():
+    """
+    TODO: Write your cleanup logic below or delete the onterminate function and remove it from the __all__ variable
+    """
+    pass
