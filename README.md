@@ -8,7 +8,7 @@ features include:
 
 - An easily **extensible and configurable** framework;
 - A set of **powerful** and **easy-to-use** scripts for debugging, configuring, and installing transforms;
-- A **plethora** of auxiliary modules focused on [Open Source Intelligence (OSINT)][http://en.wikipedia.org/wiki/Open-source_intelligence] 
+- A **plethora** of auxiliary modules focused on [Open Source Intelligence (OSINT)](http://en.wikipedia.org/wiki/Open-source_intelligence)
   gathering as well as **penetration testing**;
 - Finally, a great number of **really awesome pen-testing transforms**.
 
@@ -59,7 +59,7 @@ various platforms.
 Sploitego is only supported on Python version 2.6. The setup script will automatically download and install most of the
 prerequisite modules, however, some modules will still need to be installed manually. The following modules require
 manual installation:
-* **scapy:** See the [Scapy Installation Manual for more details](http://www.secdev.org/projects/scapy/doc/installation.html)
+* **Scapy 2.1.0**: See the [Scapy Installation Manual for more details](http://www.secdev.org/projects/scapy/doc/installation.html)
   for build instructions pertaining to your operating system.
 * **sip & PyQt4**: [Download](http://www.riverbankcomputing.co.uk/software/pyqt/download/)
 * **easygui**: [Download](http://easygui.sourceforge.net/download/index.html)
