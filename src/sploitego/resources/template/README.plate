@@ -29,7 +29,7 @@ D:This was pointless!
 `- MaltegoTransformResponseMessage:
   `- Entities:
     `- Entity:  {'Type': 'test.MyTestEntity'}
-      `- Value: Hello test
+      `- Value: Hello Phil!
       `- Weight: 1
       `- AdditionalFields:
         `- Field: 2 {'DisplayName': 'Field 1', 'Name': 'test.field1', 'MatchingRule': 'strict'}

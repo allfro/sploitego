@@ -57,7 +57,7 @@ def dotransform(request, response):
     debug('This was pointless!')
 
     # Create ${entity} entity with value set to 'Hello <request.value>!'
-    e = ${entity}('Hello %s' % request.value)
+    e = ${entity}('Hello %s!' % request.value)
     # Setting field values on the entity
     e.field1 = 2
     e.fieldN = 'test'
