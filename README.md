@@ -184,12 +184,12 @@ The following subsections describe the tools in detail.
 The ```dispatcher``` and ```mtgdebug``` scripts loads the specified local transform module and executes it, returning
 their results to Maltego or the terminal, respectively. They accept the following parameters:
 
-  * ```<transform module>``` (required): the name of the python module that contains the local transform data mining
+  * ```<transform module>``` (**required**): the name of the python module that contains the local transform data mining
     logic (e.g. ```sploitego.transforms.nmapfastscan```)
-  * ```[param1 ... paramN]``` (optional): any extra local transform parameters that can be parsed using ```optparse```
+  * ```[param1 ... paramN]``` (**optional**): any extra local transform parameters that can be parsed using ```optparse```
     (e.g. ```-p 80```)
-  * ```<value>``` (required): the value of the entity being passed into the local transform (e.g. ```google.com```)
-  * ```[field1=value1...#fieldN=valueN]``` (optional): optionally, any entity field values delimited by ```#``` (e.g.
+  * ```<value>``` (**required**): the value of the entity being passed into the local transform (e.g. ```google.com```)
+  * ```[field1=value1...#fieldN=valueN]``` (**optional**): optionally, any entity field values delimited by ```#``` (e.g.
     ```url=http://www.google.ca#public=true```)
 
 The following example illustrates the use of ```mtgdebug``` to execute the ```sploitego.transforms.nmapfastscan```
@@ -219,11 +219,11 @@ The ```mtginstall``` script installs and configures local transforms in the Malt
 parameters:
 
 * ```-h```, ```--help```: shows help
-* ```-p <package>, --package=<package>``` (required): name of the transform package that contains transform modules. (i.e.
+* ```-p <package>, --package=<package>``` (**required**): name of the transform package that contains transform modules. (i.e.
   sploitego.transforms)
-* ```-m <prefix>```, ```--maltego-settings-prefix=<prefix>``` (required): the name of the directory that contains Maltego's
+* ```-m <prefix>```, ```--maltego-settings-prefix=<prefix>``` (**required**): the name of the directory that contains Maltego's
   settings (i.e. ```~/.maltego/<version>``` in Linux, ```~/Library/Application\ Support/maltego/<version>``` in Mac OS X)
-* ```-w <dir>, --working-dir=<dir>``` (required): the default working directory for the Maltego transforms
+* ```-w <dir>, --working-dir=<dir>``` (**required**): the default working directory for the Maltego transforms
 
 The following example illustrates the use of ```mtginstall``` to install transforms from the ```sploitego.transforms```
 transform package:
@@ -244,9 +244,9 @@ The ```mtguninstall``` script uninstalls and unconfigures all the local transfor
 package in the Maltego UI. It accepts the following parameters:
 
 * ```-h```, ```--help```: shows help
-* ```-p <package>, --package=<package>``` (required): name of the transform package that contains transform modules. (i.e.
+* ```-p <package>, --package=<package>``` (**required**): name of the transform package that contains transform modules. (i.e.
   sploitego.transforms)
-* ```-m <prefix>```, ```--maltego-settings-prefix=<prefix>``` (required): the name of the directory that contains Maltego's
+* ```-m <prefix>```, ```--maltego-settings-prefix=<prefix>``` (**required**): the name of the directory that contains Maltego's
   settings (i.e. ```~/.maltego/<version>``` in Linux, ```~/Library/Application\ Support/maltego/<version>``` in Mac OS X)
 
 The following example illustrates the use of ```mtguninstall``` to uninstall transforms from the ```sploitego.transforms```
@@ -260,7 +260,7 @@ $ mtguninstall -p sploitego.transforms -m ~/Library/Application\ Support/maltego
 The ```mtgsh``` script offers an interactive shell for running transforms (work in progress). It accepts the following
 parameters:
 
-* ```<transform package>``` (required): the name of the transform package to load.
+* ```<transform package>``` (**required**): the name of the transform package to load.
 
 The following example illustrates the use of ```mtgsh``` to run transforms from the ```sploitego.transforms```
 transform package:
@@ -285,7 +285,7 @@ mtg>
 The ```mtgpkggen``` script generates a transform package skeleton for eager transform developers. It accepts the following
 parameters:
 
-* ```<package name>``` (required): the desired name of the transform package you wish to develop.
+* ```<package name>``` (**required**): the desired name of the transform package you wish to develop.
 
 The following example illustrates the use of ```mtgpkggen``` to create a transform package named ```mypackage```:
 
@@ -307,7 +307,7 @@ done!
 The ```mtgtransgen``` generates a transform module and automatically adds it to the ```__init__.py``` file in a
 transform package. It accepts the following parameters:
 
-* ```<transform name>``` (required): the desired name of the transform module to create.
+* ```<transform name>``` (**required**): the desired name of the transform module to create.
 
 The following example illustrates the use of ```mtgtransgen``` to create a transform module named ```cooltransform```:
 
@@ -323,7 +323,7 @@ done!
 The ```mtgx2csv``` script generates a comma-separated report (CSV) of a Maltego-generated graph. It accepts the following
 parameters:
 
-* ```<graph>``` (required): the name of the Maltego graph file.
+* ```<graph>``` (**required**): the name of the Maltego graph file.
 
 The following example illustrates the use of ```mtgx2csv``` to create a CSV report of a Maltego graph file named ```Graph1.mtgx```:
 
@@ -336,8 +336,8 @@ $ mtgx2csv Graph1.mtgx
 The ```csv2sheets``` file separates the CSV report into multiple CSV files containing entities of the same type. It
 accepts the following parameters:
 
-* ```<csv report>``` (required): the name of the CSV report generated by ```mtgx2csv```
-* ```<prefix>``` (required): a prefix to prepend to the generated CSV files.
+* ```<csv report>``` (**required**): the name of the CSV report generated by ```mtgx2csv```
+* ```<prefix>``` (**required**): a prefix to prepend to the generated CSV files.
 
 The following example illustrates the use of ```csv2sheets``` to create a CSV files containing entities of the same type
 from the CSV report ```Graph1.csv```:
