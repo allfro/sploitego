@@ -325,8 +325,7 @@ parameters:
 
 * ```<graph>``` (required): the name of the Maltego graph file.
 
-The following example illustrates the use of ```mtgx2csv``` to create a CSV report of a Maltego graph file named
-```Graph1.mtgx```:
+The following example illustrates the use of ```mtgx2csv``` to create a CSV report of a Maltego graph file named ```Graph1.mtgx```:
 
 ```bash
 $ mtgx2csv Graph1.mtgx
@@ -346,4 +345,6 @@ from the CSV report ```Graph1.csv```:
 ```bash
 $ csv2sheets Graph1.csv
 ```
+
+
 
