@@ -214,7 +214,7 @@ $  mtgdebug sploitego.transforms.nmapfastscan www.google.com
 ...
 ```
 
-#### 4.2.2 - ```mtginstall```
+#### 4.2.2 - ```mtginstall``` command
 The ```mtginstall``` script installs and configures local transforms in the Maltego UI. It accepts the following
 parameters:
 
@@ -239,7 +239,7 @@ Installing transform sploitego.v2.NSRecordToDNSName_CacheSnoop from sploitego.tr
 ...
 ```
 
-#### 4.2.3 - ```mtguninstall```
+#### 4.2.3 - ```mtguninstall``` command
 The ```mtguninstall``` script uninstalls and unconfigures all the local transform modules within the specified transform
 package in the Maltego UI. It accepts the following parameters:
 
@@ -256,7 +256,7 @@ transform package:
 $ mtguninstall -p sploitego.transforms -m ~/Library/Application\ Support/maltego/v3.1.1
 ```
 
-#### 4.2.4 - ```mtgsh```
+#### 4.2.4 - ```mtgsh``` command
 The ```mtgsh``` script offers an interactive shell for running transforms (work in progress). It accepts the following
 parameters:
 
@@ -281,7 +281,7 @@ mtg>
 ```
 
 
-#### 4.2.5 - ```mtgpkggen```
+#### 4.2.5 - ```mtgpkggen``` command
 The ```mtgpkggen``` script generates a transform package skeleton for eager transform developers. It accepts the following
 parameters:
 
@@ -303,7 +303,7 @@ done!
 ```
 
 
-#### 4.2.6 - ```mtgtransgen```
+#### 4.2.6 - ```mtgtransgen``` command
 The ```mtgtransgen``` generates a transform module and automatically adds it to the ```__init__.py``` file in a
 transform package. It accepts the following parameters:
 
@@ -319,7 +319,7 @@ installing to __init__.py
 done!
 ```
 
-#### 4.2.7 - ```mtgx2csv```
+#### 4.2.7 - ```mtgx2csv``` command
 The ```mtgx2csv``` script generates a comma-separated report (CSV) of a Maltego-generated graph. It accepts the following
 parameters:
 
@@ -332,7 +332,7 @@ $ mtgx2csv Graph1.mtgx
 ```
 
 
-#### 4.2.8 - ```csv2sheets```
+#### 4.2.8 - ```csv2sheets``` command
 The ```csv2sheets``` file separates the CSV report into multiple CSV files containing entities of the same type. It
 accepts the following parameters:
 
@@ -346,5 +346,24 @@ from the CSV report ```Graph1.csv```:
 $ csv2sheets Graph1.csv
 ```
 
+
+# Known Issues
+
+## ```dispatcher``` exit code 1
+
+This issue occurs when the Sploitego scripts are not in the system path of the JVM. To fix this issue you will need to
+create symlinks to the Sploitego scripts in one of the directories in your path. Unfortunately, it is not as simple as
+adding the directory to your $PATH variable. For some reason JVM determines its PATH in a different way than ```bash```,
+```csh```, etc. The ```JavaPathChecker``` in ```maltego/JavaPathChecker``` was developed to assist in determining what
+directories in the JVM's executable path exist. To run it, just do:
+
+```bash
+$ cd maltego/JavaPathChecker
+$ python run.py
+/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin
+```
+
+Once you receive the output from ```JavaPathChecker``` you'll have to manually add symlinks to each of the Sploitego
+scripts in one of the executable directories.
 
 
