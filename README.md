@@ -466,9 +466,9 @@ above:
 # ...
 ```
 
-The first line of code, a new ```MypackageEntity``` object is created with a value 'Hello <request.value>!'. The second
-line of code adds the newly created object, ```e```, to the ```response``` object. If we serialize the object into XML
-we'd see the following (spaced for clarity):
+The first line of code, creates a new ```MypackageEntity``` object is created with a value 'Hello &lt;request.value&gt;!'.
+The second line of code adds the newly created object, ```e```, to the ```response``` object. If we serialize the object
+into XML we'd see the following (spaced for clarity):
 
 ```xml
 <MaltegoMessage>
@@ -497,7 +497,7 @@ here:
 # ...
 ```
 
-If your feeling eager, see "4.3.2 - Creating a Custom Entity" for more information on how those properties came to
+If your feeling eager, see "4.3.x - Creating a Custom Entity" for more information on how those properties came to
 fruition.
 
 Once ```dotransform``` is called, the data mining logic does it's thing and adds entities to the ```response``` object
@@ -505,7 +505,7 @@ if necessary. Finally, the ```response``` is returned and ```dispatcher``` seria
 the decorators (```@configure``` and ```@superuser```)? Read on...
 
 
-#### 4.3.3 - ```mtginstall`` Magic (```@configure```)
+#### 4.3.3 - ```mtginstall``` Magic (```@configure```)
 
 So how does ```mtginstall``` figure out how to install and configure the transform in Maltego's UI? Simple, just use the
 ```@configure``` decorator on your ```dotransform``` function and ```mtginstall``` will take care of the rest. The
