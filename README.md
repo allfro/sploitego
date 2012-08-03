@@ -244,7 +244,7 @@ The ```mtguninstall``` script uninstalls and unconfigures all the local transfor
 package in the Maltego UI. It accepts the following parameters:
 
 * ```-h```, ```--help```: shows help
-* ```-p <package>, --package=<package>``` (**required**): name of the transform package that contains transform modules. (i.e.
+* ```-p <package>```, ```--package=<package>``` (**required**): name of the transform package that contains transform modules. (i.e.
   sploitego.transforms)
 * ```-m <prefix>```, ```--maltego-settings-prefix=<prefix>``` (**required**): the name of the directory that contains Maltego's
   settings (i.e. ```~/.maltego/<version>``` in Linux, ```~/Library/Application\ Support/maltego/<version>``` in Mac OS X)
@@ -346,6 +346,268 @@ from the CSV report ```Graph1.csv```:
 $ csv2sheets Graph1.csv
 ```
 
+
+### 4.3 - Transform Development Quickstart
+
+The following sections will give you a quick-start tutorial on how to develop transforms.
+
+#### 4.3.1 - Creating a Transform Package
+Developing transforms is now easier than ever. If you want to create a whole bunch of transforms or if you wish to take
+advantage of ```mtginstall``` then you'll want to create a transform package. Otherwise, you'll have to manually install
+and configure your local transform in the Maltego UI. We'll just go ahead and create a transform package called
+```mypackage``` because I have a good feeling you'll be really eager to create a whole bunch of transforms:
+
+```bash
+$ mtgpkggen mypackage
+creating skeleton in mypackage
+creating file setup.py...
+creating file README.md...
+creating file src/mypackage/transforms/common/entities.py...
+creating file src/mypackage/transforms/helloworld.py...
+creating file src/mypackage/__init__.py...
+creating file src/mypackage/transforms/__init__.py...
+creating file src/mypackage/transforms/common/__init__.py...
+done!
+```
+
+You'll notice that a simple skeleton project was generated, with a ```helloworld``` transform to get you started. You
+can test the ```helloworld``` transform module by running ```mtgdebug``` like so:
+
+```bash
+$ mtgdebug ${project}.transforms.helloworld Phil
+%50
+D:This was pointless!
+%100
+`- MaltegoTransformResponseMessage:
+  `- Entities:
+    `- Entity:  {'Type': 'test.MyTestEntity'}
+      `- Value: Hello Phil!
+      `- Weight: 1
+      `- AdditionalFields:
+        `- Field: 2 {'DisplayName': 'Field 1', 'Name': 'test.field1', 'MatchingRule': 'strict'}
+        `- Field: test {'DisplayName': 'Field N', 'Name': 'test.fieldN', 'MatchingRule': 'strict'}
+```
+
+
+#### 4.3.2 - Developing a Transform
+Let's take a look at an abbreviated version of  ```src/mypackage/transforms/helloworld.py```, from our example above,
+to see how this transform was put together.
+
+```python
+#!/usr/bin/env python
+
+from sploitego.maltego.message import Person
+from sploitego.maltego.utils import debug, progress
+from sploitego.framework import configure #, superuser
+from common.entities import MypackageEntity
+
+# ...
+#@superuser
+@configure(
+    label='To MypackageEntity [Hello World]',
+    description='Returns a MyPackageEntity entity with the phrase "Hello Word!"',
+    uuids=[ 'mypackage.v2.MyPackageEntityToPhrase_HelloWorld' ],
+    inputs=[ ( 'MyPackageEntity', Person ) ],
+    debug=True
+)
+def dotransform(request, response):
+    # Report transform progress
+    progress(50)
+    # Send a debugging message to the Maltego UI console
+    debug('This was pointless!')
+
+    # Create MyPackageEntity entity with value set to 'Hello <request.value>!'
+    e = MypackageEntity('Hello %s!' % request.value)
+
+    # Setting field values on the entity
+    e.field1 = 2
+    e.fieldN = 'test'
+
+    # Update progress
+    progress(100)
+
+    # Add entity to response object
+    response += e
+
+    # Return response for visualization
+    return response
+
+
+def onterminate():
+    debug('Caught signal... exiting.')
+    exit(0)
+```
+
+
+Right away, you notice that there are a whole bunch of decorators (or annotations) and two functions (```dotransform```
+and ```onterminate```). So what does this all mean and how does it work? Let's focus on the meat, shall we?
+
+The ```dotransform``` function is the transform's entry point, this is where all the fun stuff happens. This transform
+isn't particularly fun, but it serves as a good example of what typically happens in a Sploitego transform.
+```dotransform``` takes two arguments, ```request``` and ```response```. The ```request``` object contains the data
+passed by Maltego to the local transform and is parsed and stored into the following properties:
+
+* **value**:    a string containing the value of the input entity.
+* **fields**:   a dictionary of entity field names and their respective values of the input entity.
+* **params**:   a list of any additional command-line arguments to be passed to the transform.
+
+The ```response``` object is what our data mining logic will populate with entities and it is of type
+```MaltegoTransformResponseMessage```. The ```response``` object is very neat in the sense that it can do magical things
+with data. With simple arithematic operations (```+=```, ```-=```, ```+```, ```-```), one can add/remove entities or
+Maltego UI messages. You'll probably want to use the ```+=``` or ```-=``` operators because ```-``` and ```+``` create
+a new ```MaltegoTransformResponseMessage``` and that can be costly. Let's take a look at how it works in the transform
+above:
+
+```python
+# ...
+    e = MypackageEntity('Hello %s!' % request.value)
+# ...
+    response += e
+# ...
+```
+
+The first line of code, a new ```MypackageEntity``` object is created with a value 'Hello <request.value>!'. The second
+line of code adds the newly created object, ```e```, to the ```response``` object. If we serialize the object into XML
+we'd see the following (spaced for clarity):
+
+```xml
+<MaltegoMessage>
+    <MaltegoTransformResponseMessage>
+        <Entities>
+            <Entity Type="mypackage.MypackageEntity">
+                <Value>Hello Phil!</Value>
+                    <Weight>1</Weight>
+                    <AdditionalFields>
+                        <Field DisplayName="Field 1" MatchingRule="strict" Name="mypackage.field1">2</Field>
+                        <Field DisplayName="Field N" MatchingRule="strict" Name="mypackage.fieldN">test</Field>
+                    </AdditionalFields>
+            </Entity>
+        </Entities>
+    </MaltegoTransformResponseMessage>
+</MaltegoMessage>
+```
+
+You may be wondering where those fields (```mypackage.field1``` and ```mypackage.fieldN```) came from? Simple, from
+here:
+
+```python
+# ...
+    e.field1 = 2
+    e.fieldN = 'test'
+# ...
+```
+
+If your feeling eager, see "4.3.2 - Creating a Custom Entity" for more information on how those properties came to
+fruition.
+
+Once ```dotransform``` is called, the data mining logic does it's thing and adds entities to the ```response``` object
+if necessary. Finally, the ```response``` is returned and ```dispatcher``` serializes the object into XML. What about
+the decorators (```@configure``` and ```@superuser```)? Read on...
+
+
+#### 4.3.3 - ```mtginstall`` Magic (```@configure```)
+
+So how does ```mtginstall``` figure out how to install and configure the transform in Maltego's UI? Simple, just use the
+```@configure``` decorator on your ```dotransform``` function and ```mtginstall``` will take care of the rest. The
+@configure decorator tells ```mtginstall``` how to install the transform in Maltego. It takes the following parameters:
+
+* **label**:        the name of the transform as it appears in the Maltego UI transform selection menu
+* **description**:  a short description of the transform
+* **uuids**:        a list of unique transform IDs, one per input type. The order of this list must match that of the
+                    inputs parameter. Make sure you account for entity type inheritance in Maltego. For example, if you
+                    choose a DNSName entity type as your input type you do not need to specify it again for MXRecord,
+                    NSRecord, etc.
+* **inputs**:       a list of tuples where the first item is the name of the transform set the transform should be part
+                    of, and the second item is the input entity type.
+* **debug**:        Whether or not the debugging window should appear in Maltego's UI when running the transform.
+
+Let's take a look at the code again from the example above:
+
+```python
+# ...
+@configure(
+    label='To MypackageEntity [Hello World]',
+    description='Returns a MyPackageEntity entity with the phrase "Hello Word!"',
+    uuids=[ 'mypackage.v2.MyPackageEntityToPhrase_HelloWorld' ],
+    inputs=[ ( 'Mypackage', Person ) ],
+    debug=True
+)
+def dotransform(request, response):
+# ...
+```
+
+The example above tells ```mtginstall``` to process the transform in the following manner:
+
+1. The name of the transform in the transform selection context menu should appear as ```To MypackageEntity [Hello World]```
+   in Maltego's UI.
+2. The short description of the transform as it appears in Maltego's UI is ```Returns a MyPackageEntity entity with the
+   phrase &quot;Hello Word!&quot;```.
+3. The transform ID of the transform in Maltego's UI will be ```mypackage.v2.MyPackageEntityToPhrase_HelloWorld```.
+   and will only work with an input entity type of ```Person``` belonging to the ```Mypackage``` transform set.
+4. Finally, Maltego should pop a debug window on transform execution.
+
+What if we wanted this transform to work for entity types of ```Location```. Simple, just add another ```uuid``` and
+```input``` tuple like so:
+
+```python
+# ...
+@configure(
+    label='To MypackageEntity [Hello World]',
+    description='Returns a MyPackageEntity entity with the phrase "Hello Word!"',
+    uuids=[ 'mypackage.v2.MyPackageEntityToPhrase_HelloWorld', 'mypackage.v2.MyPackageEntityToLocation_HelloWorld' ],
+    inputs=[ ( 'Mypackage', Person ), ( 'Mypackage', Location ) ],
+    debug=True
+)
+def dotransform(request, response):
+# ...
+```
+
+Now you have one transform configured to run on two different entity types (```Person``` and ```Location```) with
+just a few lines of code and you can do this as many times as you like! Awesome!
+
+
+#### 4.3.4 - Running as Root (```@superuser```)
+
+At some point you want to run your transform using a super-user account in UNIX-based environments. Maybe to run
+something cool like Metasploit or Nmap. You can do that simply by decorating ```dotransform``` with ```@superuser```:
+
+```python
+# ...
+@superuser
+@configure(
+# ...
+)
+def dotransform(request, response):
+# ...
+```
+
+This will instruct ```dispatcher``` to run the transform using ```sudo```. If ```dispatcher``` is not running as
+```root``` a ```sudo``` password dialog box will appear asking the user to enter their password. If successful,
+the transform is run as root, just like that!
+
+#### 4.3.4 - Some Gotchas
+
+Alright, so you got a bit excited and decided to repurpose the ```helloworld``` transform module to do something cool.
+In you're bliss you decided to change the name of the transform module to ```mycooltransform.py```. So you're all set to
+go, right? **Wrong**, you'll need to change the entry in the ```__all__``` variable (i.e. ```'helloworld'``` ->
+'```mycooltransform```') in ```src/mypackage/transforms/__init__.py```, first. Why? Because ```mtginstall``` will only
+detect transforms if they are listed in the ```__all__``` variable of the transform package's ```__init__.py``` script.
+
+#### 4.3.5 - Creating More Transforms with ```mtgtransgen```
+So you want to create another transform but you want to be speedy like Gonzalez. You don't want to keep writing out the
+same thing for each transform. No problem, ```mtgtransgen``` will give you a head start. ```mtgtransgen``` generates a
+bare bones transform module that you can hack up to do whatever you like. Just run ```mtgtransgen``` in the
+```src/mypackage/transforms``` directory, like so:
+
+```bash
+$ cd src/mypackage/transforms
+$ mtgtransgen mysecondcooltransform
+creating file ./mysecondcooltransform.py...
+installing to __init__.py
+done!
+```
+
+No need to add the entry in ```__init__.py``` anymore because ```mtgtransgen``` does for you automagically.
 
 # Known Issues
 
