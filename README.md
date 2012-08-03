@@ -18,6 +18,15 @@ much more than that. Sploitego is perfect for anyone wishing to graphically repr
 the hassle of learning a whole bunch of unnecessary stuff. It has generated interest from digital forensics analysts to
 pen-testers, and even [psychologists](http://www.forbes.com/sites/kashmirhill/2012/07/20/using-twitter-to-help-expose-psychopaths).
 
+### 1.1 - Terminology
+
+Before we get started with the documentation, it might be useful to introduce some of the terminology that will be used
+throughout the documentation:
+
+* **Transform Module**: a python module local transform code.
+* **Transform Package**: a python package containing one or more transform modules.
+* **TODO**
+
 ## 2.0 - Why Use Sploitego?
 
 ### 2.1 - Extensibility
@@ -143,15 +152,7 @@ for results on ```stdout``` (or standard output). Sploitego provides a single sc
 ```dispatcher``` which essentially determines which transform to execute on the client's machine. A typical local transform
 is executed in the following manner in Sploitego:
 
-1. Maltego executes ```dispatcher``` with the following parameters:
-  * ```<transform>```: the name of the python module that contains the local transform data mining logic (e.g. 
-    ```sploitego.transforms.nmapfastscan```)
-  * ```[param1 ... paramN]```: optionally, any extra local transform parameters that can be parsed using ```optparse``` (e.g. 
-    ```-p 80```)
-  * ```<value>```: the value of the entity being passed into the local transform (e.g. ```google.com```)
-  * ```[field1=value1...#fieldN=valueN]```: optionally, any entity field values delimited by ```#``` (e.g. 
-    ```url=http://www.google.ca#public=true```)
-2. ```dispatcher``` parses the command-line arguments and attempts to load the local transform module.
+1. Maltego executes ```dispatcher```.
 3. If successful, ```dispatcher``` checks for the presence of the ```dotransform``` function in the local transform module.
 4. Additionally, ```dispatcher``` checks for the presence of the ```onterminate``` function in the local transform module
    and registers the function as an exit handler if it exists.
@@ -161,5 +162,188 @@ is executed in the following manner in Sploitego:
 7. Finally, ```dotransform``` serializes the ```response``` object and returns the result to ```stdout```
 
 In the event that an exception is raised during the execution of a local transform, ```dispatcher``` will catch the exception 
-and send an exception message to Maltego's UI. In the event that a local transform is marked to run as a super-user,  
-```dispatcher``` will try to elevate its privilege level using ```pysetuid``` prior to calling ```dotransform```.
+and send an exception message to Maltego's UI. If a local transform is marked to run as the super-user, ```dispatcher```
+will try to elevate its privilege level using ```pysetuid``` prior to calling ```dotransform```.
+
+### 4.2 - Available Tools
+Sploitego comes with a bunch of useful/interesting scripts for your use:
+
+* ```dispatcher```:     loads the specified local transform module and executes it, returning its results to Maltego.
+* ```mtgdebug```:       same as dispatcher but used for command-line testing of local transform modules.
+* ```mtginstall```:     installs and configures local transforms in the Maltego UI.
+* ```mtguninstall```:   uninstall and unconfigures local transforms in the Maltego UI.
+* ```mtgsh```:          an interactive shell for running transforms (work in progress).
+* ```mtgpkggen```:      generates a transform package skeleton for eager transform developers.
+* ```mtgtransgen```:    generates a transform module and automatically adds it to the ```__init__.py``` file.
+* ```mtgx2csv```:       generates a comma-separated report (CSV) of a Maltego-generated graph.
+* ```csv2sheets```:     separates the CSV report into multiple CSV files containing entity types of the same type.
+
+The following subsections describe the tools in detail.
+
+#### 4.2.1 - ```dispatcher```/```mtgdebug``` commands
+The ```dispatcher``` and ```mtgdebug``` scripts loads the specified local transform module and executes it, returning
+their results to Maltego or the terminal, respectively. They accept the following parameters:
+
+  * ```<transform module>``` (required): the name of the python module that contains the local transform data mining
+    logic (e.g. ```sploitego.transforms.nmapfastscan```)
+  * ```[param1 ... paramN]``` (optional): any extra local transform parameters that can be parsed using ```optparse```
+    (e.g. ```-p 80```)
+  * ```<value>``` (required): the value of the entity being passed into the local transform (e.g. ```google.com```)
+  * ```[field1=value1...#fieldN=valueN]``` (optional): optionally, any entity field values delimited by ```#``` (e.g.
+    ```url=http://www.google.ca#public=true```)
+
+The following example illustrates the use of ```mtgdebug``` to execute the ```sploitego.transforms.nmapfastscan```
+transform module on ```www.google.com```:
+
+```bash
+$  mtgdebug sploitego.transforms.nmapfastscan www.google.com
+  `- MaltegoTransformResponseMessage:
+    `- Entities:
+      `- Entity:  {'Type': 'sploitego.Port'}
+        `- Value: 80
+        `- Weight: 1
+        `- AdditionalFields:
+          `- Field: TCP {'DisplayName': 'Protocol', 'Name': 'protocol', 'MatchingRule': 'strict'}
+          `- Field: Open {'DisplayName': 'Port Status', 'Name': 'port.status', 'MatchingRule': 'strict'}
+          `- Field: 173.194.75.147 {'DisplayName': 'Destination IP', 'Name': 'ip.destination', 'MatchingRule': 'strict'}
+          `- Field: syn-ack {'DisplayName': 'Port Response', 'Name': 'port.response', 'MatchingRule': 'strict'}
+        `- IconURL: file:///Library/Python/2.6/site-packages/sploitego-1.0-py2.6.egg/sploitego/resources/images/networking/openport.gif
+        `- DisplayInformation:
+          `- Label: http {'Type': 'text/text', 'Name': 'Service Name'}
+          `- Label: table {'Type': 'text/text', 'Name': 'Method'}
+...
+```
+
+#### 4.2.2 - ```mtginstall```
+The ```mtginstall``` script installs and configures local transforms in the Maltego UI. It accepts the following
+parameters:
+
+* ```-h```, ```--help```: shows help
+* ```-p <package>, --package=<package>``` (required): name of the transform package that contains transform modules. (i.e.
+  sploitego.transforms)
+* ```-m <prefix>```, ```--maltego-settings-prefix=<prefix>``` (required): the name of the directory that contains Maltego's
+  settings (i.e. ```~/.maltego/<version>``` in Linux, ```~/Library/Application\ Support/maltego/<version>``` in Mac OS X)
+* ```-w <dir>, --working-dir=<dir>``` (required): the default working directory for the Maltego transforms
+
+The following example illustrates the use of ```mtginstall``` to install transforms from the ```sploitego.transforms```
+transform package:
+
+```bash
+$ mtginstall -w ~/ -p sploitego.transforms -m ~/Library/Application\ Support/maltego/v3.1.1
+Installing transform sploitego.v2.NmapReportToBanner_Amap from sploitego.transforms.amap...
+Installing transform sploitego.v2.WebsiteToSiteCategory_BlueCoat from sploitego.transforms.bcsitereview...
+Installing transform sploitego.v2.DomainToDNSName_Bing from sploitego.transforms.bingsubdomains...
+Installing transform sploitego.v2.DNSNameToIPv4Address_DNS from sploitego.transforms.dnsalookup...
+Installing transform sploitego.v2.IPv4AddressToDNSName_CacheSnoop from sploitego.transforms.dnscachesnoop...
+Installing transform sploitego.v2.NSRecordToDNSName_CacheSnoop from sploitego.transforms.dnscachesnoop...
+...
+```
+
+#### 4.2.3 - ```mtguninstall```
+The ```mtguninstall``` script uninstalls and unconfigures all the local transform modules within the specified transform
+package in the Maltego UI. It accepts the following parameters:
+
+* ```-h```, ```--help```: shows help
+* ```-p <package>, --package=<package>``` (required): name of the transform package that contains transform modules. (i.e.
+  sploitego.transforms)
+* ```-m <prefix>```, ```--maltego-settings-prefix=<prefix>``` (required): the name of the directory that contains Maltego's
+  settings (i.e. ```~/.maltego/<version>``` in Linux, ```~/Library/Application\ Support/maltego/<version>``` in Mac OS X)
+
+The following example illustrates the use of ```mtguninstall``` to uninstall transforms from the ```sploitego.transforms```
+transform package:
+
+```bash
+$ mtguninstall -p sploitego.transforms -m ~/Library/Application\ Support/maltego/v3.1.1
+```
+
+#### 4.2.4 - ```mtgsh```
+The ```mtgsh``` script offers an interactive shell for running transforms (work in progress). It accepts the following
+parameters:
+
+* ```<transform package>``` (required): the name of the transform package to load.
+
+The following example illustrates the use of ```mtgsh``` to run transforms from the ```sploitego.transforms```
+transform package:
+
+```bash
+$ mtgsh sploitego.transforms
+Welcome to Sploitego.
+mtg> whatismyip('4.2.2.1')
+`- MaltegoTransformResponseMessage:
+  `- Entities:
+    `- Entity:  {'Type': 'maltego.IPv4Address'}
+      `- Value: 10.0.1.22
+      `- Weight: 1
+      `- AdditionalFields:
+        `- Field: true {'DisplayName': 'Internal', 'Name': 'ipaddress.internal', 'MatchingRule': 'strict'}
+        `- Field: 68:a8:6d:4e:0f:72 {'DisplayName': 'Hardware Address', 'Name': 'ethernet.hwaddr', 'MatchingRule': 'strict'}
+mtg>
+```
+
+
+#### 4.2.5 - ```mtgpkggen```
+The ```mtgpkggen``` script generates a transform package skeleton for eager transform developers. It accepts the following
+parameters:
+
+* ```<package name>``` (required): the desired name of the transform package you wish to develop.
+
+The following example illustrates the use of ```mtgpkggen``` to create a transform package named ```mypackage```:
+
+```bash
+$ mtgpkggen mypackage
+creating skeleton in mypackage
+creating file setup.py...
+creating file README.md...
+creating file src/mypackage/transforms/common/entities.py...
+creating file src/mypackage/transforms/helloworld.py...
+creating file src/mypackage/__init__.py...
+creating file src/mypackage/transforms/__init__.py...
+creating file src/mypackage/transforms/common/__init__.py...
+done!
+```
+
+
+#### 4.2.6 - ```mtgtransgen```
+The ```mtgtransgen``` generates a transform module and automatically adds it to the ```__init__.py``` file in a
+transform package. It accepts the following parameters:
+
+* ```<transform name>``` (required): the desired name of the transform module to create.
+
+The following example illustrates the use of ```mtgtransgen``` to create a transform module named ```cooltransform```:
+
+```bash
+$ cd mypackage/src/mypackage/transforms/
+$ mtgtransgen cooltransform
+creating file ./cooltransform.py...
+installing to __init__.py
+done!
+```
+
+#### 4.2.7 - ```mtgx2csv```
+The ```mtgx2csv``` script generates a comma-separated report (CSV) of a Maltego-generated graph. It accepts the following
+parameters:
+
+* ```<graph>``` (required): the name of the Maltego graph file.
+
+The following example illustrates the use of ```mtgx2csv``` to create a CSV report of a Maltego graph file named
+```Graph1.mtgx```:
+
+```bash
+$ mtgx2csv Graph1.mtgx
+```
+
+
+#### 4.2.8 - ```csv2sheets```
+The ```csv2sheets``` file separates the CSV report into multiple CSV files containing entities of the same type. It
+accepts the following parameters:
+
+* ```<csv report>``` (required): the name of the CSV report generated by ```mtgx2csv```
+* ```<prefix>``` (required): a prefix to prepend to the generated CSV files.
+
+The following example illustrates the use of ```csv2sheets``` to create a CSV files containing entities of the same type
+from the CSV report ```Graph1.csv```:
+
+```bash
+$ csv2sheets Graph1.csv
+```
+
