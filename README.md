@@ -93,15 +93,17 @@ Once Sploitego has been installed, it's time to install the transforms. First, m
 make sure the Sploitego scripts are in your path. When you're ready, run the following command:
 
 ```bash
-$ mtginstall -p sploitego.transform -m <Maltego Settings Dir> -w <Transforms Working Dir>
+$ mtginstall -p sploitego.transforms -m <Maltego Settings Dir> -w <Transforms Working Dir>
 ```
 
 ```<Maltego Settings Dir>``` is the directory where Maltego's current configuration state is held. This is typically in:
 
 * **Mac OS X**: ```~/Library/Application\ Support/maltego/<Maltego Version>```
   (e.g. ```~/Library/Application\ Support/maltego/3.1.1``` for Maltego 3.1.1)
-* **Linux**: Unknown (TODO: need testers)
-* **Windows**: Unknown (TODO: need testers)
+* **Linux**: ~/.maltego/<Maltego Version> 
+  (e.g. ```BackTrack Linux - ~/.maltego/BT3.1.1BT``` for Maltego 3.1.1 BackTrack Edition)
+* **Windows**: \Users\<user>\AppData\Roaming\.maltego\
+  (eg. ```C:\Users\Andrew\AppData\Roaming\.maltego\v3.1.1``` for Maltego 3.1.1 on Windows 7)
 
 ```<Transforms Working Dir>``` is the working directory that you wish to use as a scratchpad for your transforms. This is
 also the directory where you can specify an additional configuration file to override certain settings for transforms.
