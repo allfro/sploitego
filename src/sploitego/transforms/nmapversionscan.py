@@ -30,7 +30,7 @@ __all__ = [
 )
 def dotransform(request, response):
     s = NmapScanner()
-    args = ['-nn', '-sV', '-p', request.value, request.fields['ip.destination']] + request.params
+    args = ['-n', '-sV', '-p', request.value, request.fields['ip.destination']] + request.params
     if request.fields['protocol'] == 'UDP':
         args.insert(0, '-sU')
     r = s.scan(args, NmapReportParser)

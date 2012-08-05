@@ -31,7 +31,7 @@ __all__ = [
 )
 def dotransform(request, response):
     s = NmapScanner()
-    r = s.scan(['-nn', '-sU', request.value] + request.params, NmapReportParser)
+    r = s.scan(['-n', '-sU', request.value] + request.params, NmapReportParser)
     addports(r, response)
     addreport(r, response, '-sU')
     return response

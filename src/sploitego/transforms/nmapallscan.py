@@ -33,7 +33,7 @@ def dotransform(request, response):
     target = request.value
     s = NmapScanner()
     debug('Starting scan on host: %s' % target)
-    r = s.scan(['-nn', '-A', target] + request.params, NmapReportParser)
+    r = s.scan(['-n', '-A', target] + request.params, NmapReportParser)
     addports(r, response)
     addsystems(r, response)
     addreport(r, response, '-A')
