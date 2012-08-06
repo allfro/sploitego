@@ -1,39 +1,44 @@
 Sploitego - Maltego's (Local) Partner in Crime
-==================================================
+==============================================
 
 ## 1.0 - Introduction
 
-Sploitego is a **rapid** local transform development framework for [Maltego](http://paterva.com/) written in Python. Sploitego's core
-features include:
-
-- An easily **extensible and configurable** framework;
-- A set of **powerful** and **easy-to-use** scripts for debugging, configuring, and installing transforms;
-- A **plethora** of auxiliary modules focused on [Open Source Intelligence (OSINT)](http://en.wikipedia.org/wiki/Open-source_intelligence)
-  gathering as well as **penetration testing**;
-- Finally, a great number of **really awesome pen-testing transforms**.
-
+Sploitego is a **rapid** local transform development framework for [Maltego](http://paterva.com/) written in Python.
 The original focus of Sploitego was to provide a set of transforms that would aid in the execution of penetration tests,
 and vulnerability assessments. Ever since it's first prototype, it has become evident that the framework can be used for
-much more than that. Sploitego is perfect for anyone wishing to graphically represent their data in [Maltego](http://paterva.com) without
-the hassle of learning a whole bunch of unnecessary stuff. It has generated interest from digital forensics analysts to
-pen-testers, and even [psychologists](http://www.forbes.com/sites/kashmirhill/2012/07/20/using-twitter-to-help-expose-psychopaths).
+much more than that. Sploitego is perfect for anyone wishing to graphically represent their data in
+[Maltego](http://paterva.com) without the hassle of learning a whole bunch of unnecessary stuff. It has generated
+interest from digital forensics analysts to pen-testers, and even
+[psychologists](http://www.forbes.com/sites/kashmirhill/2012/07/20/using-twitter-to-help-expose-psychopaths).
+Sploitego's core features include:
+
+* An easily **extensible and configurable** framework that promotes **maximum reusability**;
+* A set of **powerful** and **easy-to-use** scripts for debugging, configuring, and installing transforms;
+* A **plethora** of auxiliary modules focused on
+  [Open Source Intelligence (OSINT)](http://en.wikipedia.org/wiki/Open-source_intelligence) gathering as well as
+  **penetration testing**;
+* Finally, a great number of **really awesome pen-testing transforms**.
 
 ### 1.1 - Terminology
 
 Before we get started with the documentation, it might be useful to introduce some of the terminology that will be used
 throughout the documentation:
 
+* **Entity**: a piece of information on a Maltego graph represented as a node.
+* **Transform**: a function that takes one entity as input and produces zero or more entities as output.
+* **Input Entity**: the entity that is being passed into the transform to use for data mining purposes.
+* **Output Entity**: the entity that is being returned by the transform to be drawn on a Maltego graph.
 * **Transform Module**: a python module local transform code.
 * **Transform Package**: a python package containing one or more transform modules.
-* **TODO**
 
 ## 2.0 - Why Use Sploitego?
 
 ### 2.1 - Extensibility
 To develop *local* transforms for Maltego with *ease*; no need to learn XML, the local transform 
-[specification](http://paterva.com/web5/documentation/localtransforms.php), or develop tedious routines for command-line input parsing, 
-debugging, or XML messaging. All you need to do is focus on developing the core data mining logic and Sploitego does the rest. Sploitego's 
-interface is designed on the principles of [convention over configuration](http://en.wikipedia.org/wiki/Convention_over_configuration) and 
+[specification](http://paterva.com/web5/documentation/localtransforms.php), or develop tedious routines for command-line
+input parsing, debugging, or XML messaging. All you need to do is focus on developing the core data mining logic and
+Sploitego does the rest. Sploitego's interface is designed on the principles of
+[convention over configuration](http://en.wikipedia.org/wiki/Convention_over_configuration) and
 [KISS](http://en.wikipedia.org/wiki/KISS_principle).
 
 For example, this is what a local transform looks like using Sploitego:
@@ -68,11 +73,11 @@ various platforms.
 Sploitego is only supported on Python version 2.6. The setup script will automatically download and install most of the
 prerequisite modules, however, some modules will still need to be installed manually. The following modules require
 manual installation:
-* **Scapy 2.1.0**: See the [Scapy Installation Manual for more details](http://www.secdev.org/projects/scapy/doc/installation.html)
-  for build instructions pertaining to your operating system.
+* **Scapy 2.1.0**: See the
+  [Scapy Installation Manual for more details](http://www.secdev.org/projects/scapy/doc/installation.html) for build
+  instructions pertaining to your operating system.
 * **sip & PyQt4**: [Download](http://www.riverbankcomputing.co.uk/software/pyqt/download/)
 * **easygui**: [Download](http://easygui.sourceforge.net/download/index.html)
-* **pywin32 (for Windows users only)**: [Download](http://starship.python.net/crew/mhammond/win32/Downloads.html)
 
 Some of the transforms require external command-line tools (e.g. nmap, amap, p0f, etc.). The following command-line
 tools are currently supported:
@@ -90,41 +95,48 @@ $ sudo python setup.py install
 ```
 
 This will install all the necessary modules and download any dependencies (other than libdnet and PyQt4) automatically.
-Once Sploitego has been installed, it's time to install the transforms. First, make sure Maltego is not running. Second,
-make sure the Sploitego scripts are in your path. When you're ready, run the following command:
+Once Sploitego has been installed, it's time to install the transforms. First, make sure Maltego has been run for the
+first time and initialized (i.e. logged in, transforms discovered, etc.). Once initialized, shutdown Maltego and run the
+following command:
 
 ```bash
-$ mtginstall -p sploitego.transforms -m <Maltego Settings Dir> -w <Transforms Working Dir>
+$ mtginstall -p sploitego
 ```
+
+If ```mtginstall``` is not in your PATH you may need to perform some additional steps (see "Known Issues" at the end of
+this document. The ```mtginstall``` script will automatically find the Maltego settings directory and install and
+configure the transforms in Maltego's UI. If multiple versions of Maltego our found on your system, the installer will
+ask you which version of Maltego you wish to install the local transforms in. In the odd case where ```mtginstall``` is
+not able to determine where your Maltego settings directory is, you can specify the
+```-m <Maltego Settings Directory>``` parameter.
 
 ```<Maltego Settings Dir>``` is the directory where Maltego's current configuration state is held. This is typically in:
 
 * **Mac OS X**: ```~/Library/Application\ Support/maltego/<Maltego Version>```
   (e.g. ```~/Library/Application\ Support/maltego/3.1.1``` for Maltego 3.1.1)
-* **Linux**: ~/.maltego/<Maltego Version> 
-  (e.g. ```BackTrack Linux - ~/.maltego/BT3.1.1BT``` for Maltego 3.1.1 BackTrack Edition)
-* **Windows**: %APPDATA%\.maltego\<Maltego Version>
-  (eg. ```%APPDATA%\.maltego\v3.1.1``` for Maltego 3.1.1 on Windows 7)
+* **Linux**: ```~/.maltego/<Version>``` (e.g. ```~/.maltego/3.1.1CE``` for Maltego 3.1.1 CE)
+* **Windows**: ```%APPDATA%/.maltego/<Version>``` (e.g. ```%APPDATA/.maltego/3.1.1``` for Maltego 3.1.1)
 
-```<Transforms Working Dir>``` is the working directory that you wish to use as a scratchpad for your transforms. This is
-also the directory where you can specify an additional configuration file to override certain settings for transforms.
-If you're unsure, pick your home directory (e.g. ```~/```).
+```mtginstall``` also accepts an additional ```-w <Transforms Working Directory>``` parameter which specifies the
+working directory that you wish to use as a scratchpad for your transforms. This is also the directory where you can
+specify any additional configuration options to override certain settings for transforms. If you're unsure, you may
+exclude the parameter and ```mtginstall``` will use your home directory (e.g. ```~/```).
 
 For example:
 
 ```bash
-$ mtginstall -p sploitego.transforms -m  ~/Library/Application\ Support/maltego/3.1.1 -w ~/
+$ mtginstall -p sploitego
 ```
 
-Will install the transforms located in the ```sploitego.transforms``` python package in the Maltego 3.1.1 settings
-directory with a working path of the user's home director (```~/```). **WARNING**: DO NOT use ```sudo``` for
-```mtginstall```. Otherwise, you'll pooch your Maltego settings directory and Maltego will not be able to run or find
-any additional transforms.
+Will install the transforms located in the ```sploitego.transforms``` python package in the Maltego settings directory
+with a working path of the user's home director (```~/```). **WARNING**: DO NOT use ```sudo``` for ```mtginstall```.
+Otherwise, you'll pooch your Maltego settings directory and Maltego will not be able to run or find any additional
+transforms.
 
 If successful, you will see the following output in your terminal:
 
 ```bash
-$ mtginstall -w ~/ -p sploitego.transforms -m ~/Library/Application\ Support/maltego/v3.1.1
+$ mtginstall -p sploitego
 Installing transform sploitego.v2.NmapReportToBanner_Amap from sploitego.transforms.amap...
 Installing transform sploitego.v2.WebsiteToSiteCategory_BlueCoat from sploitego.transforms.bcsitereview...
 Installing transform sploitego.v2.DomainToDNSName_Bing from sploitego.transforms.bingsubdomains...
@@ -135,8 +147,8 @@ Installing transform sploitego.v2.NSRecordToDNSName_CacheSnoop from sploitego.tr
 ```
 
 ### 3.4 - Additional Steps
-Some of the transforms in Sploitego require additional configuration in order to operate correctly. The following web API 
-keys are required:
+Some of the transforms in Sploitego require additional configuration in order to operate correctly. The following web
+API keys are required:
 * Bing API: [Sign up](https://datamarket.azure.com/dataset/5BA839F1-12CE-4CCE-BF57-A49D98D29A44)
 * Bluecoat K9: [Sign up](http://www1.k9webprotection.com/get-k9-web-protection-free) (download not required)
 * Pipl: [Sign up](http://dev.pipl.com/)
@@ -159,14 +171,14 @@ is executed in the following manner in Sploitego:
 3. If successful, ```dispatcher``` checks for the presence of the ```dotransform``` function in the local transform module.
 4. Additionally, ```dispatcher``` checks for the presence of the ```onterminate``` function in the local transform module
    and registers the function as an exit handler if it exists.
-5. If ```dotransform``` exists, ```dispatcher``` calls ```dotransform``` passing in, both, the ```request``` and ```response``` 
-   objects
+5. If ```dotransform``` exists, ```dispatcher``` calls ```dotransform``` passing in, both, the ```request``` and
+   ```response``` objects
 6. ```dotransform``` does its thing and returns the ```response``` object to ```dispatcher```
 7. Finally, ```dotransform``` serializes the ```response``` object and returns the result to ```stdout```
 
-In the event that an exception is raised during the execution of a local transform, ```dispatcher``` will catch the exception 
-and send an exception message to Maltego's UI. If a local transform is marked to run as the super-user, ```dispatcher```
-will try to elevate its privilege level using ```pysetuid``` prior to calling ```dotransform```.
+In the event that an exception is raised during the execution of a local transform, ```dispatcher``` will catch the
+exception and send an exception message to Maltego's UI. If a local transform is marked to run as the super-user,
+```dispatcher``` will try to elevate its privilege level using ```pysudo``` prior to calling ```dotransform```.
 
 ### 4.2 - Available Tools
 Sploitego comes with a bunch of useful/interesting scripts for your use:
@@ -187,13 +199,14 @@ The following subsections describe the tools in detail.
 The ```dispatcher``` and ```mtgdebug``` scripts loads the specified local transform module and executes it, returning
 their results to Maltego or the terminal, respectively. They accept the following parameters:
 
-  * ```<transform module>``` (**required**): the name of the python module that contains the local transform data mining
-    logic (e.g. ```sploitego.transforms.nmapfastscan```)
-  * ```[param1 ... paramN]``` (**optional**): any extra local transform parameters that can be parsed using ```optparse```
-    (e.g. ```-p 80```)
-  * ```<value>``` (**required**): the value of the entity being passed into the local transform (e.g. ```google.com```)
-  * ```[field1=value1...#fieldN=valueN]``` (**optional**): optionally, any entity field values delimited by ```#``` (e.g.
-    ```url=http://www.google.ca#public=true```)
+* ```<transform module>``` (**required**): the name of the python module that contains the local transform data mining
+  logic (e.g. ```sploitego.transforms.nmapfastscan```)
+* ```[param1 ... paramN]``` (**optional**): any extra local transform parameters that can be parsed using
+  ```optparse```
+(e.g. ```-p 80```)
+* ```<value>``` (**required**): the value of the entity being passed into the local transform (e.g. ```google.com```)
+* ```[field1=value1...#fieldN=valueN]``` (**optional**): optionally, any entity field values delimited by ```#``` (e.g.
+  ```url=http://www.google.ca#public=true```)
 
 The following example illustrates the use of ```mtgdebug``` to execute the ```sploitego.transforms.nmapfastscan```
 transform module on ```www.google.com```:
@@ -222,17 +235,19 @@ The ```mtginstall``` script installs and configures local transforms in the Malt
 parameters:
 
 * ```-h```, ```--help```: shows help
-* ```-p <package>, --package=<package>``` (**required**): name of the transform package that contains transform modules. (i.e.
-  sploitego.transforms)
-* ```-m <prefix>```, ```--maltego-settings-prefix=<prefix>``` (**required**): the name of the directory that contains Maltego's
-  settings (i.e. ```~/.maltego/<version>``` in Linux, ```~/Library/Application\ Support/maltego/<version>``` in Mac OS X)
-* ```-w <dir>, --working-dir=<dir>``` (**required**): the default working directory for the Maltego transforms
+* ```-p <package>, --package=<package>``` (**required**): name of the transform package that contains transform modules.
+  (i.e. sploitego.transforms)
+* ```-m [dir]```, ```--maltego-settings-prefix=[dir]``` (**optional**): the name of the directory that contains
+  Maltego's settings (i.e. ```~/.maltego/<version>``` in Linux, ```~/Library/Application\ Support/maltego/<version>```
+  in Mac OS X)
+* ```-w [dir], --working-dir=[dir]``` (**optional, default: ```~/```**): the default working directory for the Maltego
+  transforms
 
 The following example illustrates the use of ```mtginstall``` to install transforms from the ```sploitego.transforms```
 transform package:
 
 ```bash
-$ mtginstall -w ~/ -p sploitego.transforms -m ~/Library/Application\ Support/maltego/v3.1.1
+$ mtginstall -p sploitego
 Installing transform sploitego.v2.NmapReportToBanner_Amap from sploitego.transforms.amap...
 Installing transform sploitego.v2.WebsiteToSiteCategory_BlueCoat from sploitego.transforms.bcsitereview...
 Installing transform sploitego.v2.DomainToDNSName_Bing from sploitego.transforms.bingsubdomains...
@@ -247,16 +262,17 @@ The ```mtguninstall``` script uninstalls and unconfigures all the local transfor
 package in the Maltego UI. It accepts the following parameters:
 
 * ```-h```, ```--help```: shows help
-* ```-p <package>```, ```--package=<package>``` (**required**): name of the transform package that contains transform modules. (i.e.
-  sploitego.transforms)
-* ```-m <prefix>```, ```--maltego-settings-prefix=<prefix>``` (**required**): the name of the directory that contains Maltego's
-  settings (i.e. ```~/.maltego/<version>``` in Linux, ```~/Library/Application\ Support/maltego/<version>``` in Mac OS X)
+* ```-p <package>```, ```--package=<package>``` (**required**): name of the transform package that contains transform
+  modules. (i.e. sploitego.transforms)
+* ```-m [dir]```, ```--maltego-settings-prefix=[dir]``` (**optional**): the name of the directory that contains
+  Maltego's settings (i.e. ```~/.maltego/<version>``` in Linux, ```~/Library/Application\ Support/maltego/<version>```
+  in Mac OS X)
 
-The following example illustrates the use of ```mtguninstall``` to uninstall transforms from the ```sploitego.transforms```
+The following example illustrates the use of ```mtguninstall``` to uninstall transforms from the ```sploitego```
 transform package:
 
 ```bash
-$ mtguninstall -p sploitego.transforms -m ~/Library/Application\ Support/maltego/v3.1.1
+$ mtguninstall -p sploitego -m ~/Library/Application\ Support/maltego/v3.1.1
 ```
 
 #### 4.2.4 - ```mtgsh``` command
@@ -512,14 +528,15 @@ the decorators (```@configure``` and ```@superuser```)? Read on...
 
 So how does ```mtginstall``` figure out how to install and configure the transform in Maltego's UI? Simple, just use the
 ```@configure``` decorator on your ```dotransform``` function and ```mtginstall``` will take care of the rest. The
-@configure decorator tells ```mtginstall``` how to install the transform in Maltego. It takes the following parameters:
+```@configure``` decorator tells ```mtginstall``` how to install the transform in Maltego. It takes the following
+parameters:
 
 * **label**:        the name of the transform as it appears in the Maltego UI transform selection menu
 * **description**:  a short description of the transform
 * **uuids**:        a list of unique transform IDs, one per input type. The order of this list must match that of the
                     inputs parameter. Make sure you account for entity type inheritance in Maltego. For example, if you
-                    choose a DNSName entity type as your input type you do not need to specify it again for MXRecord,
-                    NSRecord, etc.
+                    choose a ```DNSName``` entity type as your input type you do not need to specify it again for
+                    ```MXRecord```, ```NSRecord```, etc.
 * **inputs**:       a list of tuples where the first item is the name of the transform set the transform should be part
                     of, and the second item is the input entity type.
 * **debug**:        Whether or not the debugging window should appear in Maltego's UI when running the transform.
@@ -549,8 +566,8 @@ The example above tells ```mtginstall``` to process the transform in the followi
    and will only work with an input entity type of ```Person``` belonging to the ```Mypackage``` transform set.
 4. Finally, Maltego should pop a debug window on transform execution.
 
-What if we wanted this transform to work for entity types of ```Location```. Simple, just add another ```uuid``` and
-```input``` tuple like so:
+What if we wanted this transform to work for entity types of ```Location```, as well. Simple, just add another
+```uuid``` and ```input``` tuple like so:
 
 ```python
 # ...
@@ -565,13 +582,13 @@ def dotransform(request, response):
 # ...
 ```
 
-Now you have one transform configured to run on two different entity types (```Person``` and ```Location```) with
+Now you have one transform configured to run on two different input entity types (```Person``` and ```Location```) with
 just a few lines of code and you can do this as many times as you like! Awesome!
 
 
 #### 4.3.4 - Running as Root (```@superuser```)
 
-At some point you want to run your transform using a super-user account in UNIX-based environments. Maybe to run
+At some point you may want to run your transform using a super-user account in UNIX-based environments. Maybe to run
 something cool like Metasploit or Nmap. You can do that simply by decorating ```dotransform``` with ```@superuser```:
 
 ```python
@@ -586,7 +603,7 @@ def dotransform(request, response):
 
 This will instruct ```dispatcher``` to run the transform using ```sudo```. If ```dispatcher``` is not running as
 ```root``` a ```sudo``` password dialog box will appear asking the user to enter their password. If successful,
-the transform is run as root, just like that!
+the transform will run as root, just like that!
 
 #### 4.3.4 - Some Gotchas
 
@@ -610,7 +627,7 @@ installing to __init__.py
 done!
 ```
 
-No need to add the entry in ```__init__.py``` anymore because ```mtgtransgen``` does for you automagically.
+No need to add the entry in ```__init__.py``` anymore because ```mtgtransgen``` does it for you automagically.
 
 # Known Issues
 
