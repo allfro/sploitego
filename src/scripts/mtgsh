@@ -1,14 +1,7 @@
 #!/usr/bin/env python
 
-import sys
-import readline
-from re import sub, match
-from atexit import register
-from sys import argv, exit
-from os import path
-from logging import getLogger, ERROR
-from code import InteractiveConsole
-from sploitego.maltego.message import MaltegoTransformResponseMessage
+from sys import argv
+from sploitego.commands.shell import run
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -21,103 +14,5 @@ __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
 
-def hl(string, color, bold):
-    attr = []
-    if color == 'green':
-        # green
-        attr.append('32')
-    elif color == 'red':
-        # red
-        attr.append('31')
-    else:
-        attr.append('30')
-    if bold:
-        attr.append('1')
-    return '\x1b[%sm%s\x1b[0m' % (';'.join(attr), string)
-
-
-def croak(exc):
-    print hl(exc, 'red', None)
-
-
-def message(msg, tab=-1):
-    tab += 1
-    print '%s`- %s: %s %s' % (
-        '  ' * tab,
-        hl(msg.tag, None, True),
-        hl(msg.text, 'red', False) if msg.text is not None else '',
-        hl(msg.attrib, 'green', True) if msg.attrib.keys() else ''
-        )
-    for c in msg.getchildren():
-        print '  %s`- %s: %s %s' % (
-            '  ' * tab,
-            hl(c.tag, None, True),
-            hl(c.text, 'red', False) if c.text is not None else '',
-            hl(c.attrib, 'green', True) if c.attrib.keys() else ''
-            )
-        for sc in c.getchildren():
-            tab += 1
-            message(sc, tab)
-            tab -= 1
-    tab -= 1
-
-
-class MtgConsole(InteractiveConsole):
-
-    def __init__(self, package):
-        m = __import__(package, globals(), locals(), ['*'])
-        m.__dict__[MaltegoTransformResponseMessage.__name__] = MaltegoTransformResponseMessage
-        m.__dict__['message'] = message
-        InteractiveConsole.__init__(self, locals=m.__dict__)
-        self.init_history(path.expanduser('~/.mtgsh_history'))
-
-    def raw_input(self, prompt):
-        line = InteractiveConsole.raw_input(self, prompt=hl('mtg> ', None, True))
-        r = match(r'([^(]+)\((.*?)\)', line)
-        if r is not None:
-            g = r.groups()
-            if g[0] in self.locals:
-                line = eval(sub(r'([^\(]+)\((.*)\)', r'self.docall("\1", \2)', line))
-        return line
-
-    def docall(self, *args, **kwargs):
-        return """message(%s.dotransform(
-            type(
-                'MaltegoTransformRequestMessage',
-                (object,),
-                {
-                    'value' : %s,
-                    'fields' : %s,
-                    'params' : %s
-                }
-            )(),
-            MaltegoTransformResponseMessage()
-        ))""" % (args[0], repr(args[1]) if len(args) != 1 else repr(''), repr(kwargs), repr(args[2:]))
-
-    def init_history(self, histfile):
-        readline.parse_and_bind('tab: complete')
-        if hasattr(readline, "read_history_file"):
-            try:
-                readline.read_history_file(histfile)
-            except IOError:
-                pass
-            register(self.save_history, histfile)
-
-    def save_history(self, histfile):
-        readline.write_history_file(histfile)
-        print 'bye!'
-
-
-def main(*args):
-    getLogger("scapy.runtime").setLevel(ERROR)
-    if len(args) != 2:
-        print 'usage: %s <package>' % args[0]
-        exit(-1)
-    if '' not in sys.path:
-        sys.path.insert(0, '')
-    mtgsh = MtgConsole(args[1])
-    mtgsh.interact(hl('Welcome to Sploitego.', 'green', True))
-
-
 if __name__ == '__main__':
-    main(*argv)
+    run(argv[1:])

@@ -35,6 +35,7 @@ __all__ = [
 
 if name == 'nt':
     LOCK_SH = 0
+    LOCK_UN = 0
     __overlapped = OVERLAPPED()
 
     def flock(file, flags):

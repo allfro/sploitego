@@ -52,7 +52,7 @@ def parseargs(args=argv):
     """Parse arguments for Maltego local transforms."""
 
     if len(args) < 3:
-        stderr.write('usage: %s <transform> [param1 ... paramN] <value> [field1=value1...#fieldN=valueN]\n' % argv[0])
+        stderr.write('usage: %s <transform> [param1 ... paramN] <value> [field1=value1...#fieldN=valueN]\n' % args[0])
         exit(-1)
 
     arg_script = args[1]

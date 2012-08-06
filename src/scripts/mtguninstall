@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
-import logging
-
-from os import sep, path, mkdir, listdir, unlink, rmdir, listdir
-from optparse import OptionParser
-from sys import argv, exit
+from sys import argv
+from sploitego.commands.uninstall_package import run
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -17,85 +14,5 @@ __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
 
-def uninstall_transform(module, spec, prefix):
-
-    installdir = sep.join([prefix, 'config', 'Maltego', 'TransformRepositories', 'Local'])
-
-    if not path.exists(installdir):
-        mkdir(installdir)
-
-    setsdir = sep.join([prefix, 'config', 'Maltego', 'TransformSets'])
-
-    for i,n in enumerate(spec.uuids):
-
-        print 'Uninstalling transform %s from %s...' % (n, module)
-
-        if spec.inputs[i][0] is not None:
-            setdir = sep.join([setsdir, spec.inputs[i][0]])
-            f = sep.join([setdir, n])
-            if path.exists(f):
-                unlink(f)
-            if path.exists(setdir) and not listdir(setdir):
-                rmdir(setdir)
-
-        tf = sep.join([installdir, '%s.transform' % n])
-        tsf = sep.join([installdir, '%s.transformsettings' % n])
-
-        if path.exists(tf):
-            unlink(tf)
-        if path.exists(tsf):
-            unlink(tsf)
-
-
-def parseargs():
-
-    parser = OptionParser()
-
-    parser.add_option(
-        '-p',
-        '--package',
-        dest='package',
-        help='Name of python package that contains a transform set (i.e. sploitego.transforms)',
-        metavar='package'
-    )
-    parser.add_option(
-        '-m',
-        '--maltego-prefix',
-        dest='maltego_prefix',
-        help="The name of the directory that contains Maltego's settings (i.e. ~/.maltego)",
-        metavar='prefix'
-    )
-
-    opts, args = parser.parse_args()
-
-    mandatories = ['package', 'maltego_prefix']
-    for m in mandatories:
-        if not opts.__dict__[m]:
-            print "mandatory option is missing\n"
-            parser.print_help()
-            exit(-1)
-
-    return opts
-
-
-def main(*args):
-
-    logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
-
-    opts = parseargs()
-
-    m = __import__(opts.package, globals(), locals(), ['__all__'])
-
-    for t in m.__all__:
-        transform = '%s.%s' % (opts.package, t)
-        m2 = __import__(transform, globals(), locals(), ['dotransform'])
-        if hasattr(m2, 'dotransform') and hasattr(m2.dotransform, 'label'):
-            uninstall_transform(
-                m2.__name__,
-                m2.dotransform,
-                opts.maltego_prefix
-            )
-
-
 if __name__ == '__main__':
-    main(*argv)
+    run(argv[1:])

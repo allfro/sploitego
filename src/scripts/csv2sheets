@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
 
-from sys import argv, exit
-from re import sub, match
-from csv import reader
+from sys import argv
+from sploitego.commands.csv2sheets import run
 
 
 __author__ = 'Nadeem Douba'
@@ -17,38 +16,5 @@ __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
 
-def main(*args):
-
-    if len(args) != 3:
-        print 'usage: %s <csv> <sheetprefix>' % args[0]
-        exit(-1)
-
-    matchers = {}
-
-    for line in file(args[1]):
-        line.replace('""', '&quot;')
-        matcher = sub('=([^"]+)"', '=([^"]+)"', line)
-
-        if matcher not in matchers:
-            matchers[matcher] = []
-
-        matchers[matcher].append(line)
-
-
-    i = 0
-    for matcher in matchers:
-        f = open('%s_%d.csv' % (args[2], i), 'w')
-        i += 1
-
-        f.write(matcher.replace('=([^"]+)', ''))
-
-        for r in matchers[matcher]:
-            line = '","'.join(match(matcher, r).groups())
-            line = '"%s"\n' % line
-            line.replace('&quot;', '""')
-            f.write(line)
-
-        f.close()
-
 if __name__ == '__main__':
-    main(*argv)
+    run(argv[1:])

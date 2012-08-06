@@ -1,13 +1,7 @@
 #!/usr/bin/env python
 
-import logging
-from sploitego.maltego.message import (MaltegoTransform, ElementTree, CmdCwdTransformProperty, CmdDbgTransformProperty,
-                                       CmdLineTransformProperty, CmdParmTransformProperty, InputConstraint, TransformSet,
-                                       TransformSettings, CmdCwdTransformPropertySetting, CmdDbgTransformPropertySetting,
-                                       CmdLineTransformPropertySetting, CmdParmTransformPropertySetting)
-from sys import argv, exit, stderr
-from optparse import OptionParser
-from os import sep, path, mkdir
+from sys import argv
+from sploitego.commands.install_package import run
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -20,130 +14,9 @@ __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
 
-global transforms
-transforms = {}
-
-def install_transform(module, name, author, spec, prefix, working_dir):
-
-    installdir = sep.join([prefix, 'config', 'Maltego', 'TransformRepositories', 'Local'])
-
-    if not path.exists(installdir):
-        mkdir(installdir)
-
-    setsdir = sep.join([prefix, 'config', 'Maltego', 'TransformSets'])
-
-    for i,n in enumerate(spec.uuids):
-
-        if n in transforms:
-            stderr.write('WARNING: Previous declaration of %s in transform %s. Overwriting...' % (n, module))
-        else:
-            print 'Installing transform %s from %s...' % (n, module)
-            transforms[n] = module
-
-        intype = spec.inputs[i][1]('').type
-
-        sets = None
-        if spec.inputs[i][0] is not None:
-            setdir = sep.join([setsdir, spec.inputs[i][0]])
-            if not path.exists(setdir):
-                mkdir(setdir)
-            open(sep.join([setdir, n]), 'w').close()
-            sets=TransformSet(spec.inputs[i][0])
-
-        transform = MaltegoTransform(
-            n,
-            spec.label,
-            author=author,
-            description=spec.description,
-            properties=[
-                CmdLineTransformProperty(),
-                CmdCwdTransformProperty(),
-                CmdDbgTransformProperty(),
-                CmdParmTransformProperty()
-            ],
-            input=InputConstraint(intype),
-            sets=sets
-        )
-        transform.sets
-
-
-        ElementTree(transform).write(sep.join([installdir, '%s.transform' % n]))
-
-        transformsettings = TransformSettings(properties=[
-            CmdLineTransformPropertySetting('dispatcher'),
-            CmdParmTransformPropertySetting(name),
-            CmdCwdTransformPropertySetting(working_dir),
-            CmdDbgTransformPropertySetting(spec.debug)
-        ])
-        ElementTree(transformsettings).write(sep.join([installdir, '%s.transformsettings' % n]))
-
-
-def parseargs():
-
-    parser = OptionParser()
-
-    parser.add_option(
-        '-p',
-        '--package',
-        dest='package',
-        help='Name of python package that contains a transform set (i.e. sploitego.transforms)',
-        metavar='package'
-    )
-    parser.add_option(
-        '-m',
-        '--maltego-settings-prefix',
-        dest='maltego_prefix',
-        help="The name of the directory that contains Maltego's settings (i.e. ~/.maltego)",
-        metavar='prefix'
-    )
-    parser.add_option(
-        '-w',
-        '--working-dir',
-        dest='working_dir',
-        help='The default working directory for the Maltego Transforms',
-        metavar='dir'
-    )
-
-    opts, args = parser.parse_args()
-
-    mandatories = ['package', 'maltego_prefix', 'working_dir']
-    for m in mandatories:
-        if not opts.__dict__[m]:
-            print "mandatory option is missing\n"
-            parser.print_help()
-            exit(-1)
-
-    return opts
-
-
-def main(*args):
-
-    logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
-
-    opts = parseargs()
-
-    if opts.package == 'sploitego':
-        opts.package = 'sploitego.transforms'
-
-    m = __import__(opts.package, globals(), locals(), ['__all__'])
-
-    for t in m.__all__:
-        transform = '%s.%s' % (opts.package, t)
-        m2 = __import__(transform, globals(), locals(), ['dotransform'])
-        if hasattr(m2, 'dotransform') and hasattr(m2.dotransform, 'label'):
-            install_transform(
-                m2.__name__,
-                transform,
-                getattr(m2, '__author__', ''),
-                m2.dotransform,
-                opts.maltego_prefix,
-                opts.working_dir
-            )
-
-    if not transforms:
-        print 'Error: no transforms found...'
-        exit(-1)
-
-
 if __name__ == '__main__':
-    main(*argv)
+    try:
+        run(argv[1:])
+    except KeyboardInterrupt:
+        print 'exiting...'
+        pass

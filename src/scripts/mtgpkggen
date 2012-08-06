@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-from os import path, mkdir, chdir, sep
-from pkg_resources import resource_filename
-from string import Template
-from getpass import getuser
+from sploitego.commands.create_package import run
 from sys import argv
 
 
@@ -18,74 +15,5 @@ __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
 
-def read(f, kw):
-    t = Template(file(resource_filename('sploitego.resources.template', '%s.plate' % f)).read())
-    return t.substitute(**kw)
-
-
-def write(f, s):
-    print 'creating file %s...' % f
-    w = file(f, mode='wb')
-    w.write(s)
-    w.close()
-
-
-def main():
-
-    if not argv[1:]:
-        print 'usage: %s <package name>' % argv[0]
-        exit(-1)
-
-    p = argv[1]
-    P = p.capitalize()
-    kw = {
-        'package' : p,
-        'entity' : 'My%sEntity' % P,
-        'base_entity' : '%sEntity' % P,
-        'author' : getuser(),
-        'year' : 2012,
-        'project' : P,
-        'namespace' : p
-    }
-
-    if not path.exists(p):
-        print 'creating skeleton in %s' % p
-        mkdir(p)
-        chdir(p)
-        mkdir('src')
-        mkdir('maltego')
-        mkdir(sep.join(['src', p]))
-        mkdir(sep.join(['src', p, 'transforms']))
-        mkdir(sep.join(['src', p, 'transforms', 'common']))
-    else:
-        print 'A directory with the name %s already exists... exiting' % p
-        exit(-1)
-
-    write('setup.py', read('setup', kw))
-
-    write('README.md', read('README', kw))
-
-    write(sep.join(['src', p, 'transforms', 'common', 'entities.py']), read('entities', kw))
-
-    write(sep.join(['src', p, 'transforms', 'helloworld.py']), read('transform', kw))
-
-    write(sep.join(
-        ['src', p, '__init__.py']),
-        read('__init__', kw) + "\n\n__all__ = [\n    'transforms'\n]"
-    )
-
-    write(sep.join(
-        ['src', p, 'transforms', '__init__.py']),
-        read('__init__', kw) + "\n\n__all__ = [\n    'common',\n    'helloworld'\n]"
-    )
-
-    write(sep.join(
-        ['src', p, 'transforms', 'common', '__init__.py']),
-        read('__init__', kw) + "\n\n__all__ = [\n    'entities'\n]"
-    )
-
-    chdir('..')
-    print 'done!'
-
 if __name__ == '__main__':
-    main()
+    run(argv[1:])

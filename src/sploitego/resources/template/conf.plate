@@ -1,0 +1,10 @@
+[section1]
+
+option1 = this, is, a, list
+
+option2 = this\, is\, a\, comma-separated string
+
+
+[section2]
+
+etc = etc

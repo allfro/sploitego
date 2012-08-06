@@ -28,7 +28,7 @@ def main(argv):
     child = None
 
     try:
-        l = fmutex('pysetuid.lock')
+        l = fmutex('pysudo.lock')
         child = spawn('sudo -S echo start')
         while not child.expect(['Password:', 'start']):
             if platform == 'darwin':
