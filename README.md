@@ -72,6 +72,7 @@ manual installation:
   for build instructions pertaining to your operating system.
 * **sip & PyQt4**: [Download](http://www.riverbankcomputing.co.uk/software/pyqt/download/)
 * **easygui**: [Download](http://easygui.sourceforge.net/download/index.html)
+* **pywin32 (for Windows users only)**: [Download](http://starship.python.net/crew/mhammond/win32/Downloads.html)
 
 Some of the transforms require external command-line tools (e.g. nmap, amap, p0f, etc.). The following command-line
 tools are currently supported:
@@ -93,15 +94,17 @@ Once Sploitego has been installed, it's time to install the transforms. First, m
 make sure the Sploitego scripts are in your path. When you're ready, run the following command:
 
 ```bash
-$ mtginstall -p sploitego.transform -m <Maltego Settings Dir> -w <Transforms Working Dir>
+$ mtginstall -p sploitego.transforms -m <Maltego Settings Dir> -w <Transforms Working Dir>
 ```
 
 ```<Maltego Settings Dir>``` is the directory where Maltego's current configuration state is held. This is typically in:
 
 * **Mac OS X**: ```~/Library/Application\ Support/maltego/<Maltego Version>```
   (e.g. ```~/Library/Application\ Support/maltego/3.1.1``` for Maltego 3.1.1)
-* **Linux**: Unknown (TODO: need testers)
-* **Windows**: Unknown (TODO: need testers)
+* **Linux**: ~/.maltego/<Maltego Version> 
+  (e.g. ```BackTrack Linux - ~/.maltego/BT3.1.1BT``` for Maltego 3.1.1 BackTrack Edition)
+* **Windows**: %APPDATA%\.maltego\<Maltego Version>
+  (eg. ```%APPDATA%\.maltego\v3.1.1``` for Maltego 3.1.1 on Windows 7)
 
 ```<Transforms Working Dir>``` is the working directory that you wish to use as a scratchpad for your transforms. This is
 also the directory where you can specify an additional configuration file to override certain settings for transforms.
