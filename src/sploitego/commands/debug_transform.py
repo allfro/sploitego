@@ -54,6 +54,10 @@ def help():
     parser.print_help()
 
 
+def description():
+    return parser.description
+
+
 def run(args):
 
     logging.getLogger("scapy.runtime").setLevel(logging.ERROR)

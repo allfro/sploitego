@@ -38,6 +38,10 @@ def help():
     parser.print_help()
 
 
+def description():
+    return parser.description
+
+
 class MtgConsole(InteractiveConsole):
 
     def __init__(self, package):
@@ -92,5 +96,8 @@ def run(args):
 
     if '' not in sys.path:
         sys.path.insert(0, '')
+    if not opts.package.endswith('transforms'):
+        opts.package = '%s.transforms' % opts.package
+
     mtgsh = MtgConsole(opts.package)
     mtgsh.interact(highlight('Welcome to Sploitego.', 'green', True))

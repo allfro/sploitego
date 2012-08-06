@@ -47,6 +47,10 @@ def help():
     parser.print_help()
 
 
+def description():
+    return parser.description
+
+
 def parse_args(args):
     args = parser.parse_args(args)
     return args

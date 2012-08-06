@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from argparse import ArgumentParser
-from sploitego.commands.common import get_commands, cmd_name
+from sploitego.commands.common import get_commands, cmd_name, highlight
 from sys import modules
 
 __author__ = 'Nadeem Douba'
@@ -15,17 +15,11 @@ __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
 cmds = get_commands()
-cmds.update({'help': modules[__name__]})
+cmds.update({'list-commands': modules[__name__]})
 
 parser = ArgumentParser(
-    description='Shows help related to various sploitego commands',
-    usage='sploitego %s <command>' % cmd_name(__name__)
-)
-parser.add_argument(
-    'command',
-    metavar='<command>',
-    choices=cmds,
-    help='The sploitego command you want help for (%s)' % ', '.join(cmds)
+    description='Lists all the available sploitego commands',
+    usage='sploitego %s' % cmd_name(__name__)
 )
 
 
@@ -38,4 +32,7 @@ def description():
 
 
 def run(args):
-    cmds[parser.parse_args(args).command].help()
+    k = cmds.keys()
+    k.sort()
+    for i in k:
+        print '%s - %s' % (highlight(i, 'green', True), cmds[i].description())

@@ -23,5 +23,6 @@ __all__ = [
     'shell',
     'run_transform',
     'delete_transform',
-    'rename_transform'
+    'rename_transform',
+    'list_commands'
 ]

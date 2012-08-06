@@ -89,6 +89,10 @@ def help():
     parser.print_help()
 
 
+def description():
+    return parser.description
+
+
 def run(args):
 
     opts = parser.parse_args(args)

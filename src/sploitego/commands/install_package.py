@@ -59,6 +59,10 @@ def help():
     parser.print_help()
 
 
+def description():
+    return parser.description
+
+
 # Extra sauce to parse args
 def parse_args(args):
     args = parser.parse_args(args)
@@ -201,7 +205,7 @@ def run(args):
             sep.join([opts.working_dir, 'sploitego.conf']),
             sub=True,
             command=' '.join(['sploitego install'] + args),
-            config='%s.conf' % opts.package
+            config=('%s.conf' % opts.package) if opts.package != 'sploitego' else ''
         )
 
         if opts.package != 'sploitego':

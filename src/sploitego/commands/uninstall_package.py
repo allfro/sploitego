@@ -42,6 +42,10 @@ def help():
     parser.print_help()
 
 
+def description():
+    return parser.description
+
+
 def uninstall_transform(module, spec, prefix):
 
     installdir = sep.join([prefix, 'config', 'Maltego', 'TransformRepositories', 'Local'])
