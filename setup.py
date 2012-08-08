@@ -43,7 +43,8 @@ setup(
 #        'pycrypto>=2.1',
 #        'pylibpcap>=0.6.2',
         'readline>=6.2.2',
-#        'scapy==2.1.0'
+#        'scapy==2.1.0',
+        'argparse'
     ],
     dependency_links=[
 #        'http://www.secdev.org/projects/scapy/files/',
