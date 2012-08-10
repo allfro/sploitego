@@ -674,15 +674,15 @@ $ cd java
 $ python fixpath.py
 Checking PATH of JVM and Sploitego...
 Warning /usr/local/bin not in your JVM's PATH
-[0]: /usr/bin
-[1]: /bin
-[2]: /usr/sbin
-[3]: /sbin
-[4]: /opt/local/bin
+[0] : /usr/bin
+[1] : /bin
+[2] : /usr/sbin
+[3] : /sbin
+[4] : /opt/local/bin
 ...
-Please select the path where you'd like to place symlinks to Sploitego's scripts [0]: 4
-symlinking /usr/local/bin/dispatcher to /opt/local/bin/dispatcher
-symlinking /usr/local/bin/sploitego to /opt/local/bin/sploitego
+Please select the path where you'd like to place symlinks to Sploitego's scripts [0] : 4
+symlinking /usr/local/bin/dispatcher to /opt/local/bin/dispatcher...
+symlinking /usr/local/bin/sploitego to /opt/local/bin/sploitego...
 ```
 
 As seen above, `fixpath.py` compiles `JVMPathChecker.java` and runs it to determine the value of the JVM's PATH
