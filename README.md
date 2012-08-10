@@ -410,10 +410,10 @@ done!
 ```
 
 You'll notice that a simple skeleton project was generated, with a `helloworld` transform to get you started. You can
-test the `helloworld` transform module by running `mtgdebug` like so:
+test the `helloworld` transform module by running `sploitego debug-transform` like so:
 
 ```bash
-$ mtgdebug ${project}.transforms.helloworld Phil
+$ sploitego debug-transform mypackage.transforms.helloworld Phil
 %50
 D:This was pointless!
 %100
@@ -544,12 +544,12 @@ if necessary. Finally, the `response` is returned and `dispatcher` serializes th
 the decorators (`@configure` and `@superuser`)? Read on...
 
 
-#### 4.3.3 - `mtginstall` Magic (`@configure`)
+#### 4.3.3 - `sploitego install-package` Magic (`@configure`)
 
-So how does `mtginstall` figure out how to install and configure the transform in Maltego's UI? Simple, just use the
-`@configure` decorator on your `dotransform` function and `mtginstall` will take care of the rest. The
-`@configure` decorator tells `mtginstall` how to install the transform in Maltego. It takes the following
-parameters:
+So how does `sploitego install-package` figure out how to install and configure the transform in Maltego's UI? Simple,
+just use the `@configure` decorator on your `dotransform` function and `sploitego install` will take care of the rest.
+The `@configure` decorator tells `sploitego install-package` how to install the transform in Maltego. It takes the
+following named parameters:
 
 * **label**:        the name of the transform as it appears in the Maltego UI transform selection menu
 * **description**:  a short description of the transform
@@ -625,29 +625,39 @@ This will instruct `dispatcher` to run the transform using `sudo`. If `dispatche
 `root` a `sudo` password dialog box will appear asking the user to enter their password. If successful,
 the transform will run as root, just like that!
 
-#### 4.3.4 - Some Gotchas
+#### 4.3.5 - Renaming Transforms with `sploitego rename-transform`
 
 Alright, so you got a bit excited and decided to repurpose the `helloworld` transform module to do something cool.
 In you're bliss you decided to change the name of the transform module to `mycooltransform.py`. So you're all set to
 go, right? **Wrong**, you'll need to change the entry in the `__all__` variable (i.e. `'helloworld'` ->
-'`mycooltransform`') in `src/mypackage/transforms/__init__.py`, first. Why? Because `mtginstall` will only
-detect transforms if they are listed in the `__all__` variable of the transform package's `__init__.py` script.
-
-#### 4.3.5 - Creating More Transforms with `mtgtransgen`
-So you want to create another transform but you want to be speedy like Gonzalez. You don't want to keep writing out the
-same thing for each transform. No problem, `mtgtransgen` will give you a head start. `mtgtransgen` generates a
-bare bones transform module that you can hack up to do whatever you like. Just run `mtgtransgen` in the
-`src/mypackage/transforms` directory, like so:
+`'mycooltransform'`) in `src/mypackage/transforms/__init__.py`, first. Why? Because `mtginstall` will only detect
+transforms if they are listed in the `__all__` variable of the transform package's `__init__.py` script. You can do this
+quite simply by running:
 
 ```bash
-$ cd src/mypackage/transforms
-$ mtgtransgen mysecondcooltransform
-creating file ./mysecondcooltransform.py...
-installing to __init__.py
+$ pwd
+/home/user1/
+$ sploitego rename-transform helloworld mycooltransform
+renaming transform 'helloworld' to 'mycooltransform'...
+updating __init__.py
 done!
 ```
 
-No need to add the entry in `__init__.py` anymore because `mtgtransgen` does it for you automagically.
+#### 4.3.6 - Creating More Transforms with `sploitego create-transform`
+So you want to create another transform but you want to be speedy like Gonzalez. You don't want to keep writing out the
+same thing for each transform. No problem, `sploitego create-transform` will give you a head start. `sploitego create-
+transform` generates a bare bones transform module that you can hack up to do whatever you like. Just run `sploitego
+create-transform` in the `src/mypackage/transforms` directory, like so:
+
+```bash
+$ cd src/mypackage/transforms
+$ sploitego create-transform mysecondcooltransform
+creating file ./mysecondcooltransform.py...
+updating __init__.py
+done!
+```
+
+No need to add the entry in `__init__.py` anymore because `sploitego create-transform` does it for you automagically.
 
 # Known Issues
 
@@ -656,16 +666,28 @@ No need to add the entry in `__init__.py` anymore because `mtgtransgen` does it 
 This issue occurs when the Sploitego scripts are not in the system path of the JVM. To fix this issue you will need to
 create symlinks to the Sploitego scripts in one of the directories in your path. Unfortunately, it is not as simple as
 adding the directory to your $PATH variable. For some reason JVM determines its PATH in a different way than `bash`,
-`csh`, etc. The `JavaPathChecker` in `maltego/JavaPathChecker` was developed to assist in determining what
-directories in the JVM's executable path exist. To run it, just do:
+`csh`, etc. The `fixpath.py` script in the `java` directory was developed to assist in determining what directories in
+the JVM's executable path exist. To run it, just do:
 
 ```bash
-$ cd maltego/JavaPathChecker
-$ python run.py
-/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin
+$ cd java
+$ python fixpath.py
+Checking PATH of JVM and Sploitego...
+Warning /usr/local/bin not in your JVM's PATH
+[0]: /usr/bin
+[1]: /bin
+[2]: /usr/sbin
+[3]: /sbin
+[4]: /opt/local/bin
+...
+Please select the path where you'd like to place symlinks to Sploitego's scripts [0]: 4
+symlinking /usr/local/bin/dispatcher to /opt/local/bin/dispatcher
+symlinking /usr/local/bin/sploitego to /opt/local/bin/sploitego
 ```
 
-Once you receive the output from `JavaPathChecker` you'll have to manually add symlinks to each of the Sploitego
-scripts in one of the executable directories.
+As seen above, `fixpath.py` compiles `JVMPathChecker.java` and runs it to determine the value of the JVM's PATH
+environment variable. From that, it provides you with a list of directory options for which to install the sploitego
+scripts to. Once you have selected the appropriate directory, `fixpath.py` will then symlink each of the scripts for you
+in the directory of your choice.
 
 

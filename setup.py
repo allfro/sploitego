@@ -1,3 +1,4 @@
+from subprocess import PIPE, Popen
 from setuptools import setup, find_packages
 from sys import argv
 from os import path, system, name, environ, pathsep, sep, symlink
@@ -54,21 +55,45 @@ setup(
     ]
 )
 
-if name == 'posix' and 'install' in argv and system('which mtginstall'):
-    print 'Sploitego scripts are not in your path... fixing that!'
-    script_dir = get_config_var('BINDIR')
-    paths = [ path.realpath(p) for p in environ['PATH'].split(pathsep) ]
 
-    for dst in ['/usr/local/bin', '/opt/local/bin', '/usr/bin']:
-        if dst in paths:
-            print 'Creating symlinks to scripts in the %s directory' % dst
-            for s in scripts:
-                s = path.basename(s)
-                dstf = sep.join([dst, s])
-                if not path.exists(dstf):
-                    srcf = sep.join([script_dir, s])
-                    print 'Symbolically linking %s -> %s' % (srcf, dstf)
-                    symlink(srcf, dstf)
-            break
-    print 'Fixed the problem... have fun!'
+if 'install' in argv:
+    print 'Checking PATH of JVM and Sploitego...'
+
+    if system('javac java/JVMPathChecker.java'):
+        print 'Error compiling the path checker using javac.'
+        exit(-1)
+
+    proc = Popen(['java', '-cp', 'java', 'JVMPathChecker'], stdout=PIPE)
+    jvm_path = proc.communicate()[0][:-1].split(':')
+
+    bindir = get_config_var('BINDIR')
+
+    if bindir not in jvm_path:
+        print "Warning %s not in your JVM's PATH" % bindir
+
+        while True:
+            i = 0
+            for i, path_dir in enumerate(jvm_path):
+                print '[%d]: %s' % (i, path_dir)
+
+            try:
+                selection = int(raw_input("Please select the path where you'd like to place symlinks to Sploitego's scripts [0]: "))
+                if selection <= i:
+                    for script in scripts:
+                        srcf = path.join(bindir, script)
+                        dstf = path.join(jvm_path[selection], script)
+                        if not path.exists(srcf):
+                            print 'Could not find %s in %s' % (repr(script), repr(bindir))
+                            exit(-1)
+                        elif path.exists(dstf):
+                            print 'skipping %s since it already exists in %s...' % (repr(script), repr(jvm_path[selection]))
+                            continue
+                        print 'symlinking %s to %s...' % (srcf, dstf)
+                        symlink(srcf, dstf)
+                    exit(0)
+                raise ValueError
+            except ValueError:
+                print 'Invalid selection... try again.'
+    else:
+        print 'All looks good... no further action required here.'
 
