@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from sploitego.cmdtools.nmap import NmapScanner, NmapReportParser
-from common.nmap import addreport, addports, addsystems
+from common.nmap import addreport
 from sploitego.framework import configure, superuser
 from sploitego.maltego.message import IPv4Address
 from sploitego.maltego.utils import debug
@@ -24,17 +24,16 @@ __all__ = [
 
 @superuser
 @configure(
-    label='To Ports [Nmap -A]',
+    label='To Nmap Report [Nmap -A]',
     description='This transform performs an active Nmap scan.',
-    uuids=[ 'sploitego.v2.IPv4AddressToPort_NmapA' ],
+    uuids=[ 'sploitego.v2.IPv4AddressToNmapReport_NmapA' ],
     inputs=[ ( 'Reconnaissance', IPv4Address ) ],
 )
 def dotransform(request, response):
     target = request.value
     s = NmapScanner()
     debug('Starting scan on host: %s' % target)
-    r = s.scan(['-n', '-A', target] + list(request.params), NmapReportParser)
-    addports(r, response)
-    addsystems(r, response)
-    addreport(r, response, '-A')
+    args = ['-n', '-A', target] + request.params
+    r = s.scan(args, NmapReportParser)
+    addreport(r, response, ' '.join(args))
     return response

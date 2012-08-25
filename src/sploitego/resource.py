@@ -26,7 +26,7 @@ def imagepath(cat, name):
 unavailableport = imageicon('networking', 'unavailableport.gif')
 openport = imageicon('networking', 'openport.gif')
 timedoutport = imageicon('networking', 'timedoutport.gif')
-closedport = imageicon('networking', 'closed_port.gif')
+closedport = imageicon('networking', 'closedport.gif')
 
 # severity
 critical = imageicon('severity', 'critical.gif')

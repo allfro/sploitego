@@ -41,7 +41,7 @@ def addports(report, response):
 def savereport(report):
     if not path.exists(config['nmap/reportdir']):
         makedirs(config['nmap/reportdir'])
-    f = ufile(strftime(sep.join([config['nmap/reportdir'], config['nmap/namefmt']])))
+    f = ufile(strftime(path.join(config['nmap/reportdir'], config['nmap/namefmt'])))
     f.write(report.output)
     f.close()
     return f.name

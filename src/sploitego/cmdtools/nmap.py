@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from os import path, sep, pathsep, environ
+from os import path, pathsep, environ
 from xml.etree.cElementTree import XML
 from subprocess import Popen, PIPE
+from sploitego.maltego.utils import debug
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Cygnos Corporation'
@@ -20,15 +21,82 @@ __all__ = [
 ]
 
 
-class NmapReportParser(object):
+def NmapReportParser(output):
+    if 'xmloutputversion="1.0.3"' in output:
+        return NmapReportVersion103(output)
+    elif 'xmloutputversion="1.04"' in output:
+        return NmapReportVersion104(output)
+    raise NotImplementedError('Nmap 5.x and 6.x XML reports are the only supported formats')
+
+
+class NmapReportBase(object):
 
     def __init__(self, output):
         self.output = output
         self.xml = XML(output)
 
+    @property
+    def addresses(self):
+        raise NotImplementedError
+
+    @property
+    def report(self):
+        return self.output
+
+    def mac(self, address):
+        raise NotImplementedError
+
+    def _host(self, address):
+        raise NotImplementedError
+
+    def ports(self, address):
+        raise NotImplementedError
+
+    @property
+    def scaninfo(self):
+        raise NotImplementedError
+
+    @property
+    def verbosity(self):
+        raise NotImplementedError
+
+    @property
+    def debugging(self):
+        raise NotImplementedError
+
+    def hostnames(self, address):
+        raise NotImplementedError
+
+    def times(self, address):
+        raise NotImplementedError
+
+    @property
+    def runstats(self):
+        raise NotImplementedError
+
+    def scanstats(self, address):
+        raise NotImplementedError
+
+    def status(self, address):
+        raise NotImplementedError
+
+    @property
+    def nmaprun(self):
+        raise NotImplementedError
+
+    def tobanner(self, port):
+        raise NotImplementedError
+
+    @property
+    def greppable(self):
+        raise NotImplementedError
+
+
+class NmapReportVersion103(NmapReportBase):
+
     def os(self, address):
         host = self._host(address)
-        if host is not None:
+        if host is not None and host.findall('os'):
             r = {
                 'osmatch': [osm.attrib for osm in host.findall('os/osmatch')],
                 'osclass': [osm.attrib for osm in host.findall('os/osclass')],
@@ -40,10 +108,6 @@ class NmapReportParser(object):
     @property
     def addresses(self):
         return [ a.get('addr') for a in self.xml.findall('host/address') if a.get('addrtype') == 'ipv4' ]
-
-    @property
-    def report(self):
-        return self.output
 
     def mac(self, address):
         host = self._host(address)
@@ -141,18 +205,29 @@ class NmapReportParser(object):
         return output
 
 
+class NmapReportVersion104(NmapReportVersion103):
+    pass
+
+
 class NmapScanner(object):
 
     output = ''
     cmd = ''
 
-    def getversion(self):
-        for p in environ['PATH'].split(pathsep):
-            program = '%s%snmap' % (p, sep)
-            if path.exists(program):
-                self.program = program
-                self.version = self.run(['--version'])
-                return True
+    def getversion(self, binpath=None):
+        debug(environ['PATH'])
+        if binpath is None:
+            for p in environ['PATH'].split(pathsep):
+                program = path.join(p, 'nmap')
+                debug(program)
+                if path.exists(program):
+                    self.program = program
+                    self.version = self.run(['--version'])
+                    return True
+        elif path.exists(binpath):
+            self.program = binpath
+            self.version = self.run(['--version'])
+            return True
         return False
 
     def run(self, args):
@@ -163,8 +238,8 @@ class NmapScanner(object):
 
         return r.strip('\n')
 
-    def __init__(self):
-        if not self.getversion():
+    def __init__(self, binpath=None):
+        if not self.getversion(binpath):
             raise OSError('Could not find nmap, check your OS path')
 
     def scan(self, args, sendto=NmapReportParser):

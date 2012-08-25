@@ -37,6 +37,8 @@ __all__ = [
     'nessusports',
     'nmapallscan',
     'nmapfastscan',
+    'nmaptoos',
+    'nmaptoports',
     'nmapudpscan',
     'nmapversionscan',
     'p0f',
