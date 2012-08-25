@@ -1,0 +1,1 @@
+@python %~dp0\mtgx2csv %*

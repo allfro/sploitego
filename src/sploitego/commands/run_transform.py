@@ -2,7 +2,9 @@
 
 import logging
 import sys
-from os import execvp, geteuid, name
+from os import execvp, geteuid, name, path, environ
+from sploitego.config import config
+from distutils.sysconfig import get_config_var
 from traceback import format_exc
 from argparse import ArgumentParser
 from sploitego.commands.common import cmd_name, import_transform
@@ -65,11 +67,14 @@ def run(args):
     [transform, params, value, fields] = parseargs(['sploitego %s' % cmd_name(__name__)] + args)
 
     m = None
+    pysudo = path.join(get_config_var('BINDIR'), 'pysudo')
+    if config['default/path'] is not None:
+        environ['PATH'] = config['default/path']
     try:
         m = import_transform(transform)
 
         if name == 'posix' and hasattr(m.dotransform, 'privileged') and geteuid():
-            execvp('pysudo', ['pysudo'] + list(sys.argv))
+            execvp(pysudo, [pysudo] + list(sys.argv))
             sys.exit(-1)
 
         if hasattr(m, 'onterminate'):

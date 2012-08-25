@@ -4,12 +4,13 @@ import sys
 import readline
 from re import sub, match
 from atexit import register
-from os import path
+from os import path, environ
 from logging import getLogger, ERROR
 from code import InteractiveConsole
 from argparse import ArgumentParser
 from sploitego.commands.common import console_message, cmd_name, highlight
 from sploitego.maltego.message import MaltegoTransformResponseMessage
+from sploitego.config import config
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -89,6 +90,9 @@ class MtgConsole(InteractiveConsole):
 
 
 def run(args):
+
+    if config['default/path'] is not None:
+        environ['PATH'] = config['default/path']
 
     getLogger("scapy.runtime").setLevel(ERROR)
 

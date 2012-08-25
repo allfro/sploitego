@@ -12,6 +12,7 @@ from os import sep, path, mkdir, chdir, getcwd
 from pkg_resources import resource_filename
 from string import Template
 from re import sub
+from distutils.sysconfig import get_config_var
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -121,7 +122,7 @@ def install_transform(module, name, author, spec, prefix, working_dir):
         ElementTree(transform).write(sep.join([installdir, '%s.transform' % n]))
 
         transformsettings = TransformSettings(properties=[
-            CmdLineTransformPropertySetting('dispatcher'),
+            CmdLineTransformPropertySetting(path.join(get_config_var('BINDIR'), 'dispatcher')),
             CmdParmTransformPropertySetting(name),
             CmdCwdTransformPropertySetting(working_dir),
             CmdDbgTransformPropertySetting(spec.debug)
