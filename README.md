@@ -690,4 +690,10 @@ environment variable. From that, it provides you with a list of directory option
 scripts to. Once you have selected the appropriate directory, `fixpath.py` will then symlink each of the scripts for you
 in the directory of your choice.
 
+# Contact Info
 
+Right now we only have one contributor:
+
+- Nadeem Douba: @ndouba on Twitter
+
+Contact us any time! Sploitego is currently looking for help in various areas of the project.
