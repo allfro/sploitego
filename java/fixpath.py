@@ -16,12 +16,12 @@ __status__ = 'Development'
 
 print 'Checking PATH of JVM and Sploitego...'
 
-if system('javac JVMPathChecker.java'):
+if not path.exists('JVMPathChecker.class') and system('javac JVMPathChecker.java'):
     print 'Error compiling the path checker using javac.'
     exit(-1)
 
 s = Popen(['java', 'JVMPathChecker'], stdout=PIPE)
-o = s.communicate()[0][:-1].split(':')
+o = s.communicate()[0][:-1].split(path.pathsep)
 
 bd = get_config_var('BINDIR')
 

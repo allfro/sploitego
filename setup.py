@@ -1,7 +1,7 @@
 from subprocess import PIPE, Popen
 from setuptools import setup, find_packages
 from sys import argv
-from os import path, system, name, environ, pathsep, sep, symlink
+from os import path, system, symlink, pathsep, name
 from distutils.sysconfig import get_config_var
 
 scripts = [
@@ -21,6 +21,18 @@ scripts = [
     'src/scripts/sploitego'
 ]
 
+extras = [
+    'numpy',
+    'pycrypto',
+    'readline',
+    'dnet'
+]
+
+if name == 'nt':
+    scripts += ['%s.bat' % s for s in scripts]
+
+
+
 setup(
     name='sploitego',
     author='Nadeem Douba',
@@ -36,35 +48,36 @@ setup(
         '' : [ '*.gif', '*.png', '*.conf', '*.plate' ]
     },
     install_requires=[
-#        'easygui>=0.94',
-#        'gnuplot-py>=1.8',
-        'msgpack-python>=0.1.12',
+        'easygui',
+        'gnuplot-py>=1.8',
+        'msgpack-python',
 #        'numpy==1.5.1',
         'pexpect>=2.4',
 #        'pycrypto>=2.1',
-#        'pylibpcap>=0.6.2',
-        'readline>=6.2.2',
-#        'scapy==2.1.0',
+        'pylibpcap',
+#        'readline',
+        'scapy==2.1.0',
         'argparse'
     ],
     dependency_links=[
-#        'http://www.secdev.org/projects/scapy/files/',
-#        'http://sourceforge.net/projects/easygui/files/0.96/',
-#        'http://sourceforge.net/projects/pylibpcap/files/pylibpcap/0.6.4/',
-#        'http://libdnet.googlecode.com/files/'
+        'http://sourceforge.net/projects/easygui/files/0.96/easygui-0.96.tar.gz/download',
+        'http://www.secdev.org/projects/scapy/files/',
+        'http://sourceforge.net/projects/pylibpcap/files/pylibpcap/0.6.4/pylibpcap-0.6.4.tar.gz/download',
     ]
 )
 
 
-if 'install' in argv:
-    print 'Checking PATH of JVM and Sploitego...'
+# Fixing Sploitego script path to work with JVM
 
-    if system('javac java/JVMPathChecker.java'):
+if 'install' in argv:
+    print '\nChecking PATH of JVM and Sploitego...'
+
+    if not path.exists('java/JVMPathChecker.class') and system('javac java/JVMPathChecker.java'):
         print 'Error compiling the path checker using javac.'
         exit(-1)
 
     proc = Popen(['java', '-cp', 'java', 'JVMPathChecker'], stdout=PIPE)
-    jvm_path = proc.communicate()[0][:-1].split(':')
+    jvm_path = proc.communicate()[0][:-1].split(pathsep)
 
     bindir = get_config_var('BINDIR')
 
@@ -97,3 +110,12 @@ if 'install' in argv:
     else:
         print 'All looks good... no further action required here.'
 
+
+
+print '\nChecking if other dependencies installed...'
+
+for e in extras:
+    try:
+        __import__(e)
+    except ImportError:
+        print 'WARNING: Package %s not installed. Please download and manually install this package' % repr(e)

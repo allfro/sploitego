@@ -1,2 +1,4 @@
 include *.md
 recursive-include src *.py *.conf *.plate *.gif *.png *.plate
+recursive-include maltego *.mtz
+recursive-include java *.py *.java
