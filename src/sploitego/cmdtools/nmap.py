@@ -215,11 +215,9 @@ class NmapScanner(object):
     cmd = ''
 
     def getversion(self, binpath=None):
-        debug(environ['PATH'])
         if binpath is None:
             for p in environ['PATH'].split(pathsep):
                 program = path.join(p, 'nmap')
-                debug(program)
                 if path.exists(program):
                     self.program = program
                     self.version = self.run(['--version'])
