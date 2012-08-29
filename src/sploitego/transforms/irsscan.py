@@ -129,6 +129,7 @@ def dotransform(request, response):
                 e = Port(req.dport)
                 e.source = req[IP].src
                 e.destination = req[IP].dst
+                e.protocol = 'tcp'
                 e += Label('Summary', res.summary())
                 if TCP in res:
                     e.response = res[TCP].sprintf('TCP:%flags%')
