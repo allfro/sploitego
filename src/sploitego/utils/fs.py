@@ -15,7 +15,7 @@ else:
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
-__credits__ = ['Nadeem Douba']
+__credits__ = []
 
 __license__ = 'GPL'
 __version__ = '0.1'

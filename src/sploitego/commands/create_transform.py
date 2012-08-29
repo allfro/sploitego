@@ -11,7 +11,7 @@ from sploitego.commands.common import write_template, read_template, cmd_name
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
-__credits__ = ['Nadeem Douba']
+__credits__ = []
 
 __license__ = 'GPL'
 __version__ = '0.1'
