@@ -46,11 +46,11 @@ def dotransform(request, response):
 def findlocalneighbors(network, response):
 
     debug('ARP sweeping %s' % network.netblock)
-    e = Netblock(network.netblock)
-    e += Label('CIDR Notation', repr(network))
-    e += Label('Network Mask', network.netmask)
-    e += Label('Number of Hosts', int(~network.netmask) - 1)
-    response += e
+#    e = Netblock(network.netblock)
+#    e += Label('CIDR Notation', repr(network))
+#    e += Label('Network Mask', network.netmask)
+#    e += Label('Number of Hosts', int(~network.netmask) - 1)
+#    response += e
 
     ans = arping(
         repr(network),
@@ -107,11 +107,11 @@ def findremoteneighbors(ip, response):
     w = objectify(whoisip(ip, accept='application/xml'))
     network = IPNetwork([w.startAddress, w.endAddress])
 
-    e = Netblock(network.netblock)
-    e += Label('CIDR Notation', repr(network))
-    e += Label('Network Mask', network.netmask)
-    e += Label('Number of Hosts', int(~network.netmask) - 1)
-    response += e
+#    e = Netblock(network.netblock)
+#    e += Label('CIDR Notation', repr(network))
+#    e += Label('Network Mask', network.netmask)
+#    e += Label('Number of Hosts', int(~network.netmask) - 1)
+#    response += e
 
     if network.cidrlen < 24:
         debug('According to ARIN, the CIDR length is %d, reducing it to 24 for the scan...' % network.cidrlen)
