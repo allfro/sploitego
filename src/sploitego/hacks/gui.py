@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from subprocess import Popen
 from sys import platform
 
 __author__ = 'Nadeem Douba'
@@ -15,4 +14,7 @@ __status__ = 'Development'
 
 
 if platform == 'darwin':
+    from subprocess import Popen
+    from Tkinter import Tk
+    Tk().destroy()
     Popen(['osascript', '-e', 'tell application "Python" to activate'])
