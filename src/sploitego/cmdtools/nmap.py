@@ -96,11 +96,11 @@ class NmapReportVersion103(NmapReportBase):
 
     def os(self, address):
         host = self._host(address)
-        if host is not None and host.findall('os'):
+        if host is not None:
             r = {
                 'osmatch': [osm.attrib for osm in host.findall('os/osmatch')],
                 'osclass': [osm.attrib for osm in host.findall('os/osclass')],
-                'portused': host.find('os/portused').attrib
+                'portused': host.find('os/portused').attrib  if host.find('os/portused') is not None else {}
             }
             return r
         return { 'osmatch' : [], 'osclass' : [], 'portused' : {} }
