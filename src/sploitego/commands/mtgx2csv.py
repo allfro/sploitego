@@ -4,8 +4,9 @@
 import sys
 from zipfile import ZipFile
 from argparse import ArgumentParser
-from sploitego.xmltools.objectify import objectify
+#from sploitego.xmltools.objectify import objectify
 from sploitego.commands.common import cmd_name
+from xml.etree.cElementTree import XML
 
 
 __author__ = 'Nadeem Douba'
@@ -52,14 +53,12 @@ def run(args):
 
     for f in graphs:
         csv = open(f.split('/')[1].split('.')[0] + '.csv', 'w')
-        xml = zip.open(f).read()
-        o = objectify(xml)
-        for node in o.graph.node:
-            for d in node.data:
-                if 'MaltegoEntity' in d:
-                    csv.write(('"Entity Type=%s",' % d.MaltegoEntity.type).strip())
-                    for prop in d.MaltegoEntity.Properties.Property:
-                        if '"' in prop.Value:
-                            prop.Value.replace('"', '""')
-                        csv.write(('"%s=%s",' % (prop.displayName, prop.Value)).strip())
-                    csv.write('\n')
+        xml = XML(zip.open(f).read())
+        for e in xml.findall('{http://graphml.graphdrawing.org/xmlns}graph/{http://graphml.graphdrawing.org/xmlns}node/{http://graphml.graphdrawing.org/xmlns}data/{http://maltego.paterva.com/xml/mtgx}MaltegoEntity'):
+            csv.write(('"Entity Type=%s",' % e.get('type')).strip())
+            for prop in e.findall('{http://maltego.paterva.com/xml/mtgx}Properties/{http://maltego.paterva.com/xml/mtgx}Property'):
+                value = prop.find('{http://maltego.paterva.com/xml/mtgx}Value').text or ''
+                if '"' in value:
+                    value.replace('"', '""')
+                csv.write(('"%s=%s",' % (prop.get('displayName'), value)).strip())
+            csv.write('\n')
