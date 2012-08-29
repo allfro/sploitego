@@ -3,6 +3,7 @@
 import logging
 import sys
 from os import execvp, geteuid, name, path, environ
+from sys import platform
 from sploitego.config import config
 from distutils.sysconfig import get_config_var
 from traceback import format_exc
@@ -68,13 +69,23 @@ def run(args):
 
     m = None
     pysudo = path.join(get_config_var('BINDIR'), 'pysudo')
+
     if config['default/path'] is not None:
         environ['PATH'] = config['default/path']
     try:
         m = import_transform(transform)
 
         if name == 'posix' and hasattr(m.dotransform, 'privileged') and geteuid():
-            execvp(pysudo, [pysudo] + list(sys.argv))
+# Keep it for another day
+#            if platform == 'darwin':
+#                execvp(
+#                    'osascript',
+#                    ['osascript', '-e', 'do shell script "%s" with administrator privileges' % ' '.join(sys.argv)]
+#                )
+            if sys.platform.startswith('linux') and path.exists("/usr/bin/gksudo"):
+                execvp('/usr/bin/gksudo', ['/usr/bin/gksudo'] + list(sys.argv))
+            else:
+                execvp(pysudo, [pysudo] + list(sys.argv))
             sys.exit(-1)
 
         if hasattr(m, 'onterminate'):
