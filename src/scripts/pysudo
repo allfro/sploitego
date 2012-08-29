@@ -3,6 +3,7 @@
 from os import execvp
 from pexpect import spawn, EOF
 from easygui import passwordbox
+from Tkinter import Tk
 from subprocess import Popen
 from sys import platform, exit, argv, stderr
 
@@ -32,6 +33,7 @@ def main(argv):
         child = spawn('sudo -S echo start')
         while not child.expect(['Password:', 'start']):
             if platform == 'darwin':
+                Tk().destroy()
                 Popen(['osascript', '-e', 'tell application "Python" to activate'])
             password = passwordbox('Please enter your password.', 'sudo', '')
             child.sendline(password)
