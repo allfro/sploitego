@@ -1046,7 +1046,7 @@ class WorkspaceManager(MsfManager):
 
 class DbManager(MsfManager):
 
-    def connect(self, username, database='msf', server='localhost', driver='postgresql', **kwargs):
+    def connect(self, username, database='msf', host='localhost', driver='postgresql', **kwargs):
         """
         Connects to a database and creates the msf schema if necessary.
 
@@ -1054,12 +1054,13 @@ class DbManager(MsfManager):
         - username : the username for the database connection
 
         Optional Keyword Arguments:
-        - server : the IP or hostname of the database server (default: 'localhost')
+        - host : the IP or hostname of the database server (default: 'localhost')
         - driver : the driver to use for the database connection (default: 'postgresql')
         - password : the password for the database connection
         - database : the database name (default: 'msf')
+        - port: the port that the database is listening on
         """
-        runopts = { 'username': username, 'server' : server, 'database' : database, 'driver' : driver }
+        runopts = { 'username': username, 'host' : host, 'database' : database, 'driver' : driver }
         runopts.update(kwargs)
         self.rpc.call(MsfRpcMethod.DbConnect, runopts)
 
