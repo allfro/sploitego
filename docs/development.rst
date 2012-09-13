@@ -13,7 +13,7 @@ manually install and configure your local transform in the Maltego UI (ouch!). W
 transform package called :py:mod:`mypackage` because I have a good feeling you'll be really eager to create a whole
 bunch of transforms::
 
-    $ mtgpkggen mypackage
+    $ sploitego create-package mypackage
     creating skeleton in mypackage
     creating file setup.py...
     creating file README.md...
@@ -279,8 +279,8 @@ will only detect transforms if they are listed in the :py:data:`__all__` variabl
     done!
 
 
-Creating More Transforms with ``sploitego create-transform``
-------------------------------------------------------------
+Creating and Removing Transforms
+--------------------------------
 
 So you want to create another transform but you want to be speedy like Gonzalez. You don't want to keep writing out the
 same thing for each transform. No problem, ``sploitego create-transform`` will give you a head start.
@@ -295,46 +295,140 @@ Just run ``sploitego create-transform`` in the ``src/mypackage/transforms`` dire
 
 
 No need to add the entry in ``__init__.py`` anymore because ``sploitego create-transform`` does it for you
-automagically.
+automagically. The same is true for ``sploitego delete-transform`` if you want to remove a transform from your package.
 
 
 .. _custom-entity:
 
-Creating a Custom Entity
-------------------------
+Creating Custom Entities
+========================
 
-TODO
+Now you want to get a custom entity in. No problem! We've got that covered too. With just a few lines of code you can
+create as many entities as you wish. The only gotcha in this process is that you'll probably want to iconify these
+entities so they look good in Maltego. That's a manual process we can't get away from. On the other hand, defining
+custom entities in your code is quite simple. Take a look inside your custom package's
+``src/mypackage/transforms/common/entities.py`` file. It should look similar to this:
 
-.. _known-issues:
+.. code-block:: python
 
-Known Issues
-============
+    #!/usr/bin/env python
 
-:program:`dispatcher` exit code 1
----------------------------------
+    from sploitego.maltego.message import Entity, EntityField, EntityFieldType, MatchingRule
 
-This issue occurs when the Sploitego scripts are not in the system path of the JVM. To fix this issue you will need to
-create symlinks to the Sploitego scripts in one of the directories in your path. Unfortunately, it is not as simple as
-adding the directory to your ``$PATH`` variable. For some reason JVM determines its PATH in a different way than
-``bash``, ``csh``, etc. The :program:`fixpath.py` script in the ``java`` directory was developed to assist in
-determining what directories in the JVM's executable path exist. To run it, just do::
+    # ...
 
-    $ cd java
-    $ python fixpath.py
-    Checking PATH of JVM and Sploitego...
-    Warning /usr/local/bin not in your JVM's PATH
-    [0] : /usr/bin
-    [1] : /bin
-    [2] : /usr/sbin
-    [3] : /sbin
-    [4] : /opt/local/bin
+    """
+    DO NOT EDIT
     ...
-    Please select the path where you'd like to place symlinks to Sploitego's scripts [0] : 4
-    symlinking /usr/local/bin/dispatcher to /opt/local/bin/dispatcher...
-    symlinking /usr/local/bin/sploitego to /opt/local/bin/sploitego...
+    """
+    class FooEntity(Entity):
+        namespace = 'foo'
 
 
-As seen above, :program:`fixpath.py` compiles ``JVMPathChecker.java`` and runs it to determine the value of the JVM's
-PATH environment variable. From that, it provides you with a list of directory options for which to install the
-sploitego scripts to. Once you have selected the appropriate directory, :program:`fixpath.py` will then symlink each of
-the scripts for you in the directory of your choice.
+    """
+    TODO
+    ...
+    """
+    @EntityField(name='foo.fieldN', propname='fieldN', displayname='Field N', matchingrule=MatchingRule.Loose)
+    @EntityField(name='foo.field1', propname='field1', displayname='Field 1', type=EntityFieldType.Integer)
+    class MyFooEntity(FooEntity):
+        # ...
+        # name = my.fancy.EntityType
+        pass
+
+You may be asking yourself "That's it?" or maybe even scratching your head about what this all means. Don't worry, we'll
+go through this line-by-line. The first class, :py:class:`FooEntity` is the base entity class for all your custom
+entities. You won't want to edit this much since all it provides is a custom namespace for your entities. What is a
+namespace? If you've designed a custom entity in Maltego you probably noticed that the entity gets a suggested ID of
+``<username>.<EntityName>``. In this case the namespace is the ``<username>`` portion of the entity's ID. This is done
+to avoid conflicts between different entity definitions from various transform developers. Maltego's built-in entities
+have a namespace of ``maltego``. In our case, the namespace for all of our entities will be ``foo``.
+
+What about the other entity, :py:class:`MyFooEntity`? That's just an example entity definition that you can modify to
+your heart's content. Notice the :py:func:`@EntityField` decorators. Those define the structure of the entity in terms
+of what entity fields exist, their data-types, icon decorators, and various other elements that affect how Maltego
+compares two different entities of the same type. In addition, these decorators synthesize class fields identified by
+the ``propname`` keyword argument. Modifying their values is as easy as ``myfooentity.mypropname``.
+
+You can specify as many entity fields as you want by just adding an extra :py:func:`@EntityField` decorator to your
+entities. The :py:func:`@EntityField` decorator takes the following parameters:
+
+.. py:function:: @EntityField(**kwargs)
+
+    :keyword str name: the name of the field without spaces or special characters except for dots ('.') (required).
+    :keyword str propname: the name of the object's property used to get and set the value of the field
+                           (required, if name contains dots)
+    :keyword str displayname: the name of the entity as it appears in Maltego (optional).
+    :keyword str type: the data type of the field (optional, default: EntityFieldType.String).
+    :keyword bool required: whether or not the field's value must be set before sending back the message (optional,
+                            default: False).
+    :keyword list choices: a list of acceptable field values for this field (optional).
+    :keyword str matchingrule: whether or not the field should be loosely or strictly matched by Maltego's graphing
+                               engine (optional, default: MatchingRule.Strict).
+    :keyword callable decorator: a function that is invoked each and every time the field's value is set or changed.
+
+
+Matching Rules
+--------------
+
+Maltego currently supports two types of matching rules for entities: ``strict`` and ``loose``. These rules apply to an
+entity's fields and determine how Maltego graph two entities of the same type and value but with differing entity field
+values on a graph. For example, let's assume you've performed a transform that produced two ``IPv4Address`` entities on
+a graph with the same entity value of ``127.0.0.1``. Each ``IPv4Address`` entity has an ``internal`` boolean field
+which indicates whether or not the ``IPv4Address`` entity represents an internal IP address. Let's assume that the
+``internal`` fields are different, one is set to ``true`` and the other to ``false``. In the case where the ``internal``
+field is ``loose``'ly matched, both entities would appear as one entity on the graph. Otherwise, if the ``internal``
+field is ``strict``'ly matched, then both these entities would appear as two separate entities on the graph. If you're a
+fan of a visual example, try the following example transform out to see what the end results are:
+
+.. code-block:: python
+
+    #!/usr/bin/env python
+
+    from sploitego.maltego.message import Entity, MatchingRule
+    from sploitego.maltego.message import Phrase, Field
+    from sploitego.framework import configure
+
+
+    class TestEntity(Entity):
+        namespace='test'
+
+    class MyIPv4Address(TestEntity):
+        pass
+
+
+    @configure(
+        label='To IPv4Address [Matching Rules]',
+        description='Shows how matching rules work in Maltego.',
+        uuids=[ 'tests.v2.PhraseToIPv4Address_Matching_Rules' ],
+        inputs=[ ( 'Testing Matching Rules', Phrase ) ],
+        debug=True
+    )
+    def dotransform(request, response):
+
+        # What kind of matching rule are we using?
+        mr = MatchingRule.Strict
+        if request.value.lower() == 'loose':
+            mr = MatchingRule.Loose
+
+        # First IP
+        ip1 = MyIPv4Address('127.0.0.1')
+        ip1 += Field('internal', 'true', matchingrule=mr)
+        response += ip1
+
+        # Second IP
+        ip2 = MyIPv4Address('127.0.0.1')
+        ip2 += Field('internal', 'false', matchingrule=mr)
+        response += ip2
+
+        # Return response for visualization
+        return response
+
+
+The example transform runs on ``Phrase`` entities and determines its matching rule based on the ``Phrase`` entity's
+value. If it is anything other than ``loose``, the entity field ``internal`` will be ``strict``'ly matched.
+
+Entity Field Decorators
+-----------------------
+
+Say you want to provide users of your transforms with better visuals for your transform outputs. For example,

@@ -12,6 +12,9 @@ Contents:
     install
     overview
     development
+    modules/index
+    misc
+
 
 Indices and tables
 ==================

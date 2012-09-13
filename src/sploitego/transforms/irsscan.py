@@ -15,7 +15,7 @@ from sploitego.config import config
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
-__credits__ = []
+__credits__ = ['Inspired by IRS Scan tool (http://oxid.it)']
 
 __license__ = 'GPL'
 __version__ = '0.1'

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from sploitego.maltego.message import Entity, EntityField, EntityFieldType, MatchingRule
-from sploitego.resource import unavailableport, closedport, timedoutport, openport, high, medium, low, info, critical
+from sploitego.resource import unavailableport, closedport, timedoutport, openport, high, medium, low, info, critical, systems
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -71,6 +71,16 @@ class VulnerabilitySeverity(object):
             obj.iconurl = info
 
 
+class OsName(object):
+
+    @staticmethod
+    def icon(obj, val):
+        for s in systems:
+            if s in val.lower():
+                obj.iconurl = systems[s]
+                return
+
+
 @EntityField(name='ip.source', propname='source', displayname='Source IP')
 @EntityField(name='ip.destination', propname='destination', displayname='Destination IP')
 @EntityField(name='protocol')
@@ -93,6 +103,7 @@ class Service(SploitegoEntity):
     pass
 
 
+@EntityField(name='os.name', propname='name', displayname='Operating System', decorator=OsName.icon)
 class OS(SploitegoEntity):
     pass
 

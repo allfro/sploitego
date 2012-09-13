@@ -22,6 +22,21 @@ def imageicon(cat, name):
 def imagepath(cat, name):
     return '%s' % resource_filename('.'.join([ images, cat ]), name)
 
+# operating systems
+
+systems = dict(
+    apple = imageicon('os', 'apple.gif'),
+    archlinux = imageicon('os', 'archlinux.png'),
+    debian = imageicon('os', 'debian.png'),
+    freebsd = imageicon('os', 'freebsd.png'),
+    gentoo = imageicon('os', 'gentoo.png'),
+    linux = imageicon('os', 'linux.png'),
+    ubuntu = imageicon('os', 'ubuntu.png'),
+    windows = imageicon('os', 'windows.png'),
+    cisco = imageicon('os', 'cisco.gif'),
+    hp = imageicon('os', 'hp.png'),
+)
+
 # networking
 unavailableport = imageicon('networking', 'unavailableport.gif')
 openport = imageicon('networking', 'openport.gif')

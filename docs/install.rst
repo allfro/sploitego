@@ -98,6 +98,20 @@ and take a look at the various options you can override for each of the transfor
 Additional Steps
 ================
 
+Entities
+--------
+
+You will need to import the custom entity definition file manually via Maltego's UI. The entity definition file can be
+located in the ``maltego/`` directory of the Sploitego distribution. To install the entities:
+
+#. Run Maltego;
+#. In Maltego, navigate to the ``Manage`` tab;
+#. Click on the ``Import Entities`` button;
+#. Select the ``maltego/entities.mtz`` file in the file browser dialog and click ``Next`` to completion.
+
+API Keys
+--------
+
 Some of the transforms in Sploitego require additional configuration in order to operate correctly. The following web
 API keys are required:
 

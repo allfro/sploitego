@@ -6,7 +6,7 @@ from sploitego.webtools.wappalyzer import Wappalyzer
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
-__credits__ = []
+__credits__ = ['Inspired by Wappalyzer (http://wappalyzer.com)']
 
 __license__ = 'GPL'
 __version__ = '0.1'

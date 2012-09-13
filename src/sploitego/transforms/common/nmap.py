@@ -58,5 +58,6 @@ def addsystems(report, response):
     for addr in report.addresses:
         for osm in report.os(addr)['osmatch']:
             e = OS(osm['name'])
+            e.name = osm['name']
             e += Label('Accuracy', osm['accuracy'])
             response += e
