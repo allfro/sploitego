@@ -30,7 +30,7 @@ def get_commands(module='sploitego.commands'):
 def _detect_settings_dir(d):
     vs = [ i for i in listdir(d) if path.isdir(sep.join([d, i])) ]
     if len(vs) == 1:
-        return vs[0]
+        return sep.join([d, vs[0]])
     else:
         while True:
             print 'Multiple versions of Maltego detected: '
