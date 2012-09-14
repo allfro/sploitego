@@ -737,11 +737,11 @@ class AffiliationBebo(Affiliation):
 
 
 class AffiliationFacebook(Affiliation):
-    name = "maltego.affiliation.Facebook"
+    name = "affiliation.Facebook"
 
 
 class AffiliationFlickr(Affiliation):
-    name = "maltego.affiliation.Flickr"
+    name = "affiliation.Flickr"
 
 
 class AffiliationLinkedin(Affiliation):
@@ -765,7 +765,7 @@ class AffiliationSpock(Affiliation):
 @EntityField(name='twitter.friendcount', propname='number', displayname='Friend Count')
 @EntityField(name='twitter.fullname', propname='fullname', displayname='Real Name')
 class AffiliationTwitter(Affiliation):
-    name = "maltego.affiliation.Twitter"
+    name = "affiliation.Twitter"
 
 
 class AffiliationZoominfo(Affiliation):
