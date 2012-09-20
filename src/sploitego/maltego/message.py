@@ -388,7 +388,7 @@ class MaltegoException(MaltegoElement, Exception):
     def __init__(self, message):
         super(MaltegoException, self).__init__('Exception')
         Exception.__init__(self, message)
-        self.text = str(message)
+        self.text = message if not isinstance(message, basestring) else message
 
 
 @XMLSubElement(name='UIMessages', propname='uimessages', type=XSSubElementType.List)
@@ -426,7 +426,7 @@ class Label(MaltegoElement):
         if self.type == 'text/html':
             self.cdata = value
         else:
-            self.text = str(value)
+            self.text = str(value) if not isinstance(value, basestring) else value
 
 
 class MatchingRule(object):
@@ -444,7 +444,7 @@ class Field(MaltegoElement):
         self.name = name
         self.matchingrule = kwargs.get('matchingrule', self.matchingrule)
         self.displayname = kwargs.get('displayname', name.title())
-        self.text = str(value)
+        self.text = str(value) if not isinstance(value, basestring) else value
 
 
 class StringEntityField(object):
@@ -483,11 +483,11 @@ class StringEntityField(object):
 class EnumEntityField(StringEntityField):
 
     def __init__(self, name, displayname=None, choices=[], decorator=None):
-        self.choices = [ str(c) for c in choices ]
+        self.choices = [ str(c) if not isinstance(c, basestring) else c for c in choices ]
         super(EnumEntityField, self).__init__(name, displayname, decorator)
 
     def __set__(self, obj, val):
-        val = str(val)
+        val = str(val) if not isinstance(val, basestring) else val
         if val not in self.choices:
             raise ValueError('Expected one of %s (got %s instead)' % (self.choices, val))
         super(EnumEntityField, self).__set__(obj, val)
@@ -581,7 +581,7 @@ class UIMessage(MaltegoElement):
     def __init__(self, message, **kwargs):
         super(UIMessage, self).__init__(self.__class__.__name__)
         self.type = kwargs.get('type', self.type)
-        self.text = str(message)
+        self.text = str(message) if not isinstance(message, basestring) else message
 
 
 @XMLSubElement(name='Value', propname='value')
@@ -872,7 +872,7 @@ class TABLE(HTML):
         tr.append(TD(title, colspan=colspan, css_class=TD.ONE))
 
         for i in kwargs:
-            self.set(i, str(kwargs[i]))
+            self.set(i, str(kwargs[i]) if not isinstance(kwargs[i], basestring) else kwargs[i])
 
 class TR(HTML):
 
@@ -918,10 +918,10 @@ class TD(HTML):
                 'align' : align,
             }
         )
-        self.text = str(value)
+        self.text = str(value) if not isinstance(value, basestring) else value
 
         for i in kwargs:
-            self.set(i, str(kwargs[i]))
+            self.set(i, str(kwargs[i]) if not isinstance(kwargs[i], basestring) else kwargs[i])
 
 
 class Table(object):

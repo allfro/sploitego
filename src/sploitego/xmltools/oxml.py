@@ -74,11 +74,12 @@ class XSStringAttribute(object):
 class XSEnumAttribute(XSStringAttribute):
 
     def __init__(self, name, choices, default=None, required=False):
-        self.choices = [ str(c) for c in choices ]
+        self.choices = [ str(c) if not isinstance(c, basestring) else c for c in choices ]
         super(XSEnumAttribute, self).__init__(name, default, required)
 
     def __set__(self, obj, val):
-        val = str(val)
+        if not isinstance(val, basestring):
+            val = str(val)
         if val not in self.choices:
             raise ValueError('Expected one of %s (got %s instead)' % (self.choices, val))
         super(XSEnumAttribute, self).__set__(obj, val)
@@ -164,7 +165,7 @@ class XSStringSubElement(object):
 
     def __init__(self, name, default=None):
         self.name = name
-        if default is not None and not isinstance(default, str):
+        if default is not None and not isinstance(default, basestring):
             default = str(default)
         self.default = default
 
@@ -203,11 +204,12 @@ class XSCDataSubElement(XSStringSubElement):
 class XSEnumSubElement(XSStringSubElement):
 
     def __init__(self, name, choices, default=None):
-        self.choices = [ str(c) for c in choices ]
+        self.choices = [ str(c) if not isinstance(c, basestring) else c for c in choices ]
         super(XSEnumSubElement, self).__init__(name, default)
 
     def __set__(self, obj, val):
-        val = str(val)
+        if not isinstance(val, basestring):
+            val = str(val)
         if val not in self.choices:
             raise ValueError('Expected one of %s (got %s instead)' % (self.choices, val))
         super(XSEnumSubElement, self).__set__(obj, val)

@@ -3,7 +3,7 @@
 from signal import signal, SIGTERM, SIGINT
 from sys import exit, argv, stderr
 from cStringIO import StringIO
-from re import split
+from re import split, sub
 
 from sploitego.maltego.message import MaltegoMessage, Message, MaltegoTransformExceptionMessage, MaltegoException
 
@@ -38,7 +38,9 @@ def message(m):
     sio = StringIO()
     m.entities
     Message(MaltegoMessage(m)).write(sio)
-    print sio.getvalue()
+    v = sio.getvalue()
+    # Get rid of those nasty unicode 32 characters
+    print sub(r'(&#\d{5};){2}', r'', v)
     exit(0)
 
 
