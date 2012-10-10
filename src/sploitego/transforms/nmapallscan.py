@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 from sploitego.cmdtools.nmap import NmapScanner, NmapReportParser
+from canari.framework import configure, superuser
+from canari.maltego.entities import IPv4Address
+from canari.maltego.utils import debug
 from common.nmap import addreport
-from sploitego.framework import configure, superuser
-from sploitego.maltego.message import IPv4Address
-from sploitego.maltego.utils import debug
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

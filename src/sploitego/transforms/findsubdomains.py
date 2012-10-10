@@ -5,12 +5,16 @@ from Queue import Queue
 from time import sleep
 from uuid import uuid4
 
-from sploitego.maltego.message import DNSName, UIMessage, Domain, BuiltInTransformSets
+
+
+from canari.maltego.configuration import BuiltInTransformSets
 from sploitego.webtools.dnsdiscovery import subdomains
+from canari.maltego.entities import DNSName, Domain
 from sploitego.scapytools.dns import nslookup
-from sploitego.maltego.utils import debug
-from sploitego.framework import configure
-from sploitego.config import config
+from canari.maltego.message import UIMessage
+from canari.maltego.utils import debug
+from canari.framework import configure
+from canari.config import config
 from scapy.all import DNS
 
 

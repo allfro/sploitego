@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
-from re import findall
 from httplib import urlsplit
+from re import findall
 
-from sploitego.maltego.message import DNSName, Domain, BuiltInTransformSets
+from canari.maltego.configuration import BuiltInTransformSets
+from canari.maltego.entities import DNSName, Domain
 from sploitego.webtools.bing import searchweb
-from sploitego.framework import configure
-from sploitego.config import config
+from canari.framework import configure
+from canari.config import config
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

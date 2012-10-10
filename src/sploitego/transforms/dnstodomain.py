@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import DNSName, MXRecord, NSRecord, Domain, BuiltInTransformSets
-from sploitego.framework import configure
+from canari.maltego.configuration import BuiltInTransformSets
+from canari.maltego.entities import DNSName, Domain
+from canari.framework import configure
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

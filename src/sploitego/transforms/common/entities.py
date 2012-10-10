@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import Entity, EntityField, EntityFieldType, MatchingRule
-from sploitego.resource import unavailableport, closedport, timedoutport, openport, high, medium, low, info, critical, systems
+from canari.maltego.message import Entity, EntityField, EntityFieldType, MatchingRule
+from sploitego.resource import (unavailableport, closedport, timedoutport, openport, high, medium, low, info, critical,
+                                systems)
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

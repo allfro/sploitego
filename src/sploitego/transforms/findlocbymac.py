@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import IPv4Address, UIMessage
-from sploitego.framework import configure
+from canari.maltego.entities import IPv4Address
+from canari.maltego.message import UIMessage
 from common.reversegeo import getlocbymac
+from canari.framework import configure
 
 
 __author__ = 'Nadeem Douba'

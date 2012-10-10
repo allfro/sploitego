@@ -4,7 +4,7 @@ from json.decoder import JSONDecoder
 from httplib import HTTPConnection
 from urllib import urlencode
 
-from sploitego.config import config
+from canari.config import config
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import IPv4Address, Field
-from sploitego.framework import superuser, configure
+from canari.framework import superuser, configure
+from canari.maltego.entities import IPv4Address
+from canari.maltego.message import Field
 from scapy.all import conf, getmacbyip
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

@@ -4,7 +4,7 @@ from os import path
 
 from sploitego.utils.fs import cookie, age, fsemaphore
 from sploitego.utils.wordlist import wordlist
-from sploitego.config import config
+from canari.config import config
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

@@ -2,10 +2,11 @@
 
 from time import sleep
 
-from sploitego.maltego.message import Domain, IPv4Address
-from common.nessus import scan, login, policy
-from sploitego.framework import configure
+from canari.maltego.entities import Domain, IPv4Address
+from common.tenable import scan, login, policy
 from common.entities import NessusReport
+from canari.framework import configure
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

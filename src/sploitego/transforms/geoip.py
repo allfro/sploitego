@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import ( Location, IPv4Address, DNSName, NSRecord,
-                                        MXRecord, Field, Label, A, MatchingRule, UIMessage )
+from canari.maltego.entities import Location, IPv4Address, DNSName
+from canari.maltego.message import UIMessage, Label
 from sploitego.webtools.smartip import geoip
-from sploitego.framework import configure
-from sploitego.config import config
+from canari.framework import configure
+from canari.config import config
 from sploitego.resource import flag
+from canari.maltego.html import A
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

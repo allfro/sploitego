@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 from os import path
-from time import time
 from re import split
 
 from sploitego.utils.fs import cookie, age, fsemaphore
 from sploitego.utils.wordlist import wordlist
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 from sploitego.webtools.aceinsights import AceInsightMiner, Miner
-from sploitego.maltego.message import Website
-from sploitego.framework import configure
+from canari.maltego.entities import Website
 from common.entities import SiteCategory
+from canari.framework import configure
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -25,6 +25,7 @@ __all__ = [
     description='Gets the site category for a given Website.',
     uuids=[ 'sploitego.v2.WebsiteToSiteCategory_Websense' ],
     inputs=[ ( 'Reconnaissance', Website ) ],
+    remote=True
 )
 def dotransform(request, response):
     ac = AceInsightMiner(request.value)

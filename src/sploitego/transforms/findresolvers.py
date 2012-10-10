@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import Location, IPv4Address
+from canari.maltego.entities import Location, IPv4Address
 from sploitego.scapytools.dns import resolvers
-from sploitego.framework import configure
+from canari.framework import configure
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

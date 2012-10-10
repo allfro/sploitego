@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 
+from xml.etree.cElementTree import fromstring
 
-from sploitego.maltego.message import Netblock, Label, Field, IPv4Address, MaltegoException
 from scapy.all import arping, sr, sr1, TCP, IP, ICMP, sniff, ARP
+from canari.maltego.message import Field, MaltegoException
 from sploitego.scapytools.route import route, traceroute2
-from sploitego.iptools.ip import IPNetwork, IPAddress
-from sploitego.framework import configure, superuser
-from sploitego.xmltools.objectify import objectify
-from sploitego.iptools.arin import whoisip
-from sploitego.maltego.utils import debug
-from sploitego.config import config
+from canari.framework import configure, superuser
+from canari.maltego.entities import IPv4Address
+from iptools.ip import IPNetwork, IPAddress
+from canari.maltego.utils import debug
+from canari.config import config
+from iptools.arin import whoisip
 
 
 __author__ = 'Nadeem Douba'
@@ -104,8 +105,11 @@ def passivescan(network, response):
 def findremoteneighbors(ip, response):
 
     debug('Doing an ARIN whois lookup...')
-    w = objectify(whoisip(ip, accept='application/xml'))
-    network = IPNetwork([w.startAddress, w.endAddress])
+    w = fromstring(whoisip(ip, accept='application/xml'))
+    network = IPNetwork([
+        w.find('startAddress').text,
+        w.find('endAddress').text
+    ])
 
 #    e = Netblock(network.netblock)
 #    e += Label('CIDR Notation', repr(network))

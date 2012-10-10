@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import Netblock, Label, IPv4Address, BuiltInTransformSets
-from sploitego.iptools.ip import IPAddress, IPNetwork
-from sploitego.xmltools.objectify import objectify
-from sploitego.iptools.arin import whoisip
-from sploitego.framework import configure
+from canari.maltego.configuration import BuiltInTransformSets
+from canari.maltego.entities import Netblock, IPv4Address
+from xml.etree.cElementTree import fromstring
+from iptools.ip import IPAddress, IPNetwork
+from canari.maltego.message import Label
+from canari.framework import configure
+from iptools.arin import whoisip
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -29,15 +32,21 @@ __all__ = [
 )
 def dotransform(request, response):
     ip = IPAddress(request.value)
-    w = objectify(whoisip(ip, accept='application/xml'))
-    network = IPNetwork([w.startAddress, w.endAddress])
+    w = fromstring(whoisip(ip, accept='application/xml'))
+    network = IPNetwork([
+        w.find('{http://www.arin.net/whoisrws/core/v1}startAddress').text,
+        w.find('{http://www.arin.net/whoisrws/core/v1}endAddress').text
+    ])
     e = Netblock(network.netblock)
     e += Label('CIDR Notation', repr(network))
     e += Label('Network Mask', network.netmask)
     e += Label('Number of Hosts', int(~network.netmask) - 1)
     response += e
-    for nb in w.netBlocks.netBlock:
-        network = IPNetwork([nb.startAddress, nb.endAddress])
+    for nb in w.findall('netBlocks/netBlock'):
+        network = IPNetwork([
+            nb.find('startAddress').text,
+            nb.find('endAddress').text
+        ])
         e = Netblock(network.netblock)
         e += Label('CIDR Notation', repr(network))
         e += Label('Network Mask', network.netmask)

@@ -3,6 +3,7 @@
 from pkg_resources import resource_filename
 from os import path
 
+
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
 __credits__ = []

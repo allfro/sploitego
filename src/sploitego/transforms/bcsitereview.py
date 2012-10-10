@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 from sploitego.webtools.bluecoat import sitereview
-from sploitego.maltego.message import Website
-from sploitego.framework import configure
+from canari.maltego.entities import Website
 from common.entities import SiteCategory
+from canari.framework import configure
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -24,7 +24,8 @@ __all__ = [
     label='To Site Category [Blue Coat]',
     description='Gets the site category for a given Website.',
     uuids=[ 'sploitego.v2.WebsiteToSiteCategory_BlueCoat' ],
-    inputs=[ ( 'Reconnaissance', Website ) ]
+    inputs=[ ( 'Reconnaissance', Website ) ],
+    remote=True
 )
 def dotransform(request, response):
     for c in sitereview(request.value):

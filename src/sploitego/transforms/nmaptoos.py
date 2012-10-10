@@ -3,7 +3,7 @@
 from sploitego.transforms.common.entities import NmapReport
 from sploitego.transforms.common.nmap import addsystems
 from sploitego.cmdtools.nmap import NmapReportParser
-from sploitego.framework import configure
+from canari.framework import configure
 
 
 __author__ = 'Nadeem Douba'

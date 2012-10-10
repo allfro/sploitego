@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
+from xml.etree.cElementTree import fromstring
 from urllib import urlopen
 from os import path
 
 from sploitego.utils.fs import fsemaphore, age, cookie
-from sploitego.xmltools.objectify import objectify
 from sploitego.utils.wordlist import wordlist
-from sploitego.config import config
+from canari.config import config
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -61,11 +61,13 @@ def sitereview(site, port=80):
         'http://sp.cwfservice.net/1/R/%s/K9-00006/0/GET/HTTP/%s/%s///' % (config['bluecoat/license'], site, port)
     )
     if r.code == 200:
-        o = objectify(r.read())
-        if 'DomC' in o:
-            cats = _chunks(o.DomC)
+        e = fromstring(r.read())
+        domc = e.find('DomC')
+        dirc = e.find('DirC')
+        if domc is not None:
+            cats = _chunks(domc.text)
             return [ categories.get(c, 'Unknown') for c in cats ]
-        elif 'DirC' in o:
-            cats = _chunks(o.DirC)
+        elif dirc is not None:
+            cats = _chunks(dirc.text)
             return [ categories.get(c, 'Unknown') for c in cats ]
     return []

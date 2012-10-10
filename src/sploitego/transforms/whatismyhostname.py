@@ -2,8 +2,8 @@
 
 from socket import gethostname
 
-from sploitego.maltego.message import DNSName, Location
-from sploitego.framework import configure
+from canari.maltego.entities import DNSName, Location
+from canari.framework import configure
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

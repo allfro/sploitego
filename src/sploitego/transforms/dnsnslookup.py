@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import NSRecord, Domain, BuiltInTransformSets
+from canari.maltego.configuration import BuiltInTransformSets
+from canari.maltego.entities import NSRecord, Domain
 from sploitego.scapytools.dns import nslookup
-from sploitego.framework import configure
+from canari.framework import configure
 from scapy.all import DNS
 
 __author__ = 'Nadeem Douba'

@@ -2,9 +2,10 @@
 
 from json.decoder import JSONDecoder
 
-from sploitego.maltego.message import Person, Location, UIMessage, Label
+from canari.maltego.entities import Person, Location
+from canari.maltego.message import UIMessage, Label
 from sploitego.webtools.pipl import pipljsonsearch
-from sploitego.framework import configure
+from canari.framework import configure
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

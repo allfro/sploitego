@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 from sploitego.cmdtools.nmap import NmapReportParser, NmapScanner
-from sploitego.maltego.message import Label, BuiltWithTechnology
-from sploitego.framework import configure, superuser
+from canari.maltego.entities import BuiltWithTechnology
+from canari.framework import configure, superuser
+from canari.maltego.message import Label
 from common.entities import Port
 
 __author__ = 'Nadeem Douba'

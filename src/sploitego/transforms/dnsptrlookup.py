@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import DNSName, IPv4Address, BuiltInTransformSets
+from canari.maltego.configuration import BuiltInTransformSets
+from canari.maltego.entities import DNSName, IPv4Address
 from sploitego.scapytools.dns import nslookup
-from sploitego.iptools.ip import IPAddress
-from sploitego.framework import configure
+from canari.framework import configure
+from iptools.ip import IPAddress
 from scapy.all import DNS
 
 __author__ = 'Nadeem Douba'

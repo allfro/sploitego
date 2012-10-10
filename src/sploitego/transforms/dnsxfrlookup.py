@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import (NSRecord, MXRecord, DNSName, Phrase, Field,
-                                       UIMessage, Domain, BuiltInTransformSets)
+from canari.maltego.entities import NSRecord, MXRecord, DNSName, Phrase, Domain
+from canari.maltego.configuration import BuiltInTransformSets
+from canari.maltego.message import Field, UIMessage
 from sploitego.scapytools.dns import nslookup
-from sploitego.framework import configure
+from canari.framework import configure
 from scapy.all import DNS
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

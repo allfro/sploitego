@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-from sploitego.scapytools.snmp import SNMPBruteForcer, SNMPVersion
+from sploitego.scapytools.snmp import SNMPBruteForcer
+from canari.maltego.message import MaltegoException
 from common.entities import Port, SNMPCommunity
-from sploitego.framework import configure
-from sploitego.iptools.ip import IPAddress
-from sploitego.config import config
-from sploitego.maltego.message import MaltegoException
 from sploitego.utils.wordlist import wordlist
+from canari.framework import configure
+from iptools.ip import IPAddress
+from canari.config import config
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

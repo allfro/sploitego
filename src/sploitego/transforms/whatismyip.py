@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import IPv4Address, Field, Location, MatchingRule
-from sploitego.framework import configure
+from canari.maltego.entities import IPv4Address, Location
+from canari.maltego.message import Field, MatchingRule
+from canari.framework import configure
 from scapy.all import IP, Ether
 
 __author__ = 'Nadeem Douba'

@@ -2,9 +2,10 @@
 
 from urllib import urlopen
 
-from sploitego.maltego.message import Website, DNSName, UIMessage
+from canari.maltego.entities import Website, DNSName
 from sploitego.webtools.thumbnails import thumbnail
-from sploitego.framework import configure
+from canari.maltego.message import UIMessage
+from canari.framework import configure
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

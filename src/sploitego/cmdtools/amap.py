@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from re import findall
 from os import sep, path, environ, pathsep
 from subprocess import Popen, PIPE
+from re import findall
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 from common.entities import NessusVulnerability, NessusReport
-from sploitego.nessus.xmlrpc import Report
-from sploitego.framework import configure
-from common.nessus import login
+from canari.framework import configure
+from common.tenable import login
+from nessus import Report
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

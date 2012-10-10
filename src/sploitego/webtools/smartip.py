@@ -3,7 +3,6 @@
 from urllib import urlopen
 from json.decoder import JSONDecoder
 
-from sploitego.xmltools.objectify import objectify
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

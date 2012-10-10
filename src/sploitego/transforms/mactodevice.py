@@ -2,9 +2,11 @@
 
 from re import split
 
-from sploitego.maltego.message import Device, IPv4Address, UIMessage, Field, MatchingRule
-from sploitego.framework import configure
+from canari.maltego.message import UIMessage, Field, MatchingRule
+from canari.maltego.entities import Device, IPv4Address
 from sploitego.webtools.ieee import ouis
+from canari.framework import configure
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

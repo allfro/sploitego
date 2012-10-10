@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from sploitego.iptools.ip import IPAddress
-from sploitego.config import config
-from sploitego.maltego.message import MaltegoException
+from canari.maltego.message import MaltegoException
+from iptools.ip import IPAddress
+from canari.config import config
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

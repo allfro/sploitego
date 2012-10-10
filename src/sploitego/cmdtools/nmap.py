@@ -3,7 +3,7 @@
 from os import path, pathsep, environ
 from xml.etree.cElementTree import XML
 from subprocess import Popen, PIPE
-from sploitego.maltego.utils import debug
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

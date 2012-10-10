@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 from sploitego.cmdtools.nmap import NmapScanner, NmapReportParser
-from sploitego.framework import configure, superuser
-from sploitego.maltego.message import IPv4Address
+from canari.framework import configure, superuser
+from canari.maltego.entities import IPv4Address
 from common.nmap import addreport
 
 __author__ = 'Nadeem Douba'

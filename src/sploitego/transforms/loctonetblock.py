@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import Netblock, Location
-from sploitego.framework import configure
-from sploitego.iptools.ip import IPAddress, IPNetwork
+from canari.maltego.entities import Netblock, Location
+from iptools.ip import IPAddress, IPNetwork
+from canari.framework import configure
 from scapy.all import conf
 
 __author__ = 'Nadeem Douba'

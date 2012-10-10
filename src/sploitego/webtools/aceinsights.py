@@ -4,6 +4,7 @@ from json import JSONDecoder, JSONEncoder
 from httplib import HTTPConnection
 from time import sleep
 
+
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
 __credits__ = []

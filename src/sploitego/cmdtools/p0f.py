@@ -4,10 +4,10 @@ from ctypes import Structure, c_ubyte, c_uint32, c_uint16, addressof, sizeof, PO
 from socket import socket, AF_UNIX, AF_INET, AF_INET6, inet_pton
 from os import path, system, sep, devnull
 from numbers import Number
-from time import sleep
 
-from sploitego.config import config
+
 from sploitego.utils.fs import cookie
+from canari.config import config
 from scapy.all import conf
 
 __author__ = 'Nadeem Douba'

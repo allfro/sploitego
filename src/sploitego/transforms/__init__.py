@@ -22,7 +22,6 @@ __all__ = [
     'dnsmxlookup',
     'dnsnslookup',
     'dnsptrlookup',
-    'dnsstarlookup',
     'dnstodomain',
     'dnsxfrlookup',
     'findneighbors',

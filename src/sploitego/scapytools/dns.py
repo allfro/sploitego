@@ -6,7 +6,8 @@ import socket
 from scapy.all import (   IP, ICMP, TCP, DNS, UDP, DNSQR, DNSgetstr, DNSRRField, DNSStrField, DNSRR,
                        ShortEnumField, IntField, ShortField, StrField, dnstypes, dnsclasses, RDataField, RDLenField,
                        RandShort)
-from sploitego.iptools.ip import   resolvers
+from iptools.ip import resolvers
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

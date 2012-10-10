@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-from sploitego.config import config
 from httplib import HTTPConnection
 from urllib import urlencode
+
+from canari.config import config
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

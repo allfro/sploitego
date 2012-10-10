@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import IPv4Address, Domain, DNSName, MXRecord, NSRecord, BuiltInTransformSets
+from canari.maltego.configuration import BuiltInTransformSets
+from canari.maltego.entities import IPv4Address, DNSName
 from sploitego.scapytools.dns import nslookup
-from sploitego.framework import configure
+from canari.framework import configure
 from scapy.all import DNS
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

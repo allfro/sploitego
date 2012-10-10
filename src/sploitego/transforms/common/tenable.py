@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
-from sploitego.nessus.xmlrpc import NessusXmlRpcClient, NessusSessionException, NessusException
-from sploitego.utils.fs import cookie, fsemaphore
-from easygui import multpasswordbox, choicebox
-from sploitego.config import config
+from nessus import NessusXmlRpcClient, NessusSessionException, NessusException
+from canari.easygui import multpasswordbox, choicebox
+from canari.utils.fs import cookie, fsemaphore
+from canari.config import config
+
 from urlparse import parse_qsl
 from urllib import urlencode
 from os import path, unlink
 from time import strftime
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -35,7 +37,6 @@ def login():
         fv = ['localhost', '8834']
         errmsg = ''
         while True:
-            import sploitego.hacks.gui
             fv = multpasswordbox(errmsg, 'Nessus Login', ['Server:', 'Port:', 'Username:', 'Password:'], fv)
             try:
                 s = NessusXmlRpcClient(fv[2], fv[3], fv[0], fv[1])
@@ -58,7 +59,6 @@ def login():
 
 def policy(s):
     ps = s.policies.list
-    import sploitego.hacks.gui
     c = choicebox('Select a Nessus scanning policy', 'Nessus Policies', ps)
     if c is None:
         return None

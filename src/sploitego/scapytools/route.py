@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 from scapy.all import sr, sr1, conf, IP
-from sploitego.iptools.ip import IPNetwork, IPAddress
+from iptools.ip import IPNetwork, IPAddress
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

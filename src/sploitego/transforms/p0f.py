@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-from sploitego.framework import configure, superuser
-from sploitego.maltego.message import BuiltWithTechnology, IPv4Address
+from canari.maltego.entities import BuiltWithTechnology, IPv4Address
 from sploitego.cmdtools.p0f import fingerprint, P0fStatus
+from canari.framework import configure, superuser
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

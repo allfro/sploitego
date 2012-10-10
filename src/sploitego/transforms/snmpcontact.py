@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
-from sploitego.framework import configure
-from common.entities import SNMPCommunity
 from sploitego.scapytools.snmp import SNMPManager, SNMPError
+from canari.maltego.message import UIMessage
+from canari.maltego.entities import Person
+from common.entities import SNMPCommunity
+from canari.framework import configure
 from common.snmp import snmpargs
-from sploitego.maltego.message import Person, UIMessage
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

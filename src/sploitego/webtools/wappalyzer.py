@@ -3,6 +3,7 @@
 from urllib import urlopen
 from re import search, findall
 
+
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
 __credits__ = []

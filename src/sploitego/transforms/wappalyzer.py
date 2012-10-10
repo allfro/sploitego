@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-from sploitego.framework import configure
-from sploitego.maltego.message import URL, BuiltWithTechnology, Field
+from canari.maltego.entities import URL, BuiltWithTechnology
 from sploitego.webtools.wappalyzer import Wappalyzer
+from canari.maltego.message import Field
+from canari.framework import configure
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

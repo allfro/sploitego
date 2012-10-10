@@ -2,7 +2,7 @@
 
 from sploitego.webtools.geolocate import reversegeo
 from sploitego.webtools.geolocate import geomac
-from sploitego.maltego.message import Location
+from canari.maltego.entities import Location
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

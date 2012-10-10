@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import Location, DNSName
-from sploitego.framework import configure, superuser
-from sploitego.config import config
+from canari.maltego.entities import Location, DNSName
+from canari.framework import configure, superuser
+from canari.config import config
 from scapy.all import DNS, sniff
 
 __author__ = 'Nadeem Douba'

@@ -6,7 +6,8 @@ from time import sleep
 
 from scapy.all import (SNMP, SNMPnext, SNMPvarbind, ASN1_OID, SNMPget, ASN1_DECODING_ERROR, ASN1_NULL, ASN1_IPADDRESS,
                        SNMPset, SNMPbulk)
-from sploitego.iptools.ip import IPAddress
+from iptools.ip import IPAddress
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

@@ -28,6 +28,7 @@ def updatelist(filename):
         page = wordlist('http://www.alexa.com/topsites/global;%d' % i, 'topsites-label">(.*?)</')
         topsites += page
         f.write('\n'.join(page))
+        f.write('\n')
     f.close()
     return topsites
 

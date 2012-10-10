@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
-from sploitego.maltego.message import NSRecord, Label, UIMessage, Table, DNSName, IPv4Address
+from canari.maltego.entities import NSRecord, DNSName, IPv4Address
+from canari.maltego.message import Label, UIMessage
 from sploitego.scapytools.dns import nslookup
-from sploitego.webtools.alexa import topsites
-from sploitego.framework import configure
-from sploitego.maltego.utils import debug
+from canari.framework import configure
+from canari.maltego.utils import debug
+from canari.maltego.html import Table
+from canari.config import config
 from scapy.all import DNS
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -38,9 +41,11 @@ def dotransform(request, response):
     ip = request.value
     ans = nslookup("www.google.ca", nameserver=ip)
     if ans is not None:
-        for site in topsites:
+        for site in config['dnscachesnoop/wordlist']:
             debug('Resolving %s' % site)
             ans = nslookup(site, nameserver=ip, rd=0)
+            if not ans[DNS].ancount:
+                ans = nslookup('www.%s' % site, nameserver=ip, rd=0)
             if ans[DNS].ancount:
                 e = DNSName(site)
                 t = Table(['Name', 'Query Class', 'Query Type', 'Data', 'TTL'], 'Cached Answers')

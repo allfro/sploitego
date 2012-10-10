@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-from os import makedirs, path, sep
+from entities import Port, NmapReport, OS
+from canari.maltego.message import Label
+from canari.utils.fs import ufile
+from canari.config import config
+
+from os import makedirs, path
 from time import strftime
 
-from sploitego.maltego.message import Label
-from entities import Port, NmapReport, OS
-from sploitego.utils.fs import ufile
-from sploitego.config import config
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
