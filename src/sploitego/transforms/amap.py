@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 from sploitego.cmdtools.amap import AmapScanner, AmapReportParser
 from canari.maltego.entities import BuiltWithTechnology
 from sploitego.cmdtools.nmap import NmapReportParser
@@ -9,6 +8,7 @@ from canari.framework import configure
 from common.entities import NmapReport
 
 from tempfile import NamedTemporaryFile
+
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

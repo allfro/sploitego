@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from os import path, pathsep, environ
 from xml.etree.cElementTree import XML
+from os import path, pathsep, environ
 from subprocess import Popen, PIPE
 
 

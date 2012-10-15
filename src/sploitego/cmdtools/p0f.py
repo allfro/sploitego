@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
+from sploitego.utils.fs import cookie
+from canari.config import config
+from scapy.all import conf
+
 from ctypes import Structure, c_ubyte, c_uint32, c_uint16, addressof, sizeof, POINTER, string_at, c_char_p, cast
 from socket import socket, AF_UNIX, AF_INET, AF_INET6, inet_pton
 from os import path, system, sep, devnull
 from numbers import Number
 
-
-from sploitego.utils.fs import cookie
-from canari.config import config
-from scapy.all import conf
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'

@@ -6,6 +6,7 @@ from canari.framework import configure, superuser
 from canari.maltego.message import Label
 from common.entities import Port
 
+
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
 __credits__ = []

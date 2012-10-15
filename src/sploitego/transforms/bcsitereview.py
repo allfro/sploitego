@@ -5,6 +5,7 @@ from canari.maltego.entities import Website
 from common.entities import SiteCategory
 from canari.framework import configure
 
+
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
 __credits__ = []
