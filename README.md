@@ -3,7 +3,7 @@ Sploitego - Maltego's (Local) Partner in Crime
 
 ## 1.0 - Introduction
 
-Sploitego is a local pen-test transform package that uses the [Canari Framework][https://github.com/allfro/canari] for
+Sploitego is a local pen-test transform package that uses the [Canari Framework](https://github.com/allfro/canari) for
 local transform execution in [Maltego](http://paterva.com/). The framework was first introduced at DEFCON 20 and has
 since picked up steam.
 
