@@ -7,12 +7,12 @@ Sploitego is a local pen-test transform package that uses the [Canari Framework]
 local transform execution in [Maltego](http://paterva.com/). The framework was first introduced at DEFCON 20 and has
 since picked up steam.
 
-## 3.0 - Installing Sploitego
+## 2.0 - Installing Sploitego
 
-### 3.1 - Supported Platforms
+### 2.1 - Supported Platforms
 Sploitego has currently been tested on Mac OS X and Linux.
 
-### 3.2 - Requirements
+### 2.2 - Requirements
 Sploitego is only supported on Python version 2.6. The setup script will automatically download and install most of the
 prerequisite modules, however, some modules will still need to be installed manually. The following modules require
 manual installation:
@@ -30,7 +30,7 @@ tools are currently supported:
 * **Metasploit**: [Download](http://downloads.metasploit.com/data/releases/framework-latest.tar.bz2)
 * **Nessus**: [Download](http://www.tenable.com/products/nessus/nessus-product-overview)
 
-### 3.3 - Installation
+### 2.3 - Installation
 Once you've installed the necessary prerequisites, installing Sploitego is a cinch. Just run:
 
 ```bash
