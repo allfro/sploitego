@@ -107,8 +107,8 @@ def findremoteneighbors(ip, response):
     debug('Doing an ARIN whois lookup...')
     w = fromstring(whoisip(ip, accept='application/xml'))
     network = IPNetwork([
-        w.find('startAddress').text,
-        w.find('endAddress').text
+        w.find('{http://www.arin.net/whoisrws/core/v1}startAddress').text,
+        w.find('{http://www.arin.net/whoisrws/core/v1}endAddress').text
     ])
 
 #    e = Netblock(network.netblock)
