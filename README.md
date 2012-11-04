@@ -19,8 +19,6 @@ manual installation:
 * **Scapy 2.1.0**: See the
   [Scapy Installation Manual for more details](http://www.secdev.org/projects/scapy/doc/installation.html) for build
   instructions pertaining to your operating system.
-* **sip & PyQt4**: [Download](http://www.riverbankcomputing.co.uk/software/pyqt/download/)
-* **easygui**: [Download](http://easygui.sourceforge.net/download/index.html)
 
 Some of the transforms require external command-line tools (e.g. nmap, amap, p0f, etc.). The following command-line
 tools are currently supported:
