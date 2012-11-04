@@ -17,7 +17,7 @@ Sploitego is only supported on Python version 2.6. The setup script will automat
 prerequisite modules, however, some modules will still need to be installed manually. The following modules require
 manual installation:
 * **Scapy 2.1.0**: See the
-  [Scapy Installation Manual for more details](http://www.secdev.org/projects/scapy/doc/installation.html) for build
+  [Scapy Installation Manual](http://www.secdev.org/projects/scapy/doc/installation.html) for build
   instructions pertaining to your operating system.
 
 Some of the transforms require external command-line tools (e.g. nmap, amap, p0f, etc.). The following command-line
