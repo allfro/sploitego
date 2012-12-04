@@ -2,8 +2,9 @@
 
 from os import path
 
-from sploitego.utils.fs import fsemaphore, age, cookie
-from sploitego.utils.wordlist import wordlist
+from canari.utils.fs import fsemaphore, age, cookie
+from canari.utils.wordlist import wordlist
+from canari.config import config
 
 
 __author__ = 'Nadeem Douba'
@@ -42,7 +43,7 @@ topsites = None
 tmpfile = cookie('sploitego.adplanner.tmp')
 
 
-if not path.exists(tmpfile) or age(tmpfile) >= 86400:
+if not path.exists(tmpfile) or age(tmpfile) >= config['cookie/maxage']:
     topsites = updatelist(tmpfile)
 else:
     topsites = readlist(tmpfile)

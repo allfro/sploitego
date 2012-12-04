@@ -3,7 +3,7 @@
 from sploitego.scapytools.snmp import SNMPBruteForcer
 from canari.maltego.message import MaltegoException
 from common.entities import Port, SNMPCommunity
-from sploitego.utils.wordlist import wordlist
+from canari.utils.wordlist import wordlist
 from canari.framework import configure
 from iptools.ip import IPAddress
 from canari.config import config
@@ -35,7 +35,7 @@ def dotransform(request, response):
         raise MaltegoException('SNMP over UDP for versions 1 and 2c are only supported.')
     agent = str(IPAddress(request.fields['ip.destination']))
     port = int(request.value)
-    wl = wordlist(config['snmp/wordlist'])
+    wl = config['snmp/wordlist']
     for v in ['v1', 'v2c']:
         bf = SNMPBruteForcer(agent, port, v, config['snmp/bf_timeout'], config['snmp/bf_rate'])
         for c in bf.guess(wl):

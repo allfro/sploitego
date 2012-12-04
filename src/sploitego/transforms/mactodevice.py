@@ -4,7 +4,6 @@ from re import split
 
 from canari.maltego.message import UIMessage, Field, MatchingRule
 from canari.maltego.entities import Device, IPv4Address
-from sploitego.webtools.ieee import ouis
 from canari.framework import configure
 
 
@@ -30,6 +29,7 @@ __all__ = [
     inputs=[ ( 'Reconnaissance', IPv4Address ) ],
 )
 def dotransform(request, response):
+    from sploitego.webtools.ieee import ouis
     if 'ethernet.hwaddr' not in request.fields or not request.fields['ethernet.hwaddr']:
         response += UIMessage('You must provide an Ethernet Hardware Address (ethernet.hwaddr) property.')
     else:

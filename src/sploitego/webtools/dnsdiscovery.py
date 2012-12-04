@@ -2,8 +2,8 @@
 
 from os import path
 
-from sploitego.utils.fs import cookie, age, fsemaphore
-from sploitego.utils.wordlist import wordlist
+from canari.utils.fs import cookie, age, fsemaphore
+from canari.utils.wordlist import wordlist
 from canari.config import config
 
 __author__ = 'Nadeem Douba'
@@ -24,7 +24,7 @@ __all__ = [
 def updatelist(filename):
     f = fsemaphore(filename, 'wb')
     f.lockex()
-    subdomains = wordlist(config['dnsdiscovery/wordlist'])
+    subdomains = config['dnsdiscovery/wordlist']
     f.write('\n'.join(subdomains))
     f.close()
     return subdomains
@@ -41,7 +41,7 @@ def readlist(filename):
 subdomains = None
 tmpfile = cookie('sploitego.dnsdiscovery.tmp')
 
-if not path.exists(tmpfile) or age(tmpfile) >= 86400:
+if not path.exists(tmpfile) or age(tmpfile) >= config['cookie/maxage']:
     subdomains = updatelist(tmpfile)
 else:
     subdomains = readlist(tmpfile)

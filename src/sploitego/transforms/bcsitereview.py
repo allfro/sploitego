@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from sploitego.webtools.bluecoat import sitereview
 from canari.maltego.entities import Website
 from common.entities import SiteCategory
 from canari.framework import configure
@@ -29,6 +28,7 @@ __all__ = [
     remote=True
 )
 def dotransform(request, response):
+    from sploitego.webtools.bluecoat import sitereview
     for c in sitereview(request.value):
         response += SiteCategory(c)
     return response

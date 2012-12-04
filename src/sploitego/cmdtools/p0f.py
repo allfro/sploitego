@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from sploitego.utils.fs import cookie
+from canari.utils.fs import cookie
 from canari.config import config
 from scapy.all import conf
 

@@ -3,8 +3,9 @@
 from os import path
 from re import split
 
-from sploitego.utils.fs import cookie, age, fsemaphore
-from sploitego.utils.wordlist import wordlist
+from canari.utils.fs import cookie, age, fsemaphore
+from canari.utils.wordlist import wordlist
+from canari.config import config
 
 
 __author__ = 'Nadeem Douba'
@@ -50,7 +51,7 @@ ouis = None
 tmpfile = cookie('sploitego.ieee.tmp')
 
 
-if not path.exists(tmpfile) or age(tmpfile) >= 86400:
+if not path.exists(tmpfile) or age(tmpfile) >= config['cookie/maxage']:
     ouis = updatelist(tmpfile)
 else:
     ouis = readlist(tmpfile)

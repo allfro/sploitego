@@ -8,7 +8,6 @@ from uuid import uuid4
 
 
 from canari.maltego.configuration import BuiltInTransformSets
-from sploitego.webtools.dnsdiscovery import subdomains
 from canari.maltego.entities import DNSName, Domain
 from sploitego.scapytools.dns import nslookup
 from canari.maltego.message import UIMessage
@@ -93,6 +92,7 @@ def dotransform(request, response):
 
     ncount = 0
     nthreads = config['dnsdiscovery/numthreads']
+    subdomains = config['dnsdiscovery/wordlist']
 
     threads = []
     for i in range(0, nthreads):
