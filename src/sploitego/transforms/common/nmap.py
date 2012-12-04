@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+from ConfigParser import NoOptionError
+from sploitego.cmdtools.nmap import NmapScanner
+
 from entities import Port, NmapReport, OS
 from canari.maltego.message import Label
 from canari.utils.fs import ufile
@@ -18,6 +21,15 @@ __version__ = '0.1'
 __maintainer__ = 'Nadeem Douba'
 __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
+
+
+def getscanner():
+    binargs = None
+    try:
+        binargs = config['nmap/nmapcmd'].split(' ')
+    except NoOptionError:
+        pass
+    return NmapScanner() if binargs is None else NmapScanner(binargs)
 
 
 def addports(report, response):
@@ -48,10 +60,10 @@ def savereport(report):
     return f.name
 
 
-def addreport(report, response, tag):
+def addreport(report, response, tag, cmd):
     e = NmapReport('Nmap %s Report: %s' % (tag, report.nmaprun['startstr']))
     e.file = savereport(report)
-    e.command = report.nmaprun['args']
+    e.command = cmd
     response += e
 
 

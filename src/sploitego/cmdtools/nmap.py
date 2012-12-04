@@ -22,7 +22,9 @@ __all__ = [
 
 
 def NmapReportParser(output):
-    if 'xmloutputversion="1.0.3"' in output:
+    if not output:
+        return None
+    elif 'xmloutputversion="1.03"' in output:
         return NmapReportVersion103(output)
     elif 'xmloutputversion="1.04"' in output:
         return NmapReportVersion104(output)
@@ -214,30 +216,35 @@ class NmapScanner(object):
     output = ''
     cmd = ''
 
-    def getversion(self, binpath=None):
-        if binpath is None:
+    def getversion(self, binargs=[], binpath=None):
+        if binargs:
+            self.program = binargs if isinstance(binargs, list) else [ binargs ]
+            self.version = self.run(['--version'])
+            return True
+        elif binpath is None:
             for p in environ['PATH'].split(pathsep):
                 program = path.join(p, 'nmap')
                 if path.exists(program):
-                    self.program = program
+                    self.program = [ program ]
                     self.version = self.run(['--version'])
                     return True
         elif path.exists(binpath):
-            self.program = binpath
+            self.program = [ binpath ]
             self.version = self.run(['--version'])
             return True
         return False
 
     def run(self, args):
-        self.cmd = ' '.join([self.program]+args)
-        self._pipe = Popen([self.program]+args, stdin=PIPE, stdout=PIPE)
+        self.cmd = ' '.join(self.program + args)
+        self._pipe = Popen(self.program + args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         r, e = self._pipe.communicate()
         self.output = r
+        self.error = e
 
         return r.strip('\n')
 
-    def __init__(self, binpath=None):
-        if not self.getversion(binpath):
+    def __init__(self, binargs=[], binpath=None):
+        if not self.getversion(binargs, binpath):
             raise OSError('Could not find nmap, check your OS path')
 
     def scan(self, args, sendto=NmapReportParser):

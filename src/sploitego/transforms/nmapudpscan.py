@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-from sploitego.cmdtools.nmap import NmapScanner, NmapReportParser
+from sploitego.cmdtools.nmap import NmapReportParser
 from canari.framework import configure, superuser
+from canari.maltego.message import UIMessage
 from canari.maltego.entities import IPv4Address
-from common.nmap import addreport
+from common.nmap import addreport, getscanner
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -30,10 +31,14 @@ __all__ = [
     inputs=[ ( 'Reconnaissance', IPv4Address ) ],
 )
 def dotransform(request, response):
-    s = NmapScanner()
+    s = getscanner()
     args = ['-n', '-sU', request.value] + request.params
+
     r = s.scan(args, NmapReportParser)
-    addreport(r, response, ' '.join(args))
+    if r is not None:
+        addreport(r, response, ' '.join(args), s.cmd)
+    else:
+        response += UIMessage(s.error)
     return response
 
 
