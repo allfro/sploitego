@@ -11,6 +11,7 @@ __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
 __all__ = [
+    'maltego',
     'images',
     'etc'
 ]

@@ -1,0 +1,29 @@
+machine("sploitego.LocalNetworkDiscovery",
+        displayName:"Local Network Discovery",
+        author:"Nadeem Douba",
+        description: "Discovers hosts and services on the local network.") {
+
+    start {
+        run("sploitego.v2.LocationToIPv4Address_Local")
+        run("sploitego.v2.IPv4AddressToNeighbors_ActiveScan")
+        paths {
+            path {
+                run("sploitego.v2.IPv4AddressToDNSName_DNS")
+            }
+            path {
+                run("sploitego.v2.IPv4AddressToNmapReport_NmapF", "transform.local.parameters":"sploitego.transforms.nmapfastscan -O")
+
+                paths {
+                    path {
+                        run("sploitego.v2.NmapReportToPorts_NmapReport")
+                        run("sploitego.v2.PortToBanner_NmapV")
+                    }
+                    path {
+                        run("sploitego.v2.NmapReportToOS_NmapReport")
+                    }
+                }
+
+            }
+        }
+    }
+}

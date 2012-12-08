@@ -1,0 +1,14 @@
+machine("sploitego.LocalDNSCacheSnoop",
+        displayName:"Local DNS Cache Snoop",
+        author:"Nadeem Douba",
+        description: "Performs DNS cache snoop attack on local DNS servers.") {
+
+    start {
+
+        run("sploitego.v2.LocationToDNSServer_IPConfig")
+        run("sploitego.v2.IPv4AddressToDNSName_CacheSnoop")
+        run("sploitego.v2.DNSNameToWebsite_QueryPorts")
+        run("sploitego.v2.WebsiteToSiteCategory_BlueCoat")
+
+    }
+}

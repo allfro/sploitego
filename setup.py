@@ -15,7 +15,7 @@ setup(
     scripts=[],
     zip_safe=False,
     package_data={
-        '' : [ '*.gif', '*.png', '*.conf' ]
+        '' : [ '*.gif', '*.png', '*.conf', '*.mtz', '*.machine' ]
     },
     install_requires=[
         'scapy==2.1.0',
