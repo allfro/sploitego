@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 setup(
     name='sploitego',
     author='Nadeem Douba',
-    version='1.1',
+    version='1.2',
     author_email='ndouba@gmail.com',
     description='Penetration testing transforms for Maltego.',
     license='GPL',
@@ -21,7 +21,7 @@ setup(
         'scapy==2.1.0',
         'pynessusrpc',
         'pyiptools',
-        'canari==0.3'
+        'canari==0.4'
     ],
     dependency_links=[
         'http://www.secdev.org/projects/scapy/files/'

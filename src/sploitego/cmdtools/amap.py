@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from os import sep, path, environ, pathsep
+from os import path, environ, pathsep
 from subprocess import Popen, PIPE
 from re import findall
 
@@ -38,7 +38,7 @@ class AmapScanner(object):
 
     def getversion(self):
         for p in environ['PATH'].split(pathsep):
-            program = sep.join([p, 'amap'])
+            program = path.join(p, 'amap')
             if path.exists(program):
                 self.program = program
                 self.version = self.run([])
