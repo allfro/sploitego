@@ -29,3 +29,4 @@ pip-log.txt
 *.iml
 
 .idea
+.*
