@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-from xml.etree.cElementTree import XML
 from os import path, pathsep, environ
 from subprocess import Popen, PIPE
 
+from lxml.etree import XML
 
 __author__ = 'Nadeem Douba'
 __copyright__ = 'Copyright 2012, Sploitego Project'
@@ -109,30 +109,31 @@ class NmapReportVersion103(NmapReportBase):
 
     @property
     def addresses(self):
-        return [ a.get('addr') for a in self.xml.findall('host/address') if a.get('addrtype') == 'ipv4' ]
+        return [ a.get('addr') for a in self.xml.xpath('host/address[@addrtype="ipv4" or @addrtype="ipv6"]') ]
 
     def mac(self, address):
         host = self._host(address)
         if host is not None:
-            for addr in host.findall('address'):
-                if addr.get('addrtype') == 'mac':
-                    return addr.get('addr')
+            address = host.find('address[@addrtype="mac"]')
+            if address is not None:
+                return address.get('addr')
         return None
 
     def _host(self, address):
-        for host in self.xml.findall('host'):
-            for addr in host.findall('address'):
-                if addr.get('addr') == address:
-                    return host
-        return None
+        return self.xml.xpath('host[address[@addr="%s"]]' % address.replace('"', ''))[0]
 
     def ports(self, address):
         host = self._host(address)
         ports = []
         if host is not None:
             for p in host.findall('ports/port'):
-                r = p.attrib
-                map(lambda x: r.update(x.attrib), p.getchildren())
+                r = dict(p.attrib)
+                r['script'] = {}
+                for child in p.getchildren():
+                    if child.tag == 'script':
+                        r['script'][child.get('id')] = child.get('output')
+                    else:
+                        r.update(child.attrib)
                 ports.append(r)
         return ports
 
@@ -247,8 +248,12 @@ class NmapScanner(object):
         if not self.getversion(binargs, binpath):
             raise OSError('Could not find nmap, check your OS path')
 
-    def scan(self, args, sendto=NmapReportParser):
-        r = self.run(['-oX', '-'] + args)
+    def scan(self, target, *args, **kwargs):
+        args = list(args)
+        if ':' in target and '-6' not in args:
+            args.append('-6')
+        r = self.run([target, '-oX', '-'] + args)
+        sendto = kwargs.get('sendto', NmapReportParser)
         if callable(sendto):
             return sendto(r)
         return sendto.write(r)
