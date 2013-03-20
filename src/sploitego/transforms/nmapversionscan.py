@@ -34,10 +34,10 @@ __all__ = [
 )
 def dotransform(request, response):
     s = getscanner()
-    args = ['-n', '-sV', '-p', request.value, request.fields['ip.destination']] + request.params
+    args = ['-n', '-sV', '-p', request.value] + request.params
     if request.fields['protocol'] == 'UDP':
         args.insert(0, '-sU')
-    r = s.scan(args, NmapReportParser)
+    r = s.scan(request.fields['ip.destination'], *args)
     if r is not None:
         for host in r.addresses:
             for port in r.ports(host):
