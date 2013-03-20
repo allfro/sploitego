@@ -11,7 +11,7 @@ __copyright__ = 'Copyright 2012, Sploitego Project'
 __credits__ = []
 
 __license__ = 'GPL'
-__version__ = '0.1'
+__version__ = '0.2'
 __maintainer__ = 'Nadeem Douba'
 __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
@@ -29,8 +29,10 @@ __all__ = [
     debug=False
 )
 def dotransform(request, response):
-    ns = login()
-    vulns = Report(ns, request.fields['nessusreport.uuid'], '').vulnerabilities
+    s = login(host=request.fields['nessus.server'], port=request.fields['nessus.port'])
+    if s is None:
+        return response
+    vulns = Report(s, request.fields['nessusreport.uuid'], '').vulnerabilities
     for h in vulns[request.fields['nessusplugin.id']].hosts:
         p = Port(h.port)
         p.destination = h.name
