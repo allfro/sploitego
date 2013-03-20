@@ -10,7 +10,7 @@ __copyright__ = 'Copyright 2012, Sploitego Project'
 __credits__ = []
 
 __license__ = 'GPL'
-__version__ = '0.1'
+__version__ = '0.2'
 __maintainer__ = 'Nadeem Douba'
 __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
@@ -28,7 +28,7 @@ __all__ = [
 
 class SploitegoEntity(Entity):
 
-    _namespace_ = 'sploitego'
+    namespace = 'sploitego'
 
 
 class PortStatus(object):
@@ -83,6 +83,10 @@ class OsName(object):
                 return
 
 
+class IPv6Address(SploitegoEntity):
+    pass
+
+
 @EntityField(name='ip.source', propname='source', displayname='Source IP')
 @EntityField(name='ip.destination', propname='destination', displayname='Destination IP')
 @EntityField(name='protocol')
@@ -125,6 +129,8 @@ class SNMPCommunity(SploitegoEntity):
 
 
 @EntityField(name='nessusreport.uuid', propname='uuid', displayname='Report UUID')
+@EntityField(name='nessus.server', propname='server', displayname='Nessus Server')
+@EntityField(name='nessus.port', propname='port', displayname='Nessus Port')
 #@EntityField(name='nessusreport.errors', propname='errors', displayname='Errors')
 class NessusReport(SploitegoEntity):
     pass
@@ -136,5 +142,15 @@ class NessusReport(SploitegoEntity):
     displayname='Severity', decorator=VulnerabilitySeverity.icon)
 @EntityField(name='nessusplugin.count', propname='count', displayname='Count')
 @EntityField(name='nessusreport.uuid', propname='uuid', displayname='Report UUID')
+@EntityField(name='nessus.server', propname='server', displayname='Nessus Server')
+@EntityField(name='nessus.port', propname='port', displayname='Nessus Port')
 class NessusVulnerability(SploitegoEntity):
+    pass
+
+
+@EntityField(name='msfrpcd.server', propname='server', displayname='Metasploit Server')
+@EntityField(name='msfrpcd.port', propname='port', displayname='Metasploit Port')
+@EntityField(name='msfrpcd.uri', propname='uri', displayname='Metasploit URI')
+@EntityField(name='session.uuid', propname='sessionid', displayname='Metasploit Session ID')
+class MetasploitSession(SploitegoEntity):
     pass

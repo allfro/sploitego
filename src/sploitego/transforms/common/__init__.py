@@ -11,8 +11,11 @@ __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
 __all__ = [
+    'dnstools',
+    'msfrpcd',
+    'tenable',
     'entities',
-    'nmap'
+    'nmap',
     'reversegeo',
     'snmp'
 ]
