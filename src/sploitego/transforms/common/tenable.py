@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import socket
 
 from nessus import NessusXmlRpcClient, NessusSessionException, NessusException
 from canari.easygui import multpasswordbox, choicebox
@@ -16,7 +17,7 @@ __copyright__ = 'Copyright 2012, Sploitego Project'
 __credits__ = []
 
 __license__ = 'GPL'
-__version__ = '0.1'
+__version__ = '0.2'
 __maintainer__ = 'Nadeem Douba'
 __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
@@ -28,19 +29,26 @@ __all__ = [
 ]
 
 
-def login():
+def login(**kwargs):
     s = None
-    fn = cookie('nessus')
+    host = kwargs.get('host', config['nessus/server'])
+    port = kwargs.get('port', config['nessus/port'])
+    fn = cookie('%s.%s.nessus' % (host, port))
     if not path.exists(fn):
         f = fsemaphore(fn, 'wb')
         f.lockex()
-        fv = ['localhost', '8834']
+        fv = [ host, port ]
         errmsg = ''
         while True:
             fv = multpasswordbox(errmsg, 'Nessus Login', ['Server:', 'Port:', 'Username:', 'Password:'], fv)
+            if not fv:
+                return
             try:
                 s = NessusXmlRpcClient(fv[2], fv[3], fv[0], fv[1])
             except NessusException, e:
+                errmsg = str(e)
+                continue
+            except socket.error, e:
                 errmsg = str(e)
                 continue
             break
@@ -54,6 +62,9 @@ def login():
         except NessusSessionException:
             unlink(fn)
             return login()
+        except socket.error:
+            unlink(fn)
+            return login()
     return s
 
 
@@ -61,7 +72,7 @@ def policy(s):
     ps = s.policies.list
     c = choicebox('Select a Nessus scanning policy', 'Nessus Policies', ps)
     if c is None:
-        return None
+        return
     return filter(lambda x: str(x) == c, ps)[0]
 
 
