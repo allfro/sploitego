@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 
+import string
+
 from canari.maltego.entities import Location, IPv4Address, DNSName
 from canari.maltego.message import UIMessage, Label
-from sploitego.webtools.smartip import geoip
 from canari.framework import configure
-from canari.config import config
-from sploitego.resource import flag
 from canari.maltego.html import A
+
+from sploitego.webtools.smartip import geoip
+from sploitego.resource import flag
 
 
 __author__ = 'Nadeem Douba'
@@ -25,31 +27,25 @@ __all__ = [
 ]
 
 
-def maplink(r):
+def maplink(r, config):
     l = config['geoip/maplink']
-    for k in r:
-        var = '$%s' % k
-        if var in l:
-            l = l.replace(var, r[k])
-    return l
+    l = string.Template(l)
+    return l.substitute(r)
 
 @configure(
     label='To Location [Smart IP]',
     description='This transform attempts to geo locate the given IP or hostname.',
     uuids=[
         'sploitego.v2.IPv4AddressToLocation_SmartIP',
-#        'sploitego.v2.NSRecordToLocation_SmartIP',
-        'sploitego.v2.DNSNameToLocation_SmartIP',
-#        'sploitego.v2.MXRecordToLocation_SmartIP'
+        'sploitego.v2.DNSNameToLocation_SmartIP'
     ],
     inputs=[
-        ( 'Reconnaissance', IPv4Address ),
-#        ( 'Reconnaissance', NSRecord ),
-        ( 'Reconnaissance', DNSName ),
-#        ( 'Reconnaissance', MXRecord )
+        ('Reconnaissance', IPv4Address),
+        ('Reconnaissance', DNSName)
     ],
+    remote=True
 )
-def dotransform(request, response):
+def dotransform(request, response, config):
     r = geoip(request.value)
     if r is not None:
         if 'error' in r:
@@ -68,7 +64,7 @@ def dotransform(request, response):
         if 'longitude' in r and 'latitude' in r:
             e.longitude = r['longitude']
             e.latitude = r['latitude']
-            link = maplink(r)
+            link = maplink(r, config)
             e += Label('Map It', A(link, link), type='text/html')
         if 'region' in r:
             e.area = r['region']
@@ -78,7 +74,7 @@ def dotransform(request, response):
             e.country = countryf
             e.iconurl = flag(countryf)
         if 'countryCode' in r:
-            e.countrycode =  r['countryCode']
+            e.countrycode = r['countryCode']
             if e.iconurl is None:
                 e.iconurl = flag(r['countryCode'])
         response += e
