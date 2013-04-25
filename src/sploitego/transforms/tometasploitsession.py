@@ -8,7 +8,6 @@ from canari.framework import configure
 from common.entities import NessusVulnerability, MetasploitSession
 from common.tenable import login as nessus_login
 from common.msfrpcd import login as metasploit_login
-from sploitego.msftools.exploit import launch
 
 
 __author__ = 'Nadeem Douba'
@@ -34,6 +33,7 @@ __all__ = [
     debug=False
 )
 def dotransform(request, response):
+    from sploitego.msftools.exploit import launch
     s = nessus_login(host=request.fields['nessus.server'], port=request.fields['nessus.port'])
     if s is None:
         return response
