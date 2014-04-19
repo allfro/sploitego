@@ -1,9 +1,8 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 from nessus import Report
 from canari.resource import icon_resource
 from canari.framework import configure
-
 
 from common.entities import NessusVulnerability, MetasploitSession
 from common.tenable import login as nessus_login
@@ -34,16 +33,17 @@ __all__ = [
 )
 def dotransform(request, response):
     from sploitego.msftools.exploit import launch
-    s = nessus_login(host=request.fields['nessus.server'], port=request.fields['nessus.port'])
+
+    s = nessus_login(host=request.entity.server, port=request.entity.port)
     if s is None:
         return response
     m = metasploit_login()
     if m is None:
         return response
 
-    vulns = Report(s, request.fields['nessusreport.uuid'], '').vulnerabilities
-    for h in vulns[request.fields['nessusplugin.id']].hosts:
-        session = launch(m, {'RPORT':int(h.port), 'RHOST':h.name}, filter_=request.fields.get('metasploit_name'))
+    vulns = Report(s, request.entity.uuid, '').vulnerabilities
+    for h in vulns[request.entity.pluginid].hosts:
+        session = launch(m, {'RPORT': int(h.port), 'RHOST': h.name}, filter_=request.fields.get('metasploit_name'))
 
         if session != -1:
             e = MetasploitSession('%s:%s' % (h.name, h.port))
