@@ -24,8 +24,7 @@ __all__ = [
     label='To Site Category [Websense]',
     description='Gets the site category for a given Website.',
     uuids=[ 'sploitego.v2.WebsiteToSiteCategory_Websense' ],
-    inputs=[ ( 'Reconnaissance', Website ) ],
-    remote=True
+    inputs=[('Reconnaissance', Website)]
 )
 def dotransform(request, response):
     ac = AceInsightMiner(request.value)
