@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 import socket
 
 from nessus import NessusXmlRpcClient, NessusSessionException, NessusException
@@ -8,8 +8,9 @@ from canari.config import config
 
 from urlparse import parse_qsl
 from urllib import urlencode
-from os import path, unlink
-from time import strftime
+
+import os
+import time
 
 
 __author__ = 'Nadeem Douba'
@@ -29,42 +30,51 @@ __all__ = [
 ]
 
 
-def login(**kwargs):
+def login(host='localhost', port='8834', username='', password=''):
     s = None
-    host = kwargs.get('host', config['nessus/server'])
-    port = kwargs.get('port', config['nessus/port'])
     fn = cookie('%s.%s.nessus' % (host, port))
-    if not path.exists(fn):
-        f = fsemaphore(fn, 'wb')
-        f.lockex()
-        fv = [ host, port ]
-        errmsg = ''
-        while True:
-            fv = multpasswordbox(errmsg, 'Nessus Login', ['Server:', 'Port:', 'Username:', 'Password:'], fv)
-            if not fv:
-                return
-            try:
-                s = NessusXmlRpcClient(fv[2], fv[3], fv[0], fv[1])
-            except NessusException, e:
-                errmsg = str(e)
-                continue
-            except socket.error, e:
-                errmsg = str(e)
-                continue
-            break
-        f.write(urlencode({'host' : fv[0], 'port' : fv[1], 'token': s.token}))
+    if not os.path.exists(fn):
+        with fsemaphore(fn, 'wb') as f:
+            f.lockex()
+            errmsg = ''
+            while True:
+                fv = multpasswordbox(
+                    errmsg,
+                    'Nessus Login',
+                    ['Server:', 'Port:', 'Username:', 'Password:'],
+                    [host, port, username, password]
+                )
+                if not fv:
+                    f.close()
+                    os.unlink(fn)
+                    return
+                host, port, username, password = fv
+                try:
+                    s = NessusXmlRpcClient(username, password, host, port)
+                except NessusException, e:
+                    errmsg = str(e)
+                    continue
+                except socket.error, e:
+                    errmsg = str(e)
+                    continue
+                break
+            f.write(urlencode(dict(host=host, port=port, token=s.token)))
     else:
-        f = fsemaphore(fn)
-        f.locksh()
-        try:
-            d = dict(parse_qsl(f.read()))
-            s = NessusXmlRpcClient(**d)
-        except NessusSessionException:
-            unlink(fn)
-            return login()
-        except socket.error:
-            unlink(fn)
-            return login()
+        with fsemaphore(fn) as f:
+            f.locksh()
+            try:
+                d = dict(parse_qsl(f.read()))
+                s = NessusXmlRpcClient(**d)
+                policies = s.policies.list
+            except NessusException:
+                os.unlink(fn)
+                return login()
+            except NessusSessionException:
+                os.unlink(fn)
+                return login()
+            except socket.error:
+                os.unlink(fn)
+                return login()
     return s
 
 
@@ -77,4 +87,4 @@ def policy(s):
 
 
 def scan(s, t, p):
-    return s.scanner.scan(strftime(config['nessus/namefmt']), t, p)
+    return s.scanner.scan(time.strftime(config['nessus/namefmt']), t, p)
