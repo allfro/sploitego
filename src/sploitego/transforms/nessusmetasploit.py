@@ -37,7 +37,7 @@ def dotransform(request, response):
     if s is None:
         return response
 
-    vulns = Report(s, request.fields['nessusreport.uuid'], request.value).search(
+    vulns = Report(s, request.entity.uuid, request.value).search(
         ReportFilterQuery(
             ReportFilter(
                 'exploit_framework_metasploit',
