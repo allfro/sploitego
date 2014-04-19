@@ -37,8 +37,8 @@ __all__ = [
     'nessusscan',
     'nessusvulns',
     'nessusmetasploit',
-    'tometasploitsession',
-    'tometasploitshell',
+    # 'tometasploitsession',
+    # 'tometasploitshell',
     'nessusports',
     'nmapallscan',
     'nmapfastscan',
@@ -48,7 +48,7 @@ __all__ = [
     'nmapudpscan',
     'nmapversionscan',
     'p0f',
-    'passivedns',
+    # 'passivedns',
     'pipltolocation',
     'pipltorelationships',
     'sitereputation',
@@ -62,3 +62,12 @@ __all__ = [
     'whatismyinternetip',
     'whatismyip'
 ]
+
+try:
+    import PySide
+    __all__.extend([
+        'tometasploitsession',
+        'tometasploitshell'
+    ])
+except ImportError:
+    pass
