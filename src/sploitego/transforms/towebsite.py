@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 from urllib import urlopen
 
@@ -26,8 +26,8 @@ __all__ = [
 @configure(
     label='To Web site [Query Ports 80]',
     description='This transform queries port 80 for websites',
-    uuids=[ 'sploitego.v2.DNSNameToWebsite_QueryPorts' ],
-    inputs=[ ( None, DNSName ) ],
+    uuids=['sploitego.v2.DNSNameToWebsite_QueryPorts'],
+    inputs=[('Reconnaissance', DNSName)],
 )
 def dotransform(request, response):
     try:
