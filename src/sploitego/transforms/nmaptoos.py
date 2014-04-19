@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 from sploitego.transforms.common.entities import NmapReport
 from sploitego.transforms.common.nmap import addsystems
@@ -20,10 +20,10 @@ __status__ = 'Development'
 @configure(
     label='To OS [Nmap Report]',
     description='This transform mines OS information from an Nmap report.',
-    uuids=[ 'sploitego.v2.NmapReportToOS_NmapReport' ],
-    inputs=[ ( 'Reconnaissance', NmapReport ) ],
+    uuids=['sploitego.v2.NmapReportToOS_NmapReport'],
+    inputs=[('Reconnaissance', NmapReport)],
 )
 def dotransform(request, response):
-    r = NmapReportParser(file(request.fields['report.file']).read())
+    r = NmapReportParser(file(request.entity.file).read())
     addsystems(r, response)
     return response
