@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
+
+import subprocess
+from canari.maltego.utils import debug
 
 from canari.utils.fs import cookie
 from canari.config import config
@@ -6,7 +9,7 @@ from scapy.all import conf
 
 from ctypes import Structure, c_ubyte, c_uint32, c_uint16, addressof, sizeof, POINTER, string_at, c_char_p, cast
 from socket import socket, AF_UNIX, AF_INET, AF_INET6, inet_pton
-from os import path, system, sep, devnull
+import os
 from numbers import Number
 
 
@@ -87,17 +90,29 @@ class P0fError(Exception):
 
 
 def fingerprint(ip):
-
     iface = conf.route.route(ip)[0]
     us = cookie('.sploitego.p0f.%s.sock' % iface)
 
-    if not path.exists(us):
+    if not os.path.exists(us):
         log = cookie('.sploitego.p0f.%s.log' % iface)
-        cmd = config['p0f/path'] + sep + 'p0f'
-        fpf = config['p0f/path'] + sep + 'p0f.fp'
-        if system('%s -d -s %s -o %s -f %s -i %s > %s' % (cmd, us, log, fpf, iface, devnull)):
-            raise P0fError('Could not locate p0f executable.')
-        return { 'status' : P0fStatus.NoMatch }
+        cmd = os.path.join(config['p0f/path'], 'p0f')
+        fpf = os.path.join(config['p0f/path'], 'p0f.fp')
+        p = subprocess.Popen(
+            [cmd, '-d', '-s', us, '-o', log, '-f', fpf, '-i', iface, '-u', 'nobody'],
+            stdout=subprocess.PIPE
+        )
+        debug(*p.communicate()[0].split('\n'))
+        debug(
+            "!!!!!!!!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!",
+            "! IF THIS TRANSFORM IS STILL RUNNING THEN SHUT IT DOWN AND  !",
+            "! TRY AGAIN! THERE IS A BUG IN MALTEGO THAT DOES NOT        !",
+            "! TERMINATE TRANSFORMS IF A TRANSFORM SPAWNS A CHILD        !",
+            "! PROCESS. PLEASE BUG SUPPORT@PATERVA.COM FOR A FIX.        !",
+            "!!!!!!!!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!",
+        )
+        if p.returncode:
+            raise P0fError('Could not locate or successfully execute the p0f executable.')
+        return {'status': P0fStatus.NoMatch}
 
     r = P0fApiQuery()
     r.magic = P0fMagic.Query
@@ -109,7 +124,7 @@ def fingerprint(ip):
         r.addr_type = P0fAddr.IPv4
         ip = inet_pton(AF_INET, ip)
 
-    for i,a in enumerate(ip):
+    for i, a in enumerate(ip):
         r.addr[i] = ord(a)
 
     s = socket(AF_UNIX)
@@ -123,11 +138,8 @@ def fingerprint(ip):
         raise P0fError('P0f could not understand the query.')
 
     return dict(
-        map(
-            lambda x: [
-                x[0],
-                getattr(pr, x[0]) if isinstance(getattr(pr, x[0]), Number) else string_at(getattr(pr, x[0]))
-            ],
-            pr._fields_
-        )
+        (
+            fn,
+            getattr(pr, fn) if isinstance(getattr(pr, fn), Number) else string_at(getattr(pr, fn))
+        ) for fn, ft in pr._fields_
     )
