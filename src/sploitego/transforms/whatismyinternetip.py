@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 from canari.maltego.entities import Location, IPv4Address
 from sploitego.webtools.smartip import geoip
@@ -23,8 +23,8 @@ __all__ = [
 @configure(
     label='To IP Address [Internet]',
     description='This transform returns your Internet IP.',
-    uuids=[ 'sploitego.v2.LocationToIPv4Address_Internet' ],
-    inputs=[ ( None, Location ) ],
+    uuids=['sploitego.v2.LocationToIPv4Address_Internet'],
+    inputs=[('Reconnaissance', Location)],
 )
 def dotransform(request, response):
     r = geoip()
