@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 import re
 
@@ -30,20 +30,19 @@ __all__ = [
 @configure(
     label='To Client IPv4Address [NTP monlist]',
     description='This transform performs an Nmap NTP monlist scan to retrieve a list of NTP clients.',
-    uuids=[ 'sploitego.v2.PortToClients_NTPMonList' ],
-    inputs=[ ( 'Reconnaissance', Port ) ],
+    uuids=['sploitego.v2.PortToClients_NTPMonList'],
+    inputs=[('Reconnaissance', Port)],
 )
 def dotransform(request, response):
-
-    if request.fields['protocol'] != 'UDP':
+    if request.entity.protocol != 'UDP':
         response += UIMessage('NTP Monlist scans only work on UDP ports.')
         return response
 
     s = getscanner()
 
-    args = [ '-n', '-Pn', '-sU', '--script=ntp-monlist', '-p', request.value ] + request.params
+    args = ['-n', '-Pn', '-sU', '--script=ntp-monlist', '-p', request.value] + request.params
 
-    r = s.scan(request.fields['ip.destination'], *args)
+    r = s.scan(request.entity.destination, *args)
 
     if r is not None:
         for host in r.addresses:
