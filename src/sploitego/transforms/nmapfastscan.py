@@ -18,8 +18,6 @@ __maintainer__ = 'Nadeem Douba'
 __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
-__author__ = 'Nadeem Douba'
-
 __all__ = [
     'dotransform'
 ]
@@ -29,12 +27,12 @@ __all__ = [
 @configure(
     label='To Nmap Report [Nmap -F]',
     description='This transform performs an active Nmap scan.',
-    uuids=[ 'sploitego.v2.IPv4AddressToNmapReport_NmapF', 'sploitego.v2.IPv6AddressToNmapReport_NmapF' ],
-    inputs=[ ( 'Reconnaissance', IPv4Address ), ( 'Reconnaissance', IPv6Address ) ],
+    uuids=['sploitego.v2.IPv4AddressToNmapReport_NmapF', 'sploitego.v2.IPv6AddressToNmapReport_NmapF'],
+    inputs=[('Reconnaissance', IPv4Address), ('Reconnaissance', IPv6Address)],
 )
 def dotransform(request, response):
     s = getscanner()
-    args = ['-n', '-F'] + request.params
+    args = ['-n', '-Pn', '-F'] + request.params
     r = s.scan(request.value, *args)
     if r is not None:
         addreport(r, response, ' '.join(args + [request.value]), s.cmd)
