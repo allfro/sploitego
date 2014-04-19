@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 from json.decoder import JSONDecoder
 
@@ -25,14 +25,14 @@ __all__ = [
 @configure(
     label='To Location [Pipl]',
     description="This transform attempts to find a person's address.",
-    uuids=[ 'sploitego.v2.PersonToLocation_Pipl' ],
-    inputs=[ ( 'Location From Person', Person ) ],
+    uuids=['sploitego.v2.PersonToLocation_Pipl'],
+    inputs=[('Location From Person', Person)],
 )
 def dotransform(request, response):
     p = JSONDecoder().decode(
         pipljsonsearch(
-            first_name=request.fields['firstname'],
-            last_name=request.fields['lastname']
+            first_name=request.entity.firstnames or '',
+            last_name=request.entity.lastname or ''
         )
     )
 
