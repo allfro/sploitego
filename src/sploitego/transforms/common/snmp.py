@@ -17,13 +17,14 @@ __status__ = 'Development'
 
 
 def snmpargs(request):
-    if request.fields['protocol'].upper() != 'UDP':
+    protocol = (request.entity.protocol or 'UDP').upper()
+    if protocol != 'UDP':
         raise MaltegoException('SNMP over UDP for versions 1 and 2c are only supported.')
     return (
-        str(IPAddress(request.fields['snmp.agent'])),
-        int(request.fields['ip.port']),
+        str(IPAddress(request.entity.agent)),
+        int(request.entity.port),
         request.value,
-        request.fields['snmp.version'],
+        request.entity.version,
         config['scapy/sr_timeout'],
         config['scapy/sr_retries']
     )
