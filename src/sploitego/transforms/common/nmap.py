@@ -8,7 +8,7 @@ from canari.maltego.message import Label
 from canari.utils.fs import ufile
 from canari.config import config
 
-from os import makedirs, path
+import os
 from time import strftime
 
 
@@ -52,12 +52,11 @@ def addports(report, response):
 
 
 def savereport(report):
-    if not path.exists(config['nmap/reportdir']):
-        makedirs(config['nmap/reportdir'])
-    f = ufile(strftime(path.join(config['nmap/reportdir'], config['nmap/namefmt'])))
-    f.write(report.output)
-    f.close()
-    return f.name
+    if not os.path.lexists(config['nmap/reportdir']):
+        os.makedirs(config['nmap/reportdir'])
+    with ufile(strftime(os.path.join(config['nmap/reportdir'], config['nmap/namefmt']))) as f:
+        f.write(report.output)
+        return f.name
 
 
 def addreport(report, response, tag, cmd):
