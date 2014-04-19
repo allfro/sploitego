@@ -31,8 +31,8 @@ __all__ = [
 def dotransform(request, response):
     p = JSONDecoder().decode(
         pipljsonsearch(
-            first_name=request.fields['firstname'],
-            last_name=request.fields['lastname']
+            first_name=request.entity.firstnames or '',
+            last_name=request.entity.lastname or ''
         )
     )
 
