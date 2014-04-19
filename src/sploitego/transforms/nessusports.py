@@ -29,11 +29,11 @@ __all__ = [
     debug=False
 )
 def dotransform(request, response):
-    s = login(host=request.fields['nessus.server'], port=request.fields['nessus.port'])
+    s = login(host=request.entity.server, port=request.entity.port)
     if s is None:
         return response
-    vulns = Report(s, request.fields['nessusreport.uuid'], '').vulnerabilities
-    for h in vulns[request.fields['nessusplugin.id']].hosts:
+    vulns = Report(s, request.entity.uuid, '').vulnerabilities
+    for h in vulns[request.entity.pluginid].hosts:
         p = Port(h.port)
         p.destination = h.name
         p.status = 'Open'
