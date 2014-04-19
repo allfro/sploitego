@@ -25,8 +25,8 @@ def updatelist(filename):
     topsites = []
     f = fsemaphore(filename, 'wb')
     f.lockex()
-    for i in xrange(0,20):
-        page = wordlist('http://www.alexa.com/topsites/global;%d' % i, 'topsites-label">(.*?)</')
+    for i in xrange(20):
+        page = wordlist('http://www.alexa.com/topsites/global;%d' % i, '<a href="/siteinfo/(.+)?">')
         topsites += page
         f.write('\n'.join(page))
         f.write('\n')
