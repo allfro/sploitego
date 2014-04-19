@@ -28,7 +28,7 @@ __all__ = [
 
 class SploitegoEntity(Entity):
 
-    namespace = 'sploitego'
+    _namespace_ = 'sploitego'
 
 
 class PortStatus(object):
