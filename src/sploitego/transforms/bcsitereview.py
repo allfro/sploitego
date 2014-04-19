@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 from canari.maltego.entities import Website
-from common.entities import SiteCategory
 from canari.framework import configure
+
+from common.entities import SiteCategory
 
 
 __author__ = 'Nadeem Douba'
@@ -23,12 +24,12 @@ __all__ = [
 @configure(
     label='To Site Category [Blue Coat]',
     description='Gets the site category for a given Website.',
-    uuids=[ 'sploitego.v2.WebsiteToSiteCategory_BlueCoat' ],
-    inputs=[ ( 'Reconnaissance', Website ) ],
+    uuids=['sploitego.v2.WebsiteToSiteCategory_BlueCoat'],
+    inputs=[('Reconnaissance', Website)],
     remote=True
 )
-def dotransform(request, response):
+def dotransform(request, response, config):
     from sploitego.webtools.bluecoat import sitereview
-    for c in sitereview(request.value):
+    for c in sitereview(request.value, config):
         response += SiteCategory(c)
     return response
