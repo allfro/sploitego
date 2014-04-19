@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from urllib import urlopen
-from json.decoder import JSONDecoder
+from urllib2 import urlopen
+from json import loads
 
 
 __author__ = 'Nadeem Douba'
@@ -15,13 +15,12 @@ __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
 __all__ = [
-    'geoip'
+    'locate'
 ]
 
 
-def geoip(ip=''):
-    r = urlopen('http://smart-ip.net/geoip-json/%s' % ip)
+def locate(ip=''):
+    r = urlopen('http://freegeoip.net/json/%s' % ip)
     if r.code == 200:
-        j = JSONDecoder()
-        return j.decode(r.read())
+        return loads(r.read())
     return None

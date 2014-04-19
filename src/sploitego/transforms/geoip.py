@@ -7,7 +7,7 @@ from canari.maltego.message import UIMessage, Label
 from canari.framework import configure
 from canari.maltego.html import A
 
-from sploitego.webtools.smartip import geoip
+from sploitego.webtools.geoip import locate
 from sploitego.resource import flag
 
 
@@ -29,8 +29,7 @@ __all__ = [
 
 def maplink(r, config):
     l = config['geoip/maplink']
-    l = string.Template(l)
-    return l.substitute(r)
+    return l.format(**r)
 
 @configure(
     label='To Location [Smart IP]',
@@ -46,7 +45,7 @@ def maplink(r, config):
     remote=True
 )
 def dotransform(request, response, config):
-    r = geoip(request.value)
+    r = locate(request.value)
     if r is not None:
         if 'error' in r:
             response += UIMessage(r['error'])
@@ -57,25 +56,25 @@ def dotransform(request, response, config):
         if 'city' in r:
             locname += r['city']
             cityf = r['city']
-        if 'countryName' in r:
-            locname += ', %s' % r['countryName']
-            countryf = r['countryName']
+        if 'country_name' in r:
+            locname += ', %s' % r['country_name']
+            countryf = r['country_name']
         e = Location(locname)
         if 'longitude' in r and 'latitude' in r:
-            e.longitude = r['longitude']
-            e.latitude = r['latitude']
+            e.longitude = float(r['longitude'] or 0.0)
+            e.latitude = float(r['latitude'] or 0.0)
             link = maplink(r, config)
             e += Label('Map It', A(link, link), type='text/html')
-        if 'region' in r:
-            e.area = r['region']
+        if 'region_name' in r:
+            e.area = r['region_name']
         if cityf is not None:
             e.city = cityf
         if countryf is not None:
             e.country = countryf
             e.iconurl = flag(countryf)
-        if 'countryCode' in r:
-            e.countrycode = r['countryCode']
+        if 'country_code' in r:
+            e.countrycode = r['country_code']
             if e.iconurl is None:
-                e.iconurl = flag(r['countryCode'])
+                e.iconurl = flag(r['country_code'])
         response += e
     return response
