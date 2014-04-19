@@ -28,8 +28,8 @@ __all__ = [
 @configure(
     label='To DNS Names [Bing]',
     description='This transform attempts to find subdomains using the Microsoft Bing search engine.',
-    uuids=[ 'sploitego.v2.DomainToDNSName_Bing' ],
-    inputs=[ ( BuiltInTransformSets.DNSFromDomain, Domain ) ]
+    uuids=['sploitego.v2.DomainToDNSName_Bing'],
+    inputs=[(BuiltInTransformSets.DNSFromDomain, Domain)]
 )
 def dotransform(request, response):
     domain = request.value
@@ -38,7 +38,7 @@ def dotransform(request, response):
         q = ' '.join(['site:%s' % domain] + map(lambda x: '-site:%s' % x, exclude))
         results = searchweb(q)
         for r in results:
-            domains = [ urlsplit(d).netloc for d in findall('<web:Url>(.+?)</web:Url>', r) ]
+            domains = [urlsplit(d).netloc for d in findall('<web:Url>(.+?)</web:Url>', r)]
             for d in domains:
                 if d not in exclude and d != domain:
                     exclude.add(d)
