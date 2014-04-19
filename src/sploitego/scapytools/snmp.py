@@ -193,7 +193,7 @@ class SNMPBruteForcer(object):
             version=self.version,
             PDU=SNMPget(varbindlist=[SNMPvarbind(oid=ASN1_OID('1.3.6.1.2.1.1.1.0'))])
         )
-        r = []
+        r = set()
         for c in communities:
             i = randint(0, 2147483647)
             p.PDU.id = i
@@ -205,7 +205,7 @@ class SNMPBruteForcer(object):
                 p = SNMP(self.s.recvfrom(65535)[0])
             except timeout:
                 break
-            r.append(p.community.val)
+            r.add(p.community.val)
         return r
 
     def __del__(self):
