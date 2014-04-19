@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 from canari.maltego.entities import IPv4Address
 from canari.maltego.message import UIMessage
@@ -25,8 +25,8 @@ __all__ = [
 @configure(
     label='To Locations [Google Maps]',
     description='Gets device locations based on MAC address.',
-    uuids=[ 'sploitego.v2.IPv4AddressToLocation_GoogleMaps' ],
-    inputs=[ ( None, IPv4Address ) ]
+    uuids=['sploitego.v2.IPv4AddressToLocation_GoogleMaps'],
+    inputs=[('Reconnaissance', IPv4Address)]
 )
 def dotransform(request, response):
     if 'ethernet.hwaddr' not in request.fields or not request.fields['ethernet.hwaddr']:
