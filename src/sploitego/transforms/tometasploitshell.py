@@ -35,10 +35,10 @@ def dotransform(request, response):
     subprocess.Popen(
         [
             script,
-            request.fields['msfrpcd.server'],
-            request.fields['msfrpcd.port'],
-            request.fields['msfrpcd.uri'],
-            request.fields['session.uuid']
+            request.entity.server,
+            request.entity.port,
+            request.entity.uri,
+            request.entity.uuid
         ]
     )
     return response
