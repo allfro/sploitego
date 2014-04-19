@@ -30,10 +30,10 @@ __all__ = [
     inputs=[('Reconnaissance', Port)]
 )
 def dotransform(request, response):
-    protocol = request.fields['protocol'].upper()
+    protocol = (request.entity.protocol or 'UDP').upper()
     if protocol != 'UDP':
         raise MaltegoException('SNMP over UDP for versions 1 and 2c are only supported.')
-    agent = str(IPAddress(request.fields['ip.destination']))
+    agent = str(IPAddress(request.entity.destination))
     port = int(request.value)
     wl = config['snmp/wordlist']
     for v in ['v1', 'v2c']:
