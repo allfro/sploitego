@@ -25,8 +25,8 @@ __all__ = [
 @configure(
     label='To Device [IEEE OUI]',
     description='This transform gets the device manufacturer based on the MAC Address OUI.',
-    uuids=[ 'sploitego.v2.IPv4AddressToDevice_IEEEOUI' ],
-    inputs=[ ( 'Reconnaissance', IPv4Address ) ],
+    uuids=['sploitego.v2.IPv4AddressToDevice_IEEEOUI'],
+    inputs=[('Reconnaissance', IPv4Address)],
 )
 def dotransform(request, response):
     from sploitego.webtools.ieee import ouis
