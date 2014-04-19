@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 
 from canari.maltego.entities import Location, IPv4Address
-from sploitego.webtools.smartip import geoip
+from sploitego.webtools.geoip import locate
 from canari.framework import configure
 
 __author__ = 'Nadeem Douba'
@@ -27,7 +27,7 @@ __all__ = [
     inputs=[('Reconnaissance', Location)],
 )
 def dotransform(request, response):
-    r = geoip()
+    r = locate()
     if r is not None:
-        response += IPv4Address(r['host'])
+        response += IPv4Address(r['ip'])
     return response
