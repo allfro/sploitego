@@ -34,7 +34,7 @@ __all__ = [
 def dotransform(request, response):
     s = AmapScanner()
     f = NamedTemporaryFile(suffix='.gnmap', mode='wb')
-    f.write(NmapReportParser(file(request.fields['report.file']).read()).greppable)
+    f.write(NmapReportParser(file(request.entity.file).read()).greppable)
     f.flush()
     r = s.scan(['-bqi', f.name], AmapReportParser)
     f.close()
