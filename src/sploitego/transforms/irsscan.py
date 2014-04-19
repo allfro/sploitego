@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 from optparse import OptionParser
 from Queue import Queue, Empty
@@ -25,14 +25,13 @@ __maintainer__ = 'Nadeem Douba'
 __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
-
 __all__ = [
     'onterminate',
     'dotransform'
 ]
 
-class ArpCachePoisoner(Thread):
 
+class ArpCachePoisoner(Thread):
     def __init__(self, *args):
         self.mac = args[0]
         self.rmac = args[1]
@@ -64,7 +63,7 @@ class ArpCachePoisoner(Thread):
                     debug('Healing victim %s/%s' % (oldip, oldmac))
                     pa.psrc = oldip
                     pa.hwsrc = oldmac
-                    sendp(pe/pa, verbose=0)
+                    sendp(pe / pa, verbose=0)
                 if ip is None:
                     break
                 else:
@@ -75,9 +74,9 @@ class ArpCachePoisoner(Thread):
                     oldmac = self.whohas(ip)
             except Empty:
                 # Send the poison... all your base are belong to us!
-                sendp(pe/pa, verbose=0)
-                sleep(1/self.poison_rate)
-
+                debug('Poisoning %s...' % ip)
+                sendp(pe / pa, verbose=0)
+                sleep(1 / self.poison_rate)
 
 
 def parse_args(args):
@@ -105,7 +104,6 @@ def parse_args(args):
     ]
 )
 def dotransform(request, response):
-
     params = parse_args(request.params)
 
     ports = portrange(params.target_ports) if params.target_ports is not None else config['irsscan/target_ports']
@@ -117,7 +115,7 @@ def dotransform(request, response):
     debug('Sending probes to %s' % dst)
 
     # This is the template used to send traffic
-    p = Ether()/IP(dst=dst, id=int(RandShort()))/TCP(dport=ports, sport=int(RandShort()), seq=int(RandInt()))
+    p = Ether() / IP(dst=dst, id=int(RandShort())) / TCP(dport=ports, sport=int(RandShort()), seq=int(RandInt()))
 
     # We need to fix these values so that Scapy doesn't poop all over them
     p.dst = router_mac = p.dst
