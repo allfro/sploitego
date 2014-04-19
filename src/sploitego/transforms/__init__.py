@@ -26,6 +26,7 @@ __all__ = [
     'dnstodomain',
     'dnsxfrlookup',
     'dnstxtlookup',
+    # 'findlocbymac',
     'findneighbors',
     'findnexthop',
     'findresolvers',
