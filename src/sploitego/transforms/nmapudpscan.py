@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 from canari.framework import configure, superuser
 from canari.maltego.message import UIMessage
@@ -28,12 +28,12 @@ __all__ = [
 @configure(
     label='To Nmap Report [Nmap -sU]',
     description='This transform performs an active UDP Nmap scan.',
-    uuids=[ 'sploitego.v2.IPv4AddressToNmapReport_NmapU', 'sploitego.v2.IPv6AddressToNmapReport_NmapU' ],
-    inputs=[ ( 'Reconnaissance', IPv4Address ), ( 'Reconnaissance', IPv6Address ) ],
+    uuids=['sploitego.v2.IPv4AddressToNmapReport_NmapU', 'sploitego.v2.IPv6AddressToNmapReport_NmapU'],
+    inputs=[('Reconnaissance', IPv4Address), ('Reconnaissance', IPv6Address)],
 )
 def dotransform(request, response):
     s = getscanner()
-    args = ['-n', '-sU'] + request.params
+    args = ['-n', '-sU', '-Pn'] + request.params
 
     r = s.scan(request.value, *args)
     if r is not None:

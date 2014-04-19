@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
-from sploitego.cmdtools.nmap import NmapReportParser
 from canari.maltego.entities import BuiltWithTechnology
 from canari.framework import configure, superuser
 from canari.maltego.message import UIMessage
 from canari.maltego.message import Label
+
 from common.entities import Port
 from common.nmap import getscanner
 
@@ -29,15 +29,17 @@ __all__ = [
 @configure(
     label='To Banner [Nmap -sV]',
     description='This transform performs an Nmap Version Scan. Note: this is an active scan.',
-    uuids=[ 'sploitego.v2.PortToBanner_NmapV' ],
-    inputs=[ ( 'Reconnaissance', Port ) ],
+    uuids=['sploitego.v2.PortToBanner_NmapV'],
+    inputs=[('Reconnaissance', Port)],
 )
 def dotransform(request, response):
     s = getscanner()
-    args = ['-n', '-sV', '-p', request.value] + request.params
-    if request.fields['protocol'] == 'UDP':
+    args = ['-n', '-Pn', '-sV', '-p', request.value] + request.params
+    if not request.entity.protocol:
+        request.entity.protocol = 'TCP'
+    elif request.entity.protocol.upper() == 'UDP':
         args.insert(0, '-sU')
-    r = s.scan(request.fields['ip.destination'], *args)
+    r = s.scan(request.entity.destination, *args)
     if r is not None:
         for host in r.addresses:
             for port in r.ports(host):
