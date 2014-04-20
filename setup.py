@@ -53,3 +53,5 @@ except ImportError:
           '(http://qt-project.org/wiki/Category:LanguageBindings::PySide::Downloads)'
     import webbrowser
     webbrowser.open_new('http://qt-project.org/wiki/Category:LanguageBindings::PySide::Downloads')
+
+print "Please install and configure metasploit and postgresql (for msf db) if you haven't done so already."
