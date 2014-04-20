@@ -1,20 +1,21 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
+from Queue import Queue
+import re
 
 from threading import Thread
-from Queue import Queue
 from time import sleep
 from uuid import uuid4
 
-
-
 from canari.maltego.configuration import BuiltInTransformSets
 from canari.maltego.entities import DNSName, Domain
-from sploitego.scapytools.dns import nslookup
 from canari.maltego.message import UIMessage
 from canari.maltego.utils import debug
 from canari.framework import configure
 from canari.config import config
-from scapy.all import DNS
+
+import dns
+
+from common.dnstools import nslookup_raw
 
 
 __author__ = 'Nadeem Douba'
@@ -27,7 +28,6 @@ __maintainer__ = 'Nadeem Douba'
 __email__ = 'ndouba@gmail.com'
 __status__ = 'Development'
 
-
 __all__ = [
     'onterminate',
     'dotransform'
@@ -35,100 +35,111 @@ __all__ = [
 
 
 class DNSResolver(Thread):
-    def __init__(self, *args):
-        self.domain = args[0]
-        self.lookup_rate = config['dnsdiscovery/lookup_rate']
+    def __init__(self, domain, queue_recv, queue_send, lookup_rate=None):
         super(DNSResolver, self).__init__()
+        self.domain = domain
+        self.lookup_rate = lookup_rate or config['dnsdiscovery/lookup_rate']
+        self.queue_send = queue_send
+        self.queue_recv = queue_recv
 
     def run(self):
         while True:
-            subdomain = q.get()
-            if subdomain is None:
+            subdomain = self.queue_recv.get()
+            if not subdomain:
                 break
-            ans = nslookup('%s.%s' % (subdomain, self.domain))
-            if ans is not None and DNS in ans and ans[DNS].ancount:
-                qret.put(ans[DNS])
-            sleep(1/self.lookup_rate)
-        qret.put(None)
+            name = '%s.%s' % (subdomain, self.domain)
+            name = re.sub('\.+', '.', name)
+            # debug('Resolving name: %s' % name)
+            try:
+                msg = nslookup_raw(name)
+                if msg.answer:
+                    self.queue_send.put(msg)
+            except dns.exception.Timeout:
+                debug('Request timed out for name: %s' % name)
+                pass
+            sleep(1 / self.lookup_rate)
+        self.queue_send.put(None)
 
-
-def getnames(domain, dnsr):
+def get_names(domain, msg):
     names = set([])
-    if dnsr[DNS].ancount:
-        names.add(dnsr[DNS].qd.qname[:-1])
-        for i in range(0, dnsr[DNS].ancount):
-            if dnsr[DNS].an[i].type == 5 and dnsr[DNS].an[i].rdata[:-1].endswith(domain):
-                names.add(dnsr[DNS].an[i].rdata[:-1])
+    if msg.answer:
+        for rrset in msg.answer:
+            name = rrset.name.to_text()[:-1]
+            if rrset.name.to_text()[:-1].endswith(domain):
+                names.add(name)
+            for rr in rrset:
+                cname = rr.to_text()[:-1]
+                if rr.rdtype == dns.rdatatype.CNAME and cname.endswith(domain):
+                    names.add(cname)
     return names
 
 
-def getips(dnsr):
-    return set([
-        dnsr[DNS].an[i].rdata for i in range(0, dnsr.ancount)
-        if dnsr[DNS].an[i].type == 1
-    ])
+def get_ip_addresses(msg):
+    return set([rr.to_text() for rrset in msg.answer for rr in rrset if rrset.rdtype == 1])
 
 
 @configure(
     label='To DNS Names [Brute Force]',
     description='This transform attempts to find subdomains using brute-force with a custom word list.',
-    uuids=[ 'sploitego.v2.DomainToDNSName_BruteForce' ],
-    inputs=[ ( BuiltInTransformSets.DNSFromIP, Domain ) ],
+    uuids=['sploitego.v2.DomainToDNSName_BruteForce'],
+    inputs=[( BuiltInTransformSets.DNSFromIP, Domain )],
 )
 def dotransform(request, response):
 
     domain = request.value
+    wildcard_ips = set()
+    found_subdomains = {}
 
-    global q
-    global qret
-    q = Queue()
-    qret = Queue()
+    try:
+        msg = nslookup_raw('%s.%s' % (str(uuid4()), domain))
+        if msg.answer:
+            wildcard_ips = get_ip_addresses(msg)
+            name = '*.%s' % domain
+            response += DNSName(name)
+            found_subdomains[name] = 1
+    except dns.exception.Timeout:
+        pass
 
-    ans = nslookup('%s.%s' % (str(uuid4()), domain))
-    wcip = getips(ans)
-    foundsds = {}
-    if wcip:
-        response += UIMessage('Warning: wildcard domain is defined... results may not be accurate')
+    if wildcard_ips:
+        warning = 'Warning: wildcard domain is defined... results may not be accurate'
+        debug(warning)
+        response += UIMessage(warning)
 
     ncount = 0
     nthreads = config['dnsdiscovery/numthreads']
-    subdomains = config['dnsdiscovery/wordlist']
+    subdomains = set(config['dnsdiscovery/wordlist'])
 
     threads = []
+    queue_send = Queue()
+    queue_recv = Queue()
     for i in range(0, nthreads):
-        t = DNSResolver(request.value)
+        t = DNSResolver(request.value, queue_send, queue_recv)
         t.start()
         threads.append(t)
 
-    for sd in subdomains:
-        q.put(sd)
+    for s in subdomains:
+        queue_send.put(s)
 
     for i in range(0, nthreads):
-        q.put(None)
+        queue_send.put(None)
 
     while True:
-        r = qret.get()
-        if r is None:
+        msg = queue_recv.get()
+        if not msg:
             ncount += 1
             if ncount == nthreads:
                 break
-        else:
-            names = getnames(domain, r)
-            ips = getips(r)
-            if wcip and wcip.issuperset(ips):
+        elif msg.answer:
+            ips = get_ip_addresses(msg)
+            if wildcard_ips and wildcard_ips.issuperset(ips):
                 continue
-            for name in names:
-                if name in foundsds:
+            for name in get_names(domain, msg):
+                if name in found_subdomains:
                     continue
                 else:
-                    foundsds[name] = 1
+                    found_subdomains[name] = 1
                     response += DNSName(name)
 
     for t in threads:
         t.join()
     return response
-
-
-def onterminate(*args):
-    debug('Terminated.')
-    exit(-1)
