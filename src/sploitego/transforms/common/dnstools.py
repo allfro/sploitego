@@ -99,7 +99,7 @@ def nslookup(name, type_, response, resolvers=None, recursive=True):
                                 response += DNSName(rr.to_text())
                             elif type_ == dns.rdatatype.SOA:
                                 e = NSRecord(rr.mname.to_text(True))
-                                e += Field('mailaddr', rr.rname.to_text(True), 'Authority')
+                                e += Field('mailaddr', rr.rname.to_text(True), displayname='Authority')
                                 response += e
                             elif type_ == dns.rdatatype.PTR:
                                 response += DNSName(rr.to_text()[:-1])
@@ -127,15 +127,15 @@ def nslookup(name, type_, response, resolvers=None, recursive=True):
     return False
 
 
-def nslookup_raw(name, type_=dns.rdatatype.A, resolver=None, recursive=True, tcp=False):
+def nslookup_raw(name, type_=dns.rdatatype.A, resolver=None, recursive=True, tcp=False, timeout=10):
     if not resolver:
         try:
-            resolver = dns.resolver.get_default_resolver().nameservers.pop()
+            resolver = dns.resolver.get_default_resolver().nameservers[0]
         except IndexError:
             raise OSError("A DNS resolver could not be found.")
     m = dns.message.make_query(name, type_, dns.rdataclass.IN)
     if not recursive:
         m.flags ^= dns.flags.RD
     if tcp:
-        return dns.query.tcp(m, resolver)
-    return dns.query.udp(m, resolver)
+        return dns.query.tcp(m, resolver, timeout=timeout)
+    return dns.query.udp(m, resolver, timeout=timeout)
