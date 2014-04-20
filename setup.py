@@ -1,6 +1,7 @@
 # !/usr/bin/env python
 
 import sys
+import os
 
 sys.path.insert(0, 'src')
 
@@ -33,6 +34,7 @@ setup(
         'scapy==2.1.0',
         'pynessusrpc',
         'pyiptools',
+        'pymetasploit',
         'canari',
         'dnspython',
         'lxml'
@@ -41,3 +43,13 @@ setup(
         'http://www.secdev.org/projects/scapy/files/'
     ]
 )
+
+try:
+    print 'Detecting PySide installation...'
+    import PySide
+    print 'PySide is installed, no further action required.'
+except ImportError:
+    print 'PySide not detected. Opening browser to PySide download page ' \
+          '(http://qt-project.org/wiki/Category:LanguageBindings::PySide::Downloads)'
+    import webbrowser
+    webbrowser.open_new('http://qt-project.org/wiki/Category:LanguageBindings::PySide::Downloads')
