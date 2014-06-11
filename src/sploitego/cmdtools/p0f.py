@@ -111,6 +111,7 @@ def fingerprint(ip):
             "!!!!!!!!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!",
         )
         if p.returncode:
+            os.remove(us)
             raise P0fError('Could not locate or successfully execute the p0f executable.')
         return {'status': P0fStatus.NoMatch}
 
