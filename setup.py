@@ -31,7 +31,7 @@ setup(
         '': ['*.gif', '*.png', '*.conf', '*.mtz', '*.machine']
     },
     install_requires=[
-        'scapy==2.1.0',
+        'scapy==2.4.1',
         'pynessusrpc',
         'pyiptools',
         'pymetasploit',
